@@ -20,7 +20,7 @@
 
 #### Scala
 
-- [Manual de Scala](scala_manual.md): Descubre el lenguaje de programación Scala, desde los fundamentos hasta la programación funcional, la concurrencia y la interoperabilidad con Java.
+- [Manual de Scala](Lenguajes de Programación/Manual de Scala.md): Descubre el lenguaje de programación Scala, desde los fundamentos hasta la programación funcional, la concurrencia y la interoperabilidad con Java.
 
 ### Desarrollo Web
 
