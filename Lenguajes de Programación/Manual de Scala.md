@@ -1,19 +1,58 @@
 # Manual completo de Scala: De 0 a 100
+### Índice
 
-## Índice
+1. [Introducción a Scala](#1-introducción-a-scala)
+   - 1.1. [¿Qué es Scala?](#11-qué-es-scala)
+   - 1.2. [Instalación de Scala](#12-instalación-de-scala)
+     - 1.2.1. [Instalación en Windows](#121-instalación-en-windows)
+     - 1.2.2. [Instalación en macOS](#122-instalación-en-macos)
+     - 1.2.3. [Instalación en Linux](#123-instalación-en-linux)
+   - 1.3. [Entorno de desarrollo integrado (IDE)](#13-entorno-de-desarrollo-integrado-ide)
+     - 1.3.1. [IntelliJ IDEA](#131-intellij-idea)
+     - 1.3.2. [Eclipse](#132-eclipse)
 
-1. Introducción a Scala
-2. Fundamentos de programación en Scala
-3. Estructuras de control
-4. Funciones en Scala
-5. Colecciones en Scala
-6. Programación orientada a objetos en Scala
-7. Patrones de diseño en Scala
-8. Concurrencia y paralelismo en Scala
-9. Programación funcional en Scala
-10. Interoperabilidad con Java
-11. Desarrollo web con Scala
-12. Aplicaciones de Scala en Big Data
+2. [Fundamentos de programación en Scala](#2-fundamentos-de-programación-en-scala)
+   - 2.1. [Sintaxis básica](#21-sintaxis-básica)
+   - 2.2. [Tipos de datos](#22-tipos-de-datos)
+   - 2.3. [Operadores](#23-operadores)
+   - 2.4. [Estructuras de control](#24-estructuras-de-control)
+   - 2.5. [Bucles](#25-bucles)
+   - 2.6. [Funciones](#26-funciones)
+   - 2.7. [Manejo de excepciones](#27-manejo-de-excepciones)
+
+3. [Estructuras de control](#3-estructuras-de-control)
+   - 3.1. [Condicionales](#31-condicionales)
+   - 3.2. [Bucles](#32-bucles)
+   - 3.3. [Control de flujo avanzado](#33-control-de-flujo-avanzado)
+
+4. [Funciones en Scala](#4-funciones-en-scala)
+   - 4.1. [Definición de funciones](#41-definición-de-funciones)
+   - 4.2. [Funciones de orden superior](#42-funciones-de-orden-superior)
+   - 4.3. [Funciones anónimas](#43-funciones-anónimas)
+
+5. [Colecciones en Scala](#5-colecciones-en-scala)
+   - 5.1. [Listas](#51-listas)
+   - 5.2. [Conjuntos](#52-conjuntos)
+   - 5.3. [Mapas](#53-mapas)
+
+6. [Programación orientada a objetos en Scala](#6-programación-orientada-a-objetos-en-scala)
+   - 6.1. [Clases y objetos](#61-clases-y-objetos)
+   - 6.2. [Herencia](#62-herencia)
+   - 6.3. [Traits](#63-traits)
+
+7. [Patrones de diseño en Scala](#7-patrones-de-diseño-en-scala)
+   - 7.1. [Patrón de diseño Singleton](#71-patrón-de-diseño-singleton)
+   - 7.2. [Patrón de diseño Builder](#72-patrón-de-diseño-builder)
+
+8. [Concurrencia y paralelismo en Scala](#8-concurrencia-y-paralelismo-en-scala)
+
+9. [Programación funcional en Scala](#9-programación-funcional-en-scala)
+
+10. [Interoperabilidad con Java](#10-interoperabilidad-con-java)
+
+11. [Desarrollo web con Scala](#11-desarrollo-web-con-scala)
+
+12. [Aplicaciones de Scala en Big Data](#12-aplicaciones-de-scala-en-big-data)
 
 ---
 
@@ -542,6 +581,66 @@ def factorial(n: Int): Int = {
 val resultado = factorial(5)
 println(resultado) // Output: 120
 ```
+
+---
+
+## 10. Interoperabilidad con Java en Scala
+
+### 10.1. Utilizando clases y bibliotecas de Java
+Scala es compatible con la interoperabilidad con Java, lo que significa que puedes utilizar clases y bibliotecas de Java en tu código Scala sin problemas. Aquí se muestra un ejemplo de cómo utilizar una clase de Java en Scala:
+
+```scala
+import java.util.ArrayList
+
+val lista = new ArrayList[String]()
+lista.add("Hola")
+lista.add("Mundo")
+
+for (elemento <- lista) {
+  println(elemento)
+}
+```
+
+### 10.2. Convertir tipos entre Scala y Java
+Scala proporciona métodos y conversiones automáticas para convertir tipos entre Scala y Java de manera conveniente. Aquí se muestra un ejemplo de cómo convertir una lista de Scala a un array de Java:
+
+```scala
+import scala.collection.JavaConverters._
+
+val listaScala = List(1, 2, 3, 4, 5)
+val arrayJava = listaScala.asJava.toArray
+
+for (elemento <- arrayJava) {
+  println(elemento)
+}
+```
+
+### 10.3. Anotaciones de Java en Scala
+Scala también permite el uso de anotaciones de Java en su código. Puedes utilizar anotaciones de Java en clases, métodos y variables en Scala. Aquí se muestra un ejemplo de cómo utilizar una anotación de Java en Scala:
+
+```scala
+import java.lang.annotation._
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target(Array(ElementType.METHOD))
+@interface MiAnotacion {
+  String value();
+}
+
+class MiClase {
+  @MiAnotacion("Hola")
+  def miMetodo(): Unit = {
+    println("Mi método en Scala")
+  }
+}
+
+val instancia = new MiClase()
+instancia.miMetodo()
+```
+
+---
+
+Continúa explorando el manual completo en formato Markdown para aprender sobre desarrollo web con Scala, aplicaciones en Big Data y más.
 
 ---
 
