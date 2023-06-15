@@ -224,10 +224,9 @@ object MiClase {
 
 En este caso, el companion object `MiClase` define un método `crearInstancia()` que permite crear instancias de la clase `MiClase` sin llamar explícitamente al constructor.
 
-### 13. Patrones de Diseño Orientados a Objetos
+## 13. Patrones de Diseño Orientados a Objetos
 
 Scala también se puede utilizar con patrones de diseño orientados a objetos comunes, como
 
  Singleton, Builder, Factory, entre otros. Estos patrones ayudan a estructurar y organizar el código de manera efectiva. Aprender y aplicar patrones de diseño puede mejorar la calidad y la reutilización del código. Aunque estos patrones no son exclusivos de Scala, son ampliamente utilizados en la POO y pueden aplicarse en Scala de manera similar a otros lenguajes.
 
-¡Felicitaciones! Has completado el Manual de Scala para la Programación Orientada a Objetos. Ahora deberías tener una comprensión sólida de los conceptos fundamentales de la POO en Scala y cómo aplicarlos en tus propios proyectos. Recuerda practicar y experimentar con ejemplos para consolidar tu conocimiento. ¡Sigue adelante y continúa explorando las capacidades de Scala!
