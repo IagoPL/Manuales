@@ -165,8 +165,6 @@ La Terminal de Linux es una interfaz de línea de comandos que te permite intera
 1. Instala el paquete "firefox".
 2. Desinstala el paquete "firefox".
 3. Actualiza la lista de paquetes disponibles.
-
-
 4. Actualiza los paquetes instalados.
 
 ### 3.1.5. Ejercicio 5: Gestión de usuarios y permisos
