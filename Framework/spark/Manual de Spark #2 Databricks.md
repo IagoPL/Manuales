@@ -67,9 +67,7 @@ Para crear un nuevo notebook en Databricks, sigue estos pasos:
 
 ### Ejemplo 2: Ejecución de celdas de código
 
-En un notebook de Databricks, puedes ejecutar celdas de código de
-
-forma individual o en secuencia. Aquí tienes un ejemplo de cómo ejecutar una celda de código en Scala:
+En un notebook de Databricks, puedes ejecutar celdas de código de forma individual o en secuencia. Aquí tienes un ejemplo de cómo ejecutar una celda de código en Scala:
 
 ```scala
 // Define una variable
