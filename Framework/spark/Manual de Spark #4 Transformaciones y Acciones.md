@@ -53,7 +53,7 @@ Array(2, 4, 6, 8, 10)
 
 ```scala
 val data = sc.parallelize(List(1, 2, 3, 4, 5))
-val filteredData = data.filter(x => x % 2 == 0)
+val filteredData = data.filter( _ % 2 == 0)
 
 filteredData.collect()
 ```
