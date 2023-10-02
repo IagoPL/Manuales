@@ -2,18 +2,20 @@
 
 ## Índice
 
-1. [**Introducción**](#introducción)
-2. [**Planificación y Diseño**](#planificación-y-diseño)
-3. [**Configuración del Entorno de Desarrollo**](#configuración-del-entorno-de-desarrollo)
-4. [**Desarrollo de la Base de Datos**](#desarrollo-de-la-base-de-datos)
-5. [**Desarrollo de la Lógica del Servidor**](#desarrollo-de-la-lógica-del-servidor)
-6. [**Interfaz de Usuario**](#interfaz-de-usuario)
-7. [**Funcionalidad del Carrito de Compras**](#funcionalidad-del-carrito-de-compras)
-8. [**Integración de Procesamiento de Pagos**](#integración-de-procesamiento-de-pagos)
-9. [**Seguridad**](#seguridad)
-10. [**Pruebas y Depuración**](#pruebas-y-depuración)
-11. [**Despliegue**](#despliegue)
-12. [**Mantenimiento y Actualización**](#mantenimiento-y-actualización)
+1. [Introducción](#introducción)
+2. [Planificación y Diseño](#planificación-y-diseño)
+3. [Configuración del Entorno de Desarrollo](#configuración-del-entorno-de-desarrollo)
+4. [Desarrollo de la Base de Datos](#desarrollo-de-la-base-de-datos)
+5. [Desarrollo de la Lógica del Servidor](#desarrollo-de-la-lógica-del-servidor)
+6. [Interfaz de Usuario](#interfaz-de-usuario)
+7. [Funcionalidad del Carrito de Compras](#funcionalidad-del-carrito-de-compras)
+8. [Integración de Procesamiento de Pagos](#integración-de-procesamiento-de-pagos)
+9. [Seguridad](#seguridad)
+10. [Pruebas y Depuración](#pruebas-y-depuración)
+11. [Despliegue](#despliegue)
+12. [Mantenimiento y Actualización](#mantenimiento-y-actualización)
+
+
 
 ---
 
