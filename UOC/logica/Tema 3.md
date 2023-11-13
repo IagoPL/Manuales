@@ -332,12 +332,14 @@ Consideremos los enunciados \(P \land Q\) y \(\neg(\neg P \lor \neg Q)\). Demost
 
 **Tabla de Verdad para \(P \land Q\):**
 
+
 | \(P\) | \(Q\) | \(P \land Q\) |
 |-------|-------|---------------|
 |   V   |   V   |       V       |
 |   V   |   F   |       F       |
 |   F   |   V   |       F       |
 |   F   |   F   |       F       |
+
 
 **Tabla de Verdad para \(\neg(\neg P \lor \neg Q)\):**
 
