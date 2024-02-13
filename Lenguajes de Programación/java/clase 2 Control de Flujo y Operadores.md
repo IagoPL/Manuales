@@ -292,3 +292,51 @@ public class JuegoAdivinanza {
 ```
 
 Este programa genera un número aleatorio y pide al usuario que lo adivine. Proporciona pistas sobre si el número secreto es más grande o más pequeño y cuenta los intentos. El juego continúa hasta que el usuario adivina correctamente.
+
+---
+
+## IV. Bucles `do-while`
+
+Los bucles `do-while` en Java son similares a los bucles `while`, pero con una diferencia crucial: el bloque de código dentro de un bucle `do-while` se ejecuta al menos una vez, incluso si la condición es falsa. Después de cada ejecución del bloque, se verifica la condición, y si es verdadera, el bucle se repite. La estructura básica es la siguiente:
+
+```java
+do {
+    // Bloque de código a repetir
+} while (condición);
+```
+
+### Ejemplo de Bucle `do-while`:
+
+Supongamos que queremos sumar los números ingresados por el usuario hasta que ingrese un número negativo. Utilizaremos un bucle `do-while` para garantizar que el usuario tenga la oportunidad de ingresar al menos un número.
+
+```java
+import java.util.Scanner;
+
+public class SumaNumeros {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int suma = 0;
+        int numero;
+
+        do {
+            System.out.print("Ingrese un número (ingrese un número negativo para salir): ");
+            numero = scanner.nextInt();
+
+            if (numero >= 0) {
+                suma += numero; // Suma el número si es positivo
+            }
+
+        } while (numero >= 0);
+
+        System.out.println("La suma de los números ingresados es: " + suma);
+        scanner.close();
+    }
+}
+```
+
+En este ejemplo, el bucle `do-while` se ejecuta al menos una vez para solicitar al usuario que ingrese un número. Luego, verifica si el número es positivo; si lo es, lo suma al total. El bucle continúa ejecutándose hasta que el usuario ingresa un número negativo, momento en el que termina el bucle y se imprime la suma total.
+
+### Consideraciones:
+
+- Los bucles `do-while` son útiles cuando se desea que el bloque de código se ejecute al menos una vez, incluso si la condición es falsa desde el principio.
+- Es importante tener en cuenta que, al igual que con cualquier bucle, se debe evitar la posibilidad de entrar en un bucle infinito asegurándose de que la condición eventualmente se vuelva falsa.
