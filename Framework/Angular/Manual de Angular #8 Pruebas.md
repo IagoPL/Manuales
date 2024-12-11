@@ -1,56 +1,73 @@
-#  Pruebas
+# Pruebas
 
-## Índice
+## **Índice**
 
-1. [Introducción a las pruebas en Angular](#introducción-a-las-pruebas-en-angular)
-2. [Configuración del entorno de pruebas](#configuración-del-entorno-de-pruebas)
-3. [Pruebas unitarias](#pruebas-unitarias)
-    - [Ejemplo de prueba unitaria](#ejemplo-de-prueba-unitaria)
-4. [Pruebas de integración](#pruebas-de-integración)
-    - [Ejemplo de prueba de integración](#ejemplo-de-prueba-de-integración)
-5. [Pruebas de componentes](#pruebas-de-componentes)
-    - [Ejemplo de prueba de componente](#ejemplo-de-prueba-de-componente)
-6. [Pruebas de servicios](#pruebas-de-servicios)
-    - [Ejemplo de prueba de servicio](#ejemplo-de-prueba-de-servicio)
-7. [Pruebas de enrutamiento](#pruebas-de-enrutamiento)
-    - [Ejemplo de prueba de enrutamiento](#ejemplo-de-prueba-de-enrutamiento)
-8. [Conclusión](#conclusión)
+1. Introducción a las pruebas en Angular
+2. Configuración del entorno de pruebas
+3. Pruebas unitarias
+    - Ejemplo de prueba unitaria
+4. Pruebas de integración
+    - Ejemplo de prueba de integración
+5. Pruebas de componentes
+    - Ejemplo de prueba de componente
+6. Pruebas de servicios
+    - Ejemplo de prueba de servicio
+7. Pruebas de enrutamiento
+    - Ejemplo de prueba de enrutamiento
+8. Conclusión
 
-## Introducción a las pruebas en Angular
+---
 
-Las pruebas son una parte fundamental del desarrollo de aplicaciones en Angular. Permiten verificar que los componentes, servicios, enrutamiento y otras funcionalidades de la aplicación se comporten según lo esperado. En Angular, se utilizan varias herramientas y enfoques para realizar pruebas efectivas.
+## **1. Introducción a las pruebas en Angular**
 
-## Configuración del entorno de pruebas
+Las pruebas son esenciales en el desarrollo de aplicaciones para:
 
-Antes de comenzar a escribir pruebas en Angular, es necesario configurar el entorno de pruebas. Esto implica la instalación de las dependencias adecuadas y la configuración de las herramientas necesarias, como Jasmine y Karma.
+- Verificar el correcto funcionamiento del código.
+- Prevenir errores al realizar cambios.
+- Mejorar la calidad y mantenibilidad del software.
 
-1. Abre una terminal y navega hasta la raíz de tu proyecto Angular.
-2. Instala Jasmine ejecutando el siguiente comando:
-   ```
-   npm install --save-dev jasmine
-   ```
-3. Instala Karma como una herramienta de ejecución de pruebas ejecutando el siguiente comando:
-   ```
-   npm install --save-dev karma karma-jasmine karma-chrome-launcher
-   ```
-4. Configura Karma ejecutando el siguiente comando:
-   ```
-   npx karma init
-   ```
-   Esto creará un archivo de configuración `karma.conf.js` en la raíz de tu proyecto.
-5. Abre el archivo `karma.conf.js` y asegúrate de que esté configurado correctamente para tu proyecto.
+Angular ofrece soporte integrado para **pruebas unitarias**, **pruebas de integración**, y **pruebas E2E (End-to-End)**, utilizando herramientas como Jasmine, Karma, y Protractor.
 
-## Pruebas unitarias
+---
 
-Las pruebas unitarias en Angular se centran en probar componentes y servicios de forma aislada, sin interacciones con el entorno externo. Se utilizan para asegurar que las partes individuales de la aplicación funcionen correctamente.
+## **2. Configuración del entorno de pruebas**
 
-### Ejemplo de prueba unitaria
+El entorno de pruebas en Angular incluye de forma predeterminada:
 
-Supongamos que tienes un servicio `UserService` con un método `getUserById(id: number)` que devuelve un objeto `User` basado en un ID proporcionado. Aquí hay un ejemplo de cómo podrías escribir una prueba unitaria para este servicio:
+- **Jasmine**: Framework para escribir pruebas.
+- **Karma**: Ejecuta pruebas en navegadores.
+- **TestBed**: Herramienta de Angular para configurar y realizar pruebas.
 
-```typescript
-import { UserService } from './user.service';
+### **Comandos útiles**:
 
+- Ejecutar pruebas unitarias:
+    
+    ```bash
+    ng test
+    
+    ```
+    
+- Generar un informe de cobertura:
+
+Esto genera un directorio `coverage` con el informe en HTML.
+    
+    ```bash
+    ng test --code-coverage
+    
+    ```
+    
+
+---
+
+## **3. Pruebas Unitarias**
+
+Las pruebas unitarias evalúan funciones, componentes o servicios de forma aislada.
+
+### **Ejemplo de prueba unitaria**
+
+Prueba para un servicio simple que devuelve un usuario por ID:
+
+```tsx
 describe('UserService', () => {
   let userService: UserService;
 
@@ -58,34 +75,28 @@ describe('UserService', () => {
     userService = new UserService();
   });
 
-  it('debería devolver un usuario según el ID proporcionado', () => {
+  it('debería devolver un usuario por ID', () => {
     const userId = 1;
     const user = userService.getUserById(userId);
 
     expect(user.id).toBe(userId);
-    expect(user
-
-.name).toBe('John Doe');
-    expect(user.email).toBe('john@example.com');
+    expect(user.name).toBe('John Doe');
   });
 });
+
 ```
 
-En este ejemplo, estamos creando una instancia de `UserService` en el bloque `beforeEach` para asegurarnos de que se inicializa correctamente antes de cada prueba. Luego, en la prueba `debería devolver un usuario según el ID proporcionado`, llamamos al método `getUserById` con un ID y comprobamos si el objeto `User` devuelto tiene los valores esperados.
+---
 
-## Pruebas de integración
+## **4. Pruebas de Integración**
 
-Las pruebas de integración en Angular verifican la interacción y el comportamiento de varios componentes y servicios trabajando juntos. Estas pruebas se centran en escenarios más amplios y permiten asegurar que las partes de la aplicación funcionen correctamente en conjunto.
+Las pruebas de integración verifican la interacción entre componentes y servicios.
 
-### Ejemplo de prueba de integración
+### **Ejemplo de prueba de integración**
 
-Supongamos que tienes un componente `UserListComponent` que muestra una lista de usuarios obtenidos del servicio `UserService`. Aquí hay un ejemplo de cómo podrías escribir una prueba de integración para este componente:
+Prueba para un componente que depende de un servicio:
 
-```typescript
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { UserListComponent } from './user-list.component';
-import { UserService } from './user.service';
-
+```tsx
 describe('UserListComponent', () => {
   let component: UserListComponent;
   let fixture: ComponentFixture<UserListComponent>;
@@ -93,7 +104,7 @@ describe('UserListComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [UserListComponent],
-      providers: [UserService]
+      providers: [UserService],
     }).compileComponents();
   });
 
@@ -107,7 +118,7 @@ describe('UserListComponent', () => {
     const userService = TestBed.inject(UserService);
     spyOn(userService, 'getUsers').and.returnValue([
       { id: 1, name: 'John Doe' },
-      { id: 2, name: 'Jane Smith' }
+      { id: 2, name: 'Jane Smith' },
     ]);
 
     fixture.detectChanges();
@@ -117,32 +128,29 @@ describe('UserListComponent', () => {
 
     expect(userItems.length).toBe(2);
     expect(userItems[0].textContent).toContain('John Doe');
-    expect(userItems[1].textContent).toContain('Jane Smith');
   });
 });
+
 ```
 
-En este ejemplo, estamos configurando el componente `UserListComponent` y el servicio `UserService` en el bloque `beforeEach`. En la prueba `debería mostrar una lista de usuarios`, estamos simulando la respuesta del servicio `getUsers` y luego comprobamos si la lista de usuarios se muestra correctamente en el componente.
+---
 
-## Pruebas de componentes
+## **5. Pruebas de Componentes**
 
-Las pruebas de componentes en Angular se centran en verificar el comportamiento y la apariencia visual de los componentes, así como la interacción con el usuario.
+Las pruebas de componentes verifican el comportamiento de los componentes, su apariencia y eventos.
 
-### Ejemplo de prueba de componente
+### **Ejemplo de prueba de componente**
 
-Supongamos que tienes un componente `ButtonComponent` que muestra un botón con un texto proporcionado y emite un evento al hacer clic. Aquí hay un ejemplo de cómo podrías escribir una prueba de componente para este componente:
+Prueba para un botón que emite un evento al hacer clic:
 
-```typescript
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ButtonComponent } from './button.component';
-
+```tsx
 describe('ButtonComponent', () => {
   let component: ButtonComponent;
   let fixture: ComponentFixture<ButtonComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ButtonComponent]
+      declarations: [ButtonComponent],
     }).compileComponents();
   });
 
@@ -154,15 +162,13 @@ describe('ButtonComponent', () => {
 
   it('debería mostrar el texto del botón correctamente', () => {
     component.text = 'Aceptar';
-    fixture
-
-.detectChanges();
+    fixture.detectChanges();
 
     const buttonElement = fixture.nativeElement.querySelector('button');
     expect(buttonElement.textContent).toContain('Aceptar');
   });
 
-  it('debería emitir un evento al hacer clic en el botón', () => {
+  it('debería emitir un evento al hacer clic', () => {
     spyOn(component.clicked, 'emit');
 
     const buttonElement = fixture.nativeElement.querySelector('button');
@@ -171,22 +177,20 @@ describe('ButtonComponent', () => {
     expect(component.clicked.emit).toHaveBeenCalled();
   });
 });
+
 ```
 
-En este ejemplo, estamos configurando el componente `ButtonComponent` en el bloque `beforeEach` y luego escribimos dos pruebas. En la primera prueba, verificamos si el texto del botón se muestra correctamente cuando se establece la propiedad `text` del componente. En la segunda prueba, simulamos un clic en el botón y comprobamos si se emite el evento `clicked`.
+---
 
-## Pruebas de servicios
+## **6. Pruebas de Servicios**
 
-Las pruebas de servicios en Angular se centran en verificar el comportamiento y la funcionalidad de los servicios utilizados en la aplicación.
+Las pruebas de servicios verifican métodos, lógica de negocio y manejo de datos.
 
-### Ejemplo de prueba de servicio
+### **Ejemplo de prueba de servicio**
 
-Supongamos que tienes un servicio `DataService` que se encarga de obtener y almacenar datos. Aquí hay un ejemplo de cómo podrías escribir una prueba de servicio para este servicio:
+Prueba para un servicio que almacena y devuelve datos:
 
-```typescript
-import { TestBed } from '@angular/core/testing';
-import { DataService } from './data.service';
-
+```tsx
 describe('DataService', () => {
   let service: DataService;
 
@@ -195,61 +199,59 @@ describe('DataService', () => {
     service = TestBed.inject(DataService);
   });
 
-  it('debería devolver los datos correctamente', () => {
+  it('debería devolver los datos almacenados', () => {
     const data = service.getData();
-    expect(data.length).toBe(3);
-    expect(data[0]).toBe('Dato 1');
-    expect(data[1]).toBe('Dato 2');
-    expect(data[2]).toBe('Dato 3');
+    expect(data).toEqual(['Dato 1', 'Dato 2']);
   });
 
-  it('debería almacenar los datos correctamente', () => {
-    const newData = ['Nuevo dato'];
-    service.storeData(newData);
-
-    const data = service.getData();
-    expect(data).toEqual(newData);
+  it('debería almacenar nuevos datos correctamente', () => {
+    service.storeData(['Nuevo Dato']);
+    expect(service.getData()).toEqual(['Nuevo Dato']);
   });
 });
+
 ```
 
-En este ejemplo, estamos configurando el servicio `DataService` en el bloque `beforeEach`. En la primera prueba, verificamos si los datos devueltos por el método `getData` son los esperados. En la segunda prueba, almacenamos nuevos datos utilizando el método `storeData` y comprobamos si los datos almacenados son correctos.
+---
 
-## Pruebas de enrutamiento
+## **7. Pruebas de Enrutamiento**
 
-Las pruebas de enrutamiento en Angular se utilizan para verificar la navegación y la funcionalidad relacionada con las rutas de la aplicación.
+Las pruebas de enrutamiento verifican la navegación entre rutas y la carga de componentes.
 
-### Ejemplo de prueba de enrutamiento
+### **Ejemplo de prueba de enrutamiento**
 
-Supongamos que tienes un componente `HomeComponent` que se muestra cuando se navega a la ruta de inicio ("/home"). Aquí hay un ejemplo de cómo podrías escribir una prueba de enrutamiento para este componente:
+Prueba para verificar si el componente correcto se muestra en una ruta específica:
 
-```typescript
-import { TestBed, waitForAsync } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { HomeComponent } from './home.component';
-
-describe('HomeComponent', () => {
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [RouterTestingModule.withRoutes([])],
-      declarations: [HomeComponent]
+```tsx
+describe('Enrutamiento', () => {
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [RouterTestingModule.withRoutes([{ path: 'home', component: HomeComponent }])],
+      declarations: [HomeComponent],
     }).compileComponents();
-  }));
+  });
 
-  it('debería mostrarse cuando se navega a la ruta de inicio', waitForAsync(() => {
+  it('debería navegar a la ruta /home y mostrar HomeComponent', async () => {
+    const router = TestBed.inject(Router);
     const fixture = TestBed.createComponent(HomeComponent);
-    fixture.detectChanges();
-
-    const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('.home').textContent).toContain('¡Bienvenido a la página de inicio!');
-  }));
+    router.navigate(['/home']).then(() => {
+      fixture.detectChanges();
+      const compiled = fixture.nativeElement;
+      expect(compiled.querySelector('h1').textContent).toContain('¡Bienvenido a Home!');
+    });
+  });
 });
+
 ```
 
-En este ejemplo, estamos configurando el componente `HomeComponent` y el enrutamiento utilizando `Router
+---
 
-TestingModule` en el bloque `beforeEach`. En la prueba, creamos una instancia del componente y verificamos si se muestra correctamente cuando se navega a la ruta de inicio.
+## **8. Conclusión**
 
-## Conclusión
+Las pruebas en Angular son esenciales para garantizar la calidad del código.
 
-Las pruebas desempeñan un papel crucial en el desarrollo de aplicaciones en Angular.
+Con herramientas integradas como Jasmine, Karma y TestBed, puedes:
+
+- Probar componentes, servicios, y rutas.
+- Detectar errores antes de implementarlos en producción.
+- Mantener un código limpio y mantenible.
