@@ -1,100 +1,110 @@
-# Enlace de Datos (Data Binding)
+# **Enlace de Datos (Data Binding) en Angular**
 
-## Índice
+## **Índice**
 
-1. Introducción al enlace de datos
-2. Tipos de enlace de datos en Angular
-   - Interpolación (Interpolation)
-   - Enlace de propiedad (Property Binding)
-   - Enlace de evento (Event Binding)
-   - Enlace bidireccional (Two-Way Binding)
-3. Ejemplos de enlace de datos en Angular
-   - Ejemplo 1: Interpolación
-   - Ejemplo 2: Enlace de propiedad
-   - Ejemplo 3: Enlace de evento
-   - Ejemplo 4: Enlace bidireccional
-4. Conclusiones
+1. **Introducción al enlace de datos**
+2. **Tipos de enlace de datos en Angular**
+   - 2.1 Interpolación (Interpolation)
+   - 2.2 Enlace de propiedad (Property Binding)
+   - 2.3 Enlace de evento (Event Binding)
+   - 2.4 Enlace bidireccional (Two-Way Binding)
+3. **Ejemplos prácticos de enlace de datos**
+4. **Conclusiones**
 
-## 1. Introducción al enlace de datos
+---
 
-El enlace de datos es una característica fundamental de Angular que permite establecer conexiones entre la vista y el componente, asegurando que los cambios realizados en uno de ellos se reflejen automáticamente en el otro. Esto facilita la sincronización de datos y la actualización dinámica de la interfaz de usuario.
+## **1. Introducción al Enlace de Datos**
 
-El enlace de datos en Angular se basa en el uso de la sintaxis especial y las directivas proporcionadas por el framework. Permite interactuar con elementos del DOM, propiedades del componente y eventos del usuario de manera fácil y efectiva.
+El **enlace de datos** (Data Binding) es una de las características más potentes de Angular. Permite establecer una conexión fluida entre el modelo (los datos en el componente) y la vista (el HTML). Esto asegura que los cambios realizados en uno se reflejen automáticamente en el otro, facilitando la sincronización y actualizaciones dinámicas.
 
-## 2. Tipos de enlace de datos en Angular
+### **Ventajas del enlace de datos en Angular**:
+- **Sincronización automática**: Cambios en el componente o en la vista se reflejan instantáneamente.
+- **Menos código**: Simplifica la manipulación del DOM.
+- **Interactividad mejorada**: Ideal para aplicaciones dinámicas y reactivas.
 
-### Interpolación (Interpolation)
+---
 
-La interpolación es la forma más sencilla de enlace de datos en Angular. Permite mostrar valores de propiedades del componente directamente en la vista mediante la sintaxis de doble llave `{{ }}`. 
+## **2. Tipos de Enlace de Datos en Angular**
 
-Ejemplo:
+### **2.1 Interpolación (Interpolation)**
 
+La interpolación muestra valores del componente directamente en la vista mediante la sintaxis `{{ }}`.
+
+**Ejemplo**:
 ```html
-<!-- Componente -->
+<h1>{{ titulo }}</h1>
+```
+
+```typescript
 @Component({
-  template: `
-    <h1>{{ titulo }}</h1>
-  `
+  template: `<h1>{{ titulo }}</h1>`
 })
 export class MiComponente {
   titulo = "¡Hola, Angular!";
 }
 ```
 
-En este ejemplo, la propiedad `titulo` del componente se muestra en la vista mediante interpolación.
+- La propiedad `titulo` del componente se muestra dinámicamente en la etiqueta `<h1>`.
 
-### Enlace de propiedad (Property Binding)
+---
 
-El enlace de propiedad permite establecer valores de propiedades de elementos HTML utilizando la sintaxis de corchetes `[ ]`. Esto es útil para cambiar dinámicamente atributos, estilos, clases CSS, entre otros. 
+### **2.2 Enlace de Propiedad (Property Binding)**
 
-Ejemplo:
+El enlace de propiedad establece valores para propiedades de elementos HTML o componentes utilizando la sintaxis `[ ]`.
 
+**Ejemplo**:
 ```html
-<!-- Componente -->
+<button [disabled]="esDesactivado">Haz clic</button>
+```
+
+```typescript
 @Component({
-  template: `
-    <button [disabled]="esDesactivado">Haz clic</button>
-  `
+  template: `<button [disabled]="esDesactivado">Haz clic</button>`
 })
 export class MiComponente {
   esDesactivado = true;
 }
 ```
 
-En este caso, la propiedad `disabled` del botón se enlaza a la propiedad `esDesactivado` del componente. Si `esDesactivado` es `true`, el botón estará desactivado.
+- Si `esDesactivado` es `true`, el botón estará desactivado.
 
-### Enlace de evento (Event Binding)
+---
 
-El enlace de evento permite responder a eventos del usuario, como clics, pulsaciones de teclas, entre otros. Se utiliza la sintaxis de paréntesis `( )` para llamar a métodos del componente cuando ocurre un evento.
+### **2.3 Enlace de Evento (Event Binding)**
 
-Ejemplo:
+El enlace de evento permite manejar interacciones del usuario (clics, teclas presionadas, etc.) con la sintaxis `( )`.
 
+**Ejemplo**:
 ```html
-<!-- Componente -->
+<button (click)="saludar()">Saludar</button>
+```
+
+```typescript
 @Component({
-  template: `
-    <button (click)="saludar()">Saludar</button>
-  `
+  template: `<button (click)="saludar()">Saludar</button>`
 })
 export class MiComponente {
   saludar() {
-    console.log("¡Hola!");
+    console.log("¡Hola desde Angular!");
   }
 }
 ```
 
-En este ejemplo, el método `saludar()` se invoca cuando el usuario hace clic en el botón.
+- Cuando el usuario hace clic en el botón, se ejecuta el método `saludar()` del componente.
 
-### Enlace bidireccional (Two-Way Binding)
+---
 
-El enlace bidireccional permite actualizar tanto el componente como la vista al mismo tiempo. Utiliza la sintaxis `[(ng
+### **2.4 Enlace Bidireccional (Two-Way Binding)**
 
-Model)]` y se utiliza principalmente en formularios para mantener sincronizados los datos del componente y los campos de entrada del usuario.
+El enlace bidireccional sincroniza el componente y la vista al mismo tiempo utilizando `[(ngModel)]`.
 
-Ejemplo:
-
+**Ejemplo**:
 ```html
-<!-- Componente -->
+<input [(ngModel)]="nombre" placeholder="Nombre">
+<p>Hola, {{ nombre }}</p>
+```
+
+```typescript
 @Component({
   template: `
     <input [(ngModel)]="nombre" placeholder="Nombre">
@@ -106,77 +116,97 @@ export class MiComponente {
 }
 ```
 
-En este ejemplo, el valor del campo de entrada (`input`) se enlaza a la propiedad `nombre` del componente. Cualquier cambio en el campo de entrada se reflejará automáticamente en el texto de saludo.
+- Cualquier cambio en el campo de entrada se reflejará en `nombre`, y viceversa.
 
-## 3. Ejemplos de enlace de datos en Angular
+**Nota**: Para usar `ngModel`, debes importar el módulo `FormsModule` en el archivo del módulo correspondiente.
 
-### Ejemplo 1: Interpolación
+---
 
+## **3. Ejemplos Prácticos de Enlace de Datos**
+
+### **Ejemplo 1: Interpolación**
 ```html
-<!-- Componente -->
+<h1>{{ mensaje }}</h1>
+```
+
+```typescript
 @Component({
-  template: `
-    <h1>{{ titulo }}</h1>
-  `
+  template: `<h1>{{ mensaje }}</h1>`
 })
-export class MiComponente {
-  titulo = "¡Hola, Angular!";
+export class EjemploInterpolacion {
+  mensaje = "Bienvenido a Angular";
 }
 ```
 
-En este ejemplo, el valor de la propiedad `titulo` se muestra en la vista como un encabezado (`h1`).
+- Muestra dinámicamente el valor de la propiedad `mensaje` en la vista.
 
-### Ejemplo 2: Enlace de propiedad
+---
 
+### **Ejemplo 2: Enlace de Propiedad**
 ```html
-<!-- Componente -->
+<img [src]="urlImagen" alt="Imagen dinámica">
+```
+
+```typescript
 @Component({
-  template: `
-    <button [disabled]="esDesactivado">Haz clic</button>
-  `
+  template: `<img [src]="urlImagen" alt="Imagen dinámica">`
 })
-export class MiComponente {
-  esDesactivado = true;
+export class EjemploPropiedad {
+  urlImagen = "https://angular.io/assets/images/logos/angular/angular.png";
 }
 ```
 
-En este caso, la propiedad `disabled` del botón se enlaza a la propiedad `esDesactivado` del componente. Si `esDesactivado` es `true`, el botón estará desactivado.
+- Enlaza dinámicamente la propiedad `src` de la etiqueta `<img>` al valor de `urlImagen`.
 
-### Ejemplo 3: Enlace de evento
+---
 
+### **Ejemplo 3: Enlace de Evento**
 ```html
-<!-- Componente -->
+<button (click)="mostrarAlerta()">¡Alerta!</button>
+```
+
+```typescript
 @Component({
-  template: `
-    <button (click)="saludar()">Saludar</button>
-  `
+  template: `<button (click)="mostrarAlerta()">¡Alerta!</button>`
 })
-export class MiComponente {
-  saludar() {
-    console.log("¡Hola!");
+export class EjemploEvento {
+  mostrarAlerta() {
+    alert("¡Has hecho clic!");
   }
 }
 ```
 
-En este ejemplo, cuando el usuario hace clic en el botón, se invoca el método `saludar()`, que muestra un mensaje en la consola.
+- Llama al método `mostrarAlerta` cuando el usuario hace clic en el botón.
 
-### Ejemplo 4: Enlace bidireccional
+---
 
+### **Ejemplo 4: Enlace Bidireccional**
 ```html
-<!-- Componente -->
+<input [(ngModel)]="texto" placeholder="Escribe algo">
+<p>Escribiste: {{ texto }}</p>
+```
+
+```typescript
 @Component({
   template: `
-    <input [(ngModel)]="nombre" placeholder="Nombre">
-    <p>Hola, {{ nombre }}</p>
+    <input [(ngModel)]="texto" placeholder="Escribe algo">
+    <p>Escribiste: {{ texto }}</p>
   `
 })
-export class MiComponente {
-  nombre = "";
+export class EjemploBidireccional {
+  texto = "";
 }
 ```
 
-En este ejemplo, el campo de entrada (`input`) se enlaza a la propiedad `nombre` del componente utilizando el enlace bidireccional. Cualquier cambio en el campo de entrada se reflejará automáticamente en el texto de saludo.
+- Sincroniza el valor del campo de entrada con la propiedad `texto`.
 
-## 4. Conclusiones
+---
 
-El enlace de datos es una característica poderosa de Angular que facilita la sincronización de datos entre el componente y la vista. Con los diferentes tipos de enlace de datos disponibles, puedes construir interfaces de usuario dinámicas y responder a las interacciones del usuario de manera eficiente. Domina estos conceptos y aprovecha al máximo el enlace de datos en tus aplicaciones Angular.
+## **4. Conclusiones**
+
+El **enlace de datos** en Angular permite una comunicación fluida entre el componente y la vista, mejorando la interactividad de las aplicaciones. 
+
+- Usa **Interpolación** para mostrar valores simples.
+- Usa **Enlace de Propiedad** para manipular atributos HTML.
+- Usa **Enlace de Evento** para responder a interacciones del usuario.
+- Usa **Enlace Bidireccional** para sincronizar datos entre el componente y el DOM.
