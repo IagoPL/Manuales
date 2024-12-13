@@ -1,61 +1,145 @@
-# Manual de Procesamiento de Datos No Estructurados en Spark
+# Procesamiento de Datos No Estructurados en Apache Spark
 
-## Índice
-1. [Introducción](#introducción)
-2. [Trabajando con Texto](#trabajando-con-texto)
-3. [Trabajando con Imágenes](#trabajando-con-imágenes)
-4. [Trabajando con Datos JSON Anidados](#trabajando-con-datos-json-anidados)
+Apache Spark ofrece herramientas robustas para trabajar con datos no estructurados como texto, imágenes y datos JSON anidados. Estas capacidades permiten a los desarrolladores extraer valor de datos complejos en entornos distribuidos.
 
-## 1. Introducción <a name="introducción"></a>
-El procesamiento de datos no estructurados es fundamental para trabajar con diferentes tipos de datos, como texto, imágenes o datos JSON anidados, en Spark. En este manual, aprenderemos cómo utilizar las funciones específicas de Spark para procesar y analizar este tipo de datos.
+---
 
-## 2. Trabajando con Texto <a name="trabajando-con-texto"></a>
-El procesamiento de texto es una tarea común en el análisis de datos no estructurados. A continuación se muestra un ejemplo de cómo cargar un archivo de texto en Spark y realizar un conteo de palabras:
+## ¿Qué son los Datos No Estructurados?
 
-```scala
-// Cargar archivo de texto
-val textoRDD = spark.sparkContext.textFile("ruta/al/archivo.txt")
+Los datos no estructurados no siguen un formato predefinido como filas y columnas. Ejemplos comunes incluyen:
 
-// Realizar conteo de palabras
-val conteoPalabras = textoRDD.flatMap(linea => linea.split(" "))
-                          .map(palabra => (palabra, 1))
-                          .reduceByKey(_ + _)
+- **Texto:** Archivos de logs, documentos y correos electrónicos.
+- **Imágenes:** Archivos multimedia como PNG, JPEG.
+- **JSON anidado:** Datos jerárquicos utilizados en APIs y bases de datos NoSQL.
 
-// Mostrar resultados
-conteoPalabras.foreach(println)
+---
+
+## Procesamiento de Texto
+
+### Leer y procesar datos de texto
+
+```python
+# Leer un archivo de texto
+rdd = sc.textFile("/ruta/archivo.txt")
+
+# Contar líneas
+num_lineas = rdd.count()
+print(f"Número de líneas: {num_lineas}")
+
+# Filtrar líneas que contienen una palabra específica
+filtradas = rdd.filter(lambda linea: "error" in linea.lower())
+filtradas.collect()
 ```
 
-## 3. Trabajando con Imágenes <a name="trabajando-con-imágenes"></a>
-Spark también ofrece funcionalidades para procesar imágenes en paralelo. A continuación, se presenta un ejemplo de cómo cargar y procesar una imagen en Spark:
+### Tokenización y análisis
 
-```scala
-import org.apache.spark.ml.image.ImageSchema
+```python
+# Dividir en palabras
+tokens = rdd.flatMap(lambda linea: linea.split(" "))
 
-// Cargar imágenes desde un directorio
-val imagenesDF = spark.read.format("image").load("ruta/al/directorio/imagenes")
-
-// Mostrar esquema de datos de las imágenes
-imagenesDF.printSchema()
-
-// Obtener estadísticas de las imágenes
-val estadisticas = imagenesDF.select(ImageSchema.width, ImageSchema.height).describe()
-
-// Mostrar resultados
-estadisticas.show()
+# Contar palabras
+distinct_words = tokens.distinct()
+print(f"Palabras únicas: {distinct_words.count()}")
 ```
 
-## 4. Trabajando con Datos JSON Anidados <a name="trabajando-con-datos-json-anidados"></a>
-Los datos JSON anidados son comunes en aplicaciones web y registros de eventos. Spark proporciona funciones para trabajar con este tipo de datos. A continuación, se muestra un ejemplo de cómo cargar y consultar datos JSON anidados:
+---
 
-```scala
-import org.apache.spark.sql.functions._
+## Procesamiento de Imágenes
 
-// Cargar datos JSON
-val datosDF = spark.read.json("ruta/al/archivo.json")
+### Trabajar con datos binarios
 
-// Consultar datos anidados
-val consulta = datosDF.select(col("nombre"), col("edad"), col("direccion.calle"))
+Spark no tiene soporte directo para imágenes, pero permite leer datos binarios que se pueden procesar con librerías externas como PIL o OpenCV.
 
-// Mostrar resultados
-consulta.show()
+```python
+# Leer imágenes como binarios
+imagenes = sc.binaryFiles("/ruta/imagenes/*")
+
+# Procesar imágenes usando PIL
+from PIL import Image
+import io
+
+def procesar_imagen(nombre_y_contenido):
+    nombre, contenido = nombre_y_contenido
+    with Image.open(io.BytesIO(content)) as img:
+        return nombre, img.size
+
+imagenes_tamanos = imagenes.map(procesar_imagen)
+imagenes_tamanos.collect()
+```
+
+---
+
+## Procesamiento de JSON Anidado
+
+### Leer y manipular datos JSON
+
+Spark facilita el manejo de datos JSON estructurados y semiestructurados.
+
+```python
+# Leer un archivo JSON
+df = spark.read.json("/ruta/datos.json")
+
+# Mostrar el esquema de datos
+df.printSchema()
+
+# Seleccionar campos específicos
+df_seleccionado = df.select("campo_anidado.subcampo", "otro_campo")
+df_seleccionado.show()
+```
+
+### Explorar y desanidar estructuras complejas
+
+```python
+# Explode para expandir arrays
+from pyspark.sql.functions import explode
+
+exploded_df = df.withColumn("elemento", explode(df["campo_array"]))
+exploded_df.show()
+```
+
+---
+
+## Caso Práctico: Análisis de Logs
+
+### Escenario
+
+Deseamos procesar un conjunto de logs para identificar errores y patrones de actividad.
+
+### Solución
+
+```python
+# Leer archivo de logs
+logs_rdd = sc.textFile("/ruta/logs.txt")
+
+# Filtrar errores
+errores = logs_rdd.filter(lambda linea: "ERROR" in linea)
+
+# Contar errores por tipo
+from collections import Counter
+conteo_errores = errores.map(lambda linea: linea.split(":")[0])
+conteo = conteo_errores.countByValue()
+
+# Mostrar resultados
+print("Errores por tipo:")
+for tipo, cantidad in conteo.items():
+    print(f"{tipo}: {cantidad}")
+```
+
+---
+
+## Consejos para Trabajar con Datos No Estructurados
+
+1. **Optimiza las particiones:** Asegúrate de que los datos estén bien distribuidos entre las particiones.
+2. **Usa caché para operaciones repetitivas:** Si un conjunto de datos se utiliza varias veces, guárdalo en memoria con `cache()`.
+3. **Combina librerías externas:** Utiliza herramientas como PIL o OpenCV para procesar imágenes y librerías específicas para datos no estructurados.
+4. **Esquemas explícitos para JSON:** Define un esquema claro para trabajar con datos JSON complejos y mejorar el rendimiento.
+
+---
+
+## Conclusión
+
+Spark proporciona una base sólida para trabajar con datos no estructurados, desde procesamiento de texto hasta análisis de JSON y multimedia. Al dominar estas técnicas, puedes desbloquear el potencial de datos complejos y no tradicionales en entornos distribuidos.
+
+```
+
 ```
