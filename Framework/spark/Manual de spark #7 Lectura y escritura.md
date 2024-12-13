@@ -1,77 +1,155 @@
-# Manual de Lectura y escritura de datos en Spark
+# Lectura y Escritura de Datos en Apache Spark
 
-## 1. Introducción
-La lectura y escritura de datos es una parte fundamental en el procesamiento de datos con Spark. En este manual, aprenderás cómo leer y escribir datos desde y hacia diferentes fuentes utilizando Spark, así como las opciones y configuraciones disponibles.
+Apache Spark ofrece soporte integrado para leer y escribir datos en una amplia variedad de formatos y fuentes, lo que facilita la integración con diversos sistemas y herramientas.
 
-## 2. Lectura de datos
-La lectura de datos en Spark te permite cargar datos desde diversas fuentes y formatos. A continuación, se presentan algunas opciones comunes para leer datos en Spark:
+---
 
-### 2.1 Lectura desde un archivo CSV
-Puedes utilizar la función `spark.read.csv()` para leer datos desde un archivo CSV. A continuación se muestra un ejemplo:
+## Principales Fuentes y Formatos de Datos
 
-```scala
-val df = spark.read.csv("ruta/al/archivo.csv")
+1. **Archivos locales y distribuidos:**
+
+   - CSV, JSON, Parquet, Avro, ORC.
+   - Sistemas de archivos distribuidos como HDFS, S3, o Azure Blob Storage.
+2. **Bases de datos relacionales:**
+
+   - MySQL, PostgreSQL, SQL Server mediante conectores JDBC.
+3. **Bases de datos NoSQL:**
+
+   - Cassandra, MongoDB, HBase.
+
+---
+
+## Lectura de Datos
+
+### Lectura de archivos CSV
+
+```python
+# Leer un archivo CSV
+df_csv = spark.read.format("csv").option("header", "true").option("inferSchema", "true").load("/ruta/archivo.csv")
+df_csv.show()
 ```
 
-### 2.2 Lectura desde un archivo JSON
-La función `spark.read.json()` se utiliza para leer datos desde un archivo JSON. Aquí tienes un ejemplo:
+### Lectura de archivos JSON
 
-```scala
-val df = spark.read.json("ruta/al/archivo.json")
+```python
+# Leer un archivo JSON
+df_json = spark.read.format("json").load("/ruta/archivo.json")
+df_json.printSchema()
+df_json.show()
 ```
 
-### 2.3 Lectura desde una base de datos SQL
-Para leer datos desde una base de datos SQL, puedes utilizar la función `spark.read.jdbc()`. A continuación, se muestra un ejemplo:
+### Lectura de archivos Parquet
 
-```scala
-val df = spark.read.jdbc(url, tabla, properties)
+```python
+# Leer un archivo Parquet
+df_parquet = spark.read.format("parquet").load("/ruta/archivo.parquet")
+df_parquet.show()
 ```
 
-## 3. Escritura de datos
-La escritura de datos te permite guardar los resultados del procesamiento en diferentes formatos y ubicaciones. A continuación, se presentan algunas opciones comunes para escribir datos en Spark:
+### Lectura desde bases de datos relacionales
 
-### 3.1 Escritura en un archivo Parquet
-Puedes guardar un DataFrame en formato Parquet utilizando la función `df.write.parquet()`. Aquí tienes un ejemplo:
+```python
+# Leer desde MySQL
+jdbc_url = "jdbc:mysql://host:puerto/base_de_datos"
+propiedades = {"user": "usuario", "password": "contraseña"}
 
-```scala
-df.write.parquet("ruta/de/salida.parquet")
+df_mysql = spark.read.jdbc(url=jdbc_url, table="tabla", properties=propiedades)
+df_mysql.show()
 ```
 
-### 3.2 Escritura en un archivo CSV
-Para escribir un DataFrame en un archivo CSV, puedes utilizar la función `df.write.csv()`. A continuación, se muestra un ejemplo:
+---
 
-```scala
-df.write.csv("ruta/de/salida.csv")
+## Escritura de Datos
+
+### Escritura en formato CSV
+
+```python
+# Guardar un DataFrame en formato CSV
+df_csv.write.format("csv").option("header", "true").save("/ruta/salida.csv")
 ```
 
-### 3.3 Escritura en una tabla de base de datos SQL
-Si deseas escribir datos en una tabla de una base de datos SQL, puedes utilizar la función `df.write.jdbc()`. Aquí tienes un ejemplo:
+### Escritura en formato Parquet
 
-```scala
-df.write.jdbc(url, tabla, properties)
+```python
+# Guardar un DataFrame en formato Parquet
+df_parquet.write.format("parquet").save("/ruta/salida.parquet")
 ```
 
-## 4. Opciones y configuraciones adicionales
-Spark proporciona opciones y configuraciones adicionales para personalizar la lectura y escritura de datos. A continuación, se muestran algunos ejemplos:
+### Escritura en bases de datos relacionales
 
-### 4.1 Especificar esquema
-Puedes especificar el esquema de los datos al leer un archivo CSV utilizando la opción `schema`:
-
-```scala
-val customSchema = new StructType().add("columna1", StringType).add("columna2", IntegerType)
-val df = spark.read.schema(customSchema).csv("ruta/al/archivo.csv")
+```python
+# Guardar en MySQL
+df_mysql.write.jdbc(url=jdbc_url, table="nueva_tabla", mode="overwrite", properties=propiedades)
 ```
 
-### 4.2 Opciones de escritura
-Al escribir datos, puedes especificar diferentes opciones, como el delimitador en un archivo CSV:
+---
 
-```scala
-df.write.option("delimiter", "|").csv("ruta/de/salida.csv")
+## Opciones Avanzadas para Lectura y Escritura
+
+### Configuración de particiones
+
+```python
+# Escribir datos con particiones personalizadas
+df_csv.write.format("csv").partitionBy("columna").save("/ruta/particionado")
 ```
 
-### 4.3 Particiones
-Si deseas controlar el número de particiones al escribir datos, puedes utilizar la opción `numPartitions`:
+### Compresión
 
-```scala
-df.write.option("numPartitions", 10).parquet("ruta/de/salida.parquet")
+```python
+# Escribir datos comprimidos
+df_parquet.write.format("parquet").option("compression", "snappy").save("/ruta/comprimido")
+```
+
+### Esquemas personalizados
+
+```python
+from pyspark.sql.types import StructType, StructField, StringType, IntegerType
+
+# Definir un esquema personalizado
+schema = StructType([
+    StructField("nombre", StringType(), True),
+    StructField("edad", IntegerType(), True),
+    StructField("ciudad", StringType(), True)
+])
+
+df_custom = spark.read.format("csv").schema(schema).load("/ruta/datos.csv")
+df_custom.show()
+```
+
+---
+
+## Caso Práctico: Consolidación de Datos
+
+### Escenario
+
+Tienes múltiples archivos CSV distribuidos en varias carpetas. Necesitas consolidar los datos, procesarlos y almacenarlos en formato Parquet con particiones basadas en una columna específica.
+
+### Solución
+
+```python
+# Leer múltiples archivos CSV
+df = spark.read.format("csv").option("header", "true").option("inferSchema", "true").load("/ruta/csv/*")
+
+# Realizar operaciones de limpieza
+df_limpio = df.dropDuplicates().filter(df["columna"] != "valor_no_deseado")
+
+# Guardar los datos procesados en formato Parquet con particiones
+df_limpio.write.format("parquet").partitionBy("columna_particion").save("/ruta/salida_parquet")
+```
+
+---
+
+## Consejos para Optimizar Lectura y Escritura
+
+1. **Usa formatos binarios como Parquet o ORC:** Estos son más eficientes que CSV y JSON.
+2. **Configura particiones:** Mejoran el rendimiento al trabajar con subconjuntos de datos.
+3. **Esquemas explícitos:** Ayudan a evitar inferencias incorrectas en datos complejos.
+4. **Compresión:** Reduce el tamaño del almacenamiento sin afectar la lectura.
+
+---
+
+## Conclusión
+
+Spark facilita la lectura y escritura de datos en múltiples formatos y fuentes, permitiendo flexibilidad y escalabilidad. Dominar estas capacidades es fundamental para integrar Spark en flujos de trabajo de Big Data y maximizar su eficiencia.
+
 ```
