@@ -1,109 +1,166 @@
+# Manejo de Excepciones en Java
 
-# Manual de Programación en Java: Manejo de Excepciones y Estructuras de Control Avanzadas
+El manejo de excepciones en Java es una técnica fundamental para manejar errores de manera controlada y mantener la estabilidad de las aplicaciones. Las excepciones son eventos anormales que ocurren durante la ejecución de un programa, como errores de entrada o problemas al acceder a recursos.
 
-## I. Introducción al Manejo de Excepciones
+---
 
-### ¿Qué son las Excepciones?
-Las excepciones en Java son eventos que ocurren durante la ejecución de un programa y pueden interrumpir su flujo normal. Pueden ser causadas por errores en el código, condiciones imprevistas o situaciones anómalas. Ejemplos comunes de excepciones incluyen `NullPointerException`, `ArrayIndexOutOfBoundsException`, `ArithmeticException`, entre otras.
+## ¿Qué es una Excepción?
 
-### Tipos de Excepciones
-En Java, las excepciones se dividen en dos categorías principales:
+Una excepción es un objeto que representa un error o un evento inesperado que interrumpe el flujo normal de ejecución de un programa.
 
-1. **Excepciones Verificadas (Checked Exceptions):** Son excepciones que deben ser manejadas explícitamente por el programador. Estas excepciones son subclases de `Exception`, pero no de `RuntimeException`. Ejemplos incluyen `IOException`, `SQLException`, etc.
+### Jerarquía de Excepciones
 
-2. **Excepciones No Verificadas (Unchecked Exceptions):** Son excepciones que no necesitan ser manejadas explícitamente por el programador. Estas excepciones son subclases de `RuntimeException`. Ejemplos incluyen `NullPointerException`, `ArrayIndexOutOfBoundsException`, `ArithmeticException`, etc.
+- **`Throwable`:** Clase base de todas las excepciones y errores.
+  - **`Exception`:** Excepciones que se pueden manejar.
+    - **Checked Exceptions:** Deben manejarse explícitamente (e.g., `IOException`, `SQLException`).
+    - **Unchecked Exceptions:** No requieren manejo explícito (e.g., `NullPointerException`, `ArithmeticException`).
+  - **`Error`:** Problemas graves relacionados con el entorno (e.g., `OutOfMemoryError`).
 
-## II. Bloques Try-Catch
+---
 
-### Estructura de Try-Catch
-La estructura try-catch es utilizada para manejar excepciones en Java. Consiste en un bloque try seguido de uno o más bloques catch. El código que puede lanzar una excepción se coloca dentro del bloque try, y el código para manejar la excepción se coloca dentro de uno o más bloques catch.
+## Estructura Básica de Manejo de Excepciones
+
+Java proporciona las palabras clave `try`, `catch`, `finally`, y `throw` para manejar excepciones.
+
+### `try` y `catch`
 
 ```java
 try {
     // Código que puede lanzar una excepción
-} catch (TipoDeExcepción1 e1) {
-    // Manejo de la excepción TipoDeExcepción1
-} catch (TipoDeExcepción2 e2) {
-    // Manejo de la excepción TipoDeExcepción2
-} finally {
-    // Código opcional que se ejecuta siempre, independientemente de si se lanzó una excepción o no
-}
-```
-
-### Ejemplo de Try-Catch
-```java
-try {
-    int resultado = 10 / 0; // División por cero
+    int resultado = 10 / 0;
 } catch (ArithmeticException e) {
-    System.out.println("Error: División por cero");
+    // Manejo de la excepción
+    System.out.println("Error: División por cero.");
 }
 ```
 
-## III. Bloque Finally y Sentencia Try-With-Resources
+### `finally`
 
-### Bloque Finally
-El bloque finally se utiliza para ejecutar código de limpieza después de un bloque try-catch, independientemente de si se produce una excepción o no. Por ejemplo, se puede utilizar para liberar recursos que se estaban utilizando en el bloque try.
+El bloque `finally` siempre se ejecuta, independientemente de si ocurre una excepción.
 
 ```java
 try {
-    // Código que puede lanzar una excepción
-} catch (TipoDeExcepción e) {
-    // Manejo de la excepción
+    int[] numeros = {1, 2, 3};
+    System.out.println(numeros[5]);
+} catch (ArrayIndexOutOfBoundsException e) {
+    System.out.println("Error: Índice fuera de rango.");
 } finally {
-    // Código de limpieza que se ejecuta siempre
+    System.out.println("Bloque finally ejecutado.");
 }
 ```
 
-### Sentencia Try-With-Resources
-La sentencia try-with-resources es una característica de Java introducida en Java 7 que simplifica el manejo de recursos como archivos o conexiones de red. Permite declarar y utilizar recursos dentro de un bloque try, y garantiza que estos recursos se cierren correctamente al salir del bloque try, incluso en caso de excepción.
+### `throw`
+
+Se utiliza para lanzar una excepción manualmente.
 
 ```java
-try (BufferedReader br = new BufferedReader(new FileReader("archivo.txt"))) {
-    // Código que utiliza el recurso
-} catch (IOException e) {
-    // Manejo de la excepción
+public void verificarEdad(int edad) {
+    if (edad < 18) {
+        throw new IllegalArgumentException("Edad no válida");
+    }
+    System.out.println("Edad válida.");
 }
 ```
 
-## IV. Sentencias de Control Avanzadas
+### `throws`
 
-### Switch-Case
-La sentencia switch-case se utiliza para tomar decisiones basadas en el valor de una expresión. Permite evaluar una expresión y ejecutar diferentes bloques de código dependiendo del valor resultante.
+Declara excepciones que un método puede lanzar.
 
 ```java
-int opcion = 2;
-
-switch (opcion) {
-    case 1:
-        System.out.println("Opción 1 seleccionada");
-        break;
-    case 2:
-        System.out.println("Opción 2 seleccionada");
-        break;
-    default:
-        System.out.println("Opción no válida");
+public void leerArchivo(String ruta) throws IOException {
+    BufferedReader br = new BufferedReader(new FileReader(ruta));
+    System.out.println(br.readLine());
+    br.close();
 }
 ```
 
-### Do-While
-La estructura do-while se utiliza para ejecutar un bloque de código al menos una vez y luego repetirlo mientras se cumpla una condición específica.
+---
+
+## Tipos Comunes de Excepciones
+
+### Checked Exceptions
+
+Estas excepciones deben ser manejadas explícitamente en tiempo de compilación.
+
+- **`IOException`:** Problemas al trabajar con archivos o entrada/salida.
+- **`SQLException`:** Errores relacionados con bases de datos.
+
+### Unchecked Exceptions
+
+Estas excepciones ocurren en tiempo de ejecución y no requieren manejo explícito.
+
+- **`NullPointerException`:** Acceso a un objeto nulo.
+- **`ArithmeticException`:** Errores matemáticos, como división por cero.
+- **`ArrayIndexOutOfBoundsException`:** Índice fuera del rango válido de un array.
+
+---
+
+## Creación de Excepciones Personalizadas
+
+Puedes definir tus propias excepciones para manejar errores específicos de tu aplicación.
 
 ```java
-int contador = 0;
+public class MiExcepcion extends Exception {
+    public MiExcepcion(String mensaje) {
+        super(mensaje);
+    }
+}
 
-do {
-    System.out.println("Contador: " + contador);
-    contador++;
-} while (contador < 5);
+public class Main {
+    public static void main(String[] args) {
+        try {
+            lanzarExcepcion();
+        } catch (MiExcepcion e) {
+            System.out.println("Excepción personalizada: " + e.getMessage());
+        }
+    }
+
+    public static void lanzarExcepcion() throws MiExcepcion {
+        throw new MiExcepcion("Error personalizado");
+    }
+}
 ```
 
-### For-Each
-La estructura for-each se utiliza para iterar sobre elementos de una colección, como arrays o listas. Simplifica el proceso de iteración y hace que el código sea más legible.
+---
+
+## Ejemplo Completo: Manejo de Excepciones al Leer un Archivo
 
 ```java
-int[] numeros = {1, 2, 3, 4, 5};
+import java.io.*;
 
-for (int numero : numeros) {
-    System.out.println(numero);
+public class LeerArchivo {
+    public static void main(String[] args) {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("archivo.txt"));
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                System.out.println(linea);
+            }
+            br.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("Error: Archivo no encontrado.");
+        } catch (IOException e) {
+            System.out.println("Error: Problema al leer el archivo.");
+        } finally {
+            System.out.println("Operación finalizada.");
+        }
+    }
 }
+```
+
+---
+
+## Buenas Prácticas para el Manejo de Excepciones
+
+1. **Especificidad:** Captura excepciones específicas en lugar de usar `Exception` genérico.
+2. **Mensajes claros:** Proporciona mensajes descriptivos al lanzar excepciones.
+3. **No ocultes errores:** Registra las excepciones para depuración futura.
+4. **Limpieza de recursos:** Usa bloques `finally` o `try-with-resources` para liberar recursos.
+
+---
+
+## Conclusión
+
+El manejo adecuado de excepciones en Java garantiza que las aplicaciones sean más robustas, predecibles y fáciles de mantener. Aplicar las buenas prácticas y utilizar excepciones personalizadas es clave para un código profesional.
+
 ```
