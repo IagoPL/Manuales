@@ -139,7 +139,3 @@ for tipo, cantidad in conteo.items():
 ## Conclusión
 
 Spark proporciona una base sólida para trabajar con datos no estructurados, desde procesamiento de texto hasta análisis de JSON y multimedia. Al dominar estas técnicas, puedes desbloquear el potencial de datos complejos y no tradicionales en entornos distribuidos.
-
-```
-
-```
