@@ -1,47 +1,88 @@
-# Repositorio de Manuales de Aprendizaje
+# Manuales técnicos
 
-¡Bienvenido al repositorio de Manuales de Aprendizaje! Aquí encontrarás una colección de manuales que he creado y utilizado a lo largo de mi aprendizaje en diversos lenguajes de programación. Estos manuales están diseñados para brindar una guía paso a paso y ejemplos prácticos sobre diferentes temas relacionados con la programación.
+Repositorio personal de documentación técnica orientada a desarrollo full stack, ingeniería de datos, bases de datos, lenguajes de programación y herramientas de desarrollo.
 
-## Categorías
+El objetivo es mantener una base de conocimiento clara, navegable y reutilizable, preparada para evolucionar hacia una web de documentación pública con Astro Starlight, Docusaurus o VitePress.
 
-### Lenguajes de Programación
+## Categorías principales
 
-#### Python
+- **Full Stack:** frontend, backend, arquitectura, UX, CSS, Angular, React y desarrollo web con PHP.
+- **Ingeniería de Datos:** Apache Spark, Databricks, Apache NiFi y diseño de pipelines.
+- **Bases de Datos:** espacio preparado para SQL, Oracle SQL, MySQL y MongoDB.
+- **Lenguajes:** Python, Java, JavaScript, TypeScript, C++ y Scala.
+- **Herramientas:** Git, terminal, Linux y Docker.
+- **Recursos:** imágenes, plantillas y materiales auxiliares para la futura web de documentación.
 
-- [Manual de Python](python_manual.md): Aprende los conceptos básicos de Python, incluyendo sintaxis, estructuras de datos, funciones, módulos y más.
+## Estructura del repositorio
 
-#### JavaScript
+```txt
+Manuales/
+├── README.md
+├── full-stack/
+│   ├── frontend/
+│   │   ├── angular/
+│   │   ├── css/
+│   │   ├── react/
+│   │   └── ux/
+│   ├── backend/
+│   │   └── php/
+│   └── arquitectura/
+├── data-engineering/
+│   ├── spark/
+│   ├── databricks/
+│   ├── nifi/
+│   └── pipelines/
+├── bases-de-datos/
+│   ├── sql/
+│   ├── oracle-sql/
+│   ├── mysql/
+│   └── mongodb/
+├── lenguajes/
+│   ├── python/
+│   ├── java/
+│   ├── javascript/
+│   ├── typescript/
+│   ├── cpp/
+│   └── scala/
+├── herramientas/
+│   ├── git/
+│   ├── linux/
+│   ├── docker/
+│   └── terminal/
+├── recursos/
+│   ├── imagenes/
+│   └── plantillas/
+└── _revision-pendiente/
+```
 
-- [Manual de JavaScript](javascript_manual.md): Descubre los fundamentos de JavaScript, como variables, operadores, estructuras de control, funciones, objetos y eventos.
+## Tecnologías y temas incluidos
 
-#### Java
+- Frontend: Angular, React, CSS, UX, accesibilidad y diseño centrado en el usuario.
+- Backend: PHP aplicado a una tienda online.
+- Datos: Apache Spark, Databricks, notebooks, procesamiento estructurado y no estructurado, NiFi y flujos de datos.
+- Lenguajes: Python, Java, JavaScript, TypeScript, C++ y Scala.
+- Herramientas: Git, repositorios remotos, ramas, conflictos, flujos de trabajo y terminal en Linux.
 
-- [Manual de Java](java_manual.md): Sumérgete en el mundo de Java y aprende los conceptos esenciales, la programación orientada a objetos y el desarrollo de aplicaciones.
+## Estado del proyecto
 
-#### Scala
+Proyecto en reorganización activa. La estructura principal ya está orientada a documentación técnica profesional y se ha separado el contenido académico o dudoso en `_revision-pendiente`.
 
-- [Manual de Scala](Lenguajes de Programación/Manual de Scala.md): Descubre el lenguaje de programación Scala, desde los fundamentos hasta la programación funcional, la concurrencia y la interoperabilidad con Java.
+## Roadmap
 
-### Desarrollo Web
+- Normalizar el formato interno de todos los manuales.
+- Revisar ortografía, gramática y consistencia de títulos.
+- Añadir índices por categoría.
+- Completar las carpetas de bases de datos, Linux, Docker y arquitectura.
+- Validar ejemplos técnicos y marcar contenido que requiera revisión.
+- Preparar una web de documentación con Astro Starlight, Docusaurus o VitePress.
+- Publicar la documentación en GitHub Pages.
 
-#### HTML y CSS
+## Web de documentación
 
-- [Manual de HTML y CSS](html_css_manual.md): Aprende a crear páginas web con HTML y CSS, desde la estructura básica hasta el diseño y estilos avanzados.
+Este repositorio está pensado para convertirse en una web pública de documentación técnica.
 
-#### Angular
+GitHub Pages: `https://<usuario>.github.io/<repositorio>/`
 
-- [Manual de Angular](angular_manual.md): Aprende a construir aplicaciones web con el framework Angular, incluyendo componentes, enrutamiento, servicios y más.
+## Autor
 
-### Gestión de Datos
-
-#### SQL
-
-- [Manual de SQL](sql_manual.md): Explora el lenguaje SQL para manipular y consultar bases de datos, incluyendo operaciones CRUD y consultas complejas.
-
-#### Git
-
-- [Manual de Git](git_manual.md): Domina el control de versiones con Git, aprendiendo los comandos básicos, la gestión de ramas y la colaboración en equipos.
-
-Espero que estos manuales te sean de utilidad en tu viaje de aprendizaje. ¡Diviértete explorando y desarrollando nuevas habilidades!
-
-¡Happy coding!
+Iago P.
