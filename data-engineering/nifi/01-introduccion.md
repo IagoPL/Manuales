@@ -47,3 +47,82 @@ La interfaz web de NiFi proporciona un panel de control intuitivo para diseñar 
 
 
 ---
+
+## Componentes principales
+
+### Processor
+
+Un **processor** realiza una acción concreta sobre los datos. Puede leer archivos, transformar contenido, invocar una API, escribir en una base de datos o enrutar eventos.
+
+Ejemplos habituales:
+
+- `GetFile`: lee archivos desde un directorio.
+- `PutFile`: escribe archivos en un directorio.
+- `LogAttribute`: registra atributos del FlowFile.
+- `RouteOnAttribute`: enruta datos según condiciones.
+- `UpdateAttribute`: modifica o añade atributos.
+
+### FlowFile
+
+Un **FlowFile** representa una unidad de datos dentro de NiFi. Está formado por:
+
+- **Contenido:** los datos reales.
+- **Atributos:** metadatos asociados al contenido.
+
+### Connection
+
+Una **connection** une procesadores y almacena temporalmente FlowFiles entre pasos. También permite configurar colas, prioridades y límites de back pressure.
+
+### Process Group
+
+Un **process group** agrupa procesadores y conexiones para organizar flujos complejos. Es útil para separar responsabilidades y reutilizar diseños.
+
+## Ejemplo práctico: ingesta de archivos
+
+Flujo básico:
+
+```txt
+GetFile -> UpdateAttribute -> LogAttribute -> PutFile
+```
+
+Objetivo:
+
+1. Leer archivos desde una carpeta de entrada.
+2. Añadir atributos de control.
+3. Registrar metadatos para depuración.
+4. Escribir los archivos procesados en una carpeta de salida.
+
+## Buenas prácticas
+
+- Usa nombres descriptivos en procesadores y grupos.
+- Divide flujos grandes en process groups.
+- Configura back pressure para evitar saturación.
+- Revisa las relaciones de éxito y error de cada processor.
+- Registra errores en rutas separadas.
+- Usa NiFi Registry si necesitas versionar flujos.
+- Documenta variables, rutas y dependencias externas.
+
+## Errores comunes
+
+- Dejar relaciones sin conectar o sin terminar.
+- No configurar límites de cola.
+- Mezclar demasiada lógica en un único grupo.
+- No separar datos válidos y datos con error.
+- No revisar permisos en rutas de lectura o escritura.
+
+## Chuleta rápida
+
+```txt
+FlowFile = contenido + atributos
+Processor = acción sobre los datos
+Connection = cola entre procesadores
+Process Group = agrupación lógica
+Back pressure = control de saturación
+Relationship = salida posible de un processor
+```
+
+## Recursos relacionados
+
+- [Diseño y desarrollo de flujos](02-diseno-y-desarrollo-de-flujos.md)
+- [Optimización y administración](03-optimizacion-y-administracion.md)
+- [Pipelines de datos](../pipelines/README.md)

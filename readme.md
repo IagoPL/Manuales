@@ -71,17 +71,18 @@ Proyecto en reorganización activa. La estructura principal ya está orientada a
 
 ## Prioridades recomendadas
 
-- Completar primero los manuales base con `TODO:`: Snowflake, SQL, Oracle SQL, MySQL, MongoDB, pipelines, arquitectura, Linux y Docker.
+- Profundizar los manuales base con más ejemplos reales, ejercicios y casos de uso.
 - Crear índices por categoría para facilitar la navegación cuando el repositorio se convierta en web de documentación.
 - Revisar los manuales largos de Python, Java, JavaScript, Scala, Spark, Angular y React para dividirlos si alguna página queda demasiado extensa.
 - Validar ejemplos técnicos antes de ampliar contenido avanzado.
+- Añadir diagramas o esquemas en `recursos/imagenes` para arquitectura, pipelines y flujos de datos.
 
 ## Roadmap
 
 - Normalizar el formato interno de todos los manuales.
 - Revisar ortografía, gramática y consistencia de títulos.
 - Añadir índices por categoría.
-- Completar los manuales base de Snowflake, bases de datos, pipelines, Linux, Docker y arquitectura.
+- Completar ejemplos avanzados en Snowflake, bases de datos, pipelines, Linux, Docker y arquitectura.
 - Validar ejemplos técnicos y marcar contenido que requiera revisión.
 - Preparar una web de documentación con Astro Starlight, Docusaurus o VitePress.
 - Publicar la documentación en GitHub Pages.

@@ -59,3 +59,86 @@ En este ejemplo, se utilizan formatos RGBA y HSLA para agregar transparencia a e
 ---
 
 Este quinto apartado sobre "Colores y Gradientes" te proporciona una comprensión sólida de cómo trabajar con colores en diferentes espacios de color, gradientes y transparencia en diseño web. La elección de colores y el uso de gradientes son fundamentales para crear un diseño web atractivo y visualmente impactante.
+
+## 5.4. Variables CSS para paletas
+
+Las variables CSS permiten centralizar colores y reutilizarlos en toda la interfaz.
+
+```css
+:root {
+  --color-primary: #2563eb;
+  --color-primary-dark: #1e40af;
+  --color-surface: #ffffff;
+  --color-text: #111827;
+  --color-muted: #6b7280;
+}
+
+.button {
+  background-color: var(--color-primary);
+  color: var(--color-surface);
+}
+
+.button:hover {
+  background-color: var(--color-primary-dark);
+}
+```
+
+## 5.5. Estados de interfaz
+
+Los colores también comunican estado. Conviene reservar colores semánticos para mensajes importantes.
+
+```css
+:root {
+  --color-success: #15803d;
+  --color-warning: #b45309;
+  --color-error: #b91c1c;
+  --color-info: #0369a1;
+}
+
+.alert-success {
+  color: var(--color-success);
+}
+
+.alert-error {
+  color: var(--color-error);
+}
+```
+
+## 5.6. Accesibilidad y contraste
+
+Un diseño visualmente atractivo debe seguir siendo legible. Antes de publicar una interfaz, revisa el contraste entre texto y fondo.
+
+Buenas prácticas:
+
+- Usa contraste alto para texto principal.
+- No transmitas información solo mediante color.
+- Añade iconos, texto o estados visibles junto al color.
+- Evita texto fino sobre fondos con gradientes complejos.
+- Prueba estados hover, focus, disabled y error.
+
+## 5.7. Buenas prácticas
+
+- Define una paleta base antes de crear componentes.
+- Usa variables CSS para evitar colores repetidos.
+- Reserva colores intensos para acciones o estados importantes.
+- Mantén coherencia entre botones, enlaces, alertas y formularios.
+- Evita abusar de gradientes si dificultan la lectura.
+
+## 5.8. Errores comunes
+
+- Usar demasiados colores sin jerarquía.
+- Aplicar gradientes detrás de texto pequeño.
+- No comprobar contraste.
+- Repetir valores hexadecimales por todo el CSS.
+- Usar colores semánticos de forma inconsistente.
+
+## 5.9. Chuleta rápida
+
+```css
+color: #111827;
+background-color: rgb(255, 255, 255);
+background-color: hsl(220, 80%, 55%);
+background-color: rgba(37, 99, 235, 0.2);
+background: linear-gradient(90deg, #2563eb, #14b8a6);
+color: var(--color-text);
+```
