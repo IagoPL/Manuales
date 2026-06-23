@@ -1,8 +1,8 @@
-# **Manual Completo de Angular: Comunicación con el Servidor**
+﻿# **Manual Completo de Angular: Comunicación con el Servidor**
 
 ---
 
-## **Índice**
+## Índice
 
 1. **Introducción a la comunicación con el servidor en Angular**  
 2. **Solicitudes HTTP con HttpClient**  
@@ -15,11 +15,11 @@
 
 ---
 
-## **1. Introducción a la comunicación con el servidor en Angular**
+## 1. Introducción a la comunicación con el servidor en Angular
 
 En las aplicaciones web modernas, interactuar con un servidor backend para obtener, enviar y manipular datos es crucial. Angular proporciona una herramienta eficiente y flexible para este propósito: el módulo **HttpClient**.
 
-### **Ventajas del uso de HttpClient**:
+### Ventajas del uso de HttpClient:
 - API simple y poderosa para manejar solicitudes HTTP.
 - Soporte nativo para **observables** (RxJS).
 - Manejo automático de respuestas JSON.
@@ -27,7 +27,7 @@ En las aplicaciones web modernas, interactuar con un servidor backend para obten
 
 ---
 
-## **2. Solicitudes HTTP con HttpClient**
+## 2. Solicitudes HTTP con HttpClient
 
 El módulo **HttpClient** está disponible en `@angular/common/http` y debe ser importado en el módulo principal de la aplicación:
 
@@ -40,7 +40,7 @@ import { HttpClientModule } from '@angular/common/http';
 export class AppModule { }
 ```
 
-### **Uso de HttpClient en un servicio**
+### Uso de HttpClient en un servicio
 Crea un servicio para manejar las solicitudes HTTP:
 
 ```typescript
@@ -66,16 +66,16 @@ Este servicio utiliza el método `get()` de HttpClient para realizar una solicit
 
 ---
 
-## **3. Tipos de Comunicaciones: GET, POST, PUT y DELETE**
+## 3. Tipos de Comunicaciones: GET, POST, PUT y DELETE
 
-### **GET**: Para obtener datos del servidor.
+### GET: Para obtener datos del servidor.
 ```typescript
 this.http.get<User[]>('https://api.example.com/users').subscribe(users => {
   console.log(users);
 });
 ```
 
-### **POST**: Para enviar datos y crear nuevos recursos.
+### POST: Para enviar datos y crear nuevos recursos.
 ```typescript
 const newUser = { name: 'Jane Doe', email: 'jane@example.com' };
 this.http.post<User>('https://api.example.com/users', newUser).subscribe(user => {
@@ -83,7 +83,7 @@ this.http.post<User>('https://api.example.com/users', newUser).subscribe(user =>
 });
 ```
 
-### **PUT**: Para actualizar recursos existentes.
+### PUT: Para actualizar recursos existentes.
 ```typescript
 const updatedUser = { id: 1, name: 'Jane Smith', email: 'jane.smith@example.com' };
 this.http.put<User>('https://api.example.com/users/1', updatedUser).subscribe(user => {
@@ -91,7 +91,7 @@ this.http.put<User>('https://api.example.com/users/1', updatedUser).subscribe(us
 });
 ```
 
-### **DELETE**: Para eliminar recursos.
+### DELETE: Para eliminar recursos.
 ```typescript
 this.http.delete('https://api.example.com/users/1').subscribe(() => {
   console.log('Usuario eliminado');
@@ -100,9 +100,9 @@ this.http.delete('https://api.example.com/users/1').subscribe(() => {
 
 ---
 
-## **4. Manejo de Respuestas y Errores**
+## 4. Manejo de Respuestas y Errores
 
-### **Manejo de Respuestas**
+### Manejo de Respuestas
 Cuando recibimos una respuesta del servidor, utilizamos el método `subscribe()` para manejar los datos devueltos:
 ```typescript
 this.http.get<User>('https://api.example.com/users/1').subscribe(user => {
@@ -110,7 +110,7 @@ this.http.get<User>('https://api.example.com/users/1').subscribe(user => {
 });
 ```
 
-### **Manejo de Errores**
+### Manejo de Errores
 El segundo argumento de `subscribe()` nos permite manejar errores:
 ```typescript
 this.http.get<User>('https://api.example.com/users/1').subscribe({
@@ -136,11 +136,11 @@ this.http.get<User>('https://api.example.com/users/1')
 
 ---
 
-## **5. Interceptor de Peticiones HTTP**
+## 5. Interceptor de Peticiones HTTP
 
 Los interceptores permiten modificar solicitudes y respuestas de manera centralizada.
 
-### **Creación de un interceptor**
+### Creación de un interceptor
 ```typescript
 import { Injectable } from '@angular/core';
 import { HttpInterceptor, HttpRequest, HttpHandler } from '@angular/common/http';
@@ -156,7 +156,7 @@ export class AuthInterceptor implements HttpInterceptor {
 }
 ```
 
-### **Registro del interceptor**
+### Registro del interceptor
 Agrega el interceptor en el módulo:
 ```typescript
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -171,27 +171,27 @@ export class AppModule {}
 
 ---
 
-## **6. Comunicación con un Servidor RESTful**
+## 6. Comunicación con un Servidor RESTful
 
 Angular simplifica la interacción con APIs RESTful:
 
-### **Obtener recursos**
+### Obtener recursos
 ```typescript
 this.http.get<User[]>('https://api.example.com/users').subscribe(users => {
   console.log(users);
 });
 ```
 
-### **Crear, actualizar y eliminar recursos**
+### Crear, actualizar y eliminar recursos
 Los métodos `post()`, `put()` y `delete()` permiten trabajar con recursos REST de manera estándar.
 
 ---
 
-## **7. Pruebas Unitarias de Comunicación con el Servidor**
+## 7. Pruebas Unitarias de Comunicación con el Servidor
 
 Usa el módulo **HttpClientTestingModule** para simular solicitudes HTTP.
 
-### **Configuración**
+### Configuración
 ```typescript
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
@@ -201,7 +201,7 @@ TestBed.configureTestingModule({
 });
 ```
 
-### **Prueba de una solicitud GET**
+### Prueba de una solicitud GET
 ```typescript
 it('should retrieve data', () => {
   const mockData = [{ id: 1, name: 'John' }];
@@ -218,7 +218,7 @@ it('should retrieve data', () => {
 
 ---
 
-## **8. Buenas Prácticas en la Comunicación HTTP**
+## 8. Buenas Prácticas en la Comunicación HTTP
 
 1. **Centralizar las solicitudes HTTP**: Usa servicios para gestionar la lógica de comunicación.
 2. **Manejar errores adecuadamente**: Implementa un interceptor o usa operadores RxJS como `catchError`.

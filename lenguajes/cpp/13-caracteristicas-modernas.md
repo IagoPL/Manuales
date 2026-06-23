@@ -1,4 +1,4 @@
-# Capítulo 13: Nuevas Características de C++ (desde C++11 en adelante)
+﻿# Capítulo 13: Nuevas Características de C++ (desde C++11 en adelante)
 
 ## 13.1 Nivel Introductorio
 
@@ -548,7 +548,7 @@ En este ejemplo, si `T` tiene un método `begin()`, se elige la primera sobrecar
 
 ---
 
-# Próximos Pasos
+## Próximos Pasos
 
 ¡Felicitaciones por completar el capítulo final de este libro! Has recorrido desde los fundamentos de C++ hasta las características avanzadas introducidas en C++11 y estándares posteriores. Con estas herramientas y conceptos, estás bien preparado para escribir código C++ moderno, eficiente y expresivo.
 

@@ -1,6 +1,6 @@
-# Enrutamiento
+﻿# Enrutamiento
 
-## **Índice**
+## Índice
 
 1. **Introducción al enrutamiento en Angular**
 2. **Configuración de rutas en Angular**
@@ -16,7 +16,7 @@
 
 ---
 
-## **1. Introducción al Enrutamiento en Angular**
+## 1. Introducción al Enrutamiento en Angular
 
 El **enrutamiento** es una funcionalidad esencial para aplicaciones de una sola página (SPA). Permite:
 
@@ -28,9 +28,9 @@ Angular utiliza el módulo `RouterModule` para proporcionar un sistema de enruta
 
 ---
 
-## **2. Configuración de Rutas en Angular**
+## 2. Configuración de Rutas en Angular
 
-### **Definición de Rutas**
+### Definición de Rutas
 
 Las rutas se configuran en un archivo dedicado, comúnmente `app-routing.module.ts`.
 
@@ -57,7 +57,7 @@ export class AppRoutingModule { }
 
 ```
 
-### **Estructura de las Rutas**
+### Estructura de las Rutas
 
 Cada ruta es un objeto con las siguientes propiedades principales:
 
@@ -68,9 +68,9 @@ Cada ruta es un objeto con las siguientes propiedades principales:
 
 ---
 
-## **3. Navegación entre Rutas**
+## 3. Navegación entre Rutas
 
-### **Directiva `routerLink`**
+### Directiva `routerLink`
 
 La directiva `routerLink` permite enlazar rutas en plantillas HTML.
 
@@ -83,7 +83,7 @@ La directiva `routerLink` permite enlazar rutas en plantillas HTML.
 
 ```
 
-### **`<router-outlet>`**
+### `<router-outlet>`
 
 Es un marcador en el DOM donde se renderiza el contenido del componente asociado a la ruta activa.
 
@@ -96,7 +96,7 @@ Es un marcador en el DOM donde se renderiza el contenido del componente asociado
 
 ---
 
-## **4. Parámetros de Ruta**
+## 4. Parámetros de Ruta
 
 Los parámetros de ruta permiten enviar datos dinámicos a través de la URL.
 
@@ -127,7 +127,7 @@ export class ProductDetailsComponent {
 
 ---
 
-## **5. Rutas Anidadas**
+## 5. Rutas Anidadas
 
 Las rutas anidadas permiten definir estructuras jerárquicas.
 
@@ -152,7 +152,7 @@ const routes: Routes = [
 
 ---
 
-## **6. Rutas con Guardias de Navegación**
+## 6. Rutas con Guardias de Navegación
 
 Las guardias controlan el acceso a rutas específicas.
 
@@ -188,7 +188,7 @@ export class AuthGuard implements CanActivate {
 
 ---
 
-## **7. Redirecciones**
+## 7. Redirecciones
 
 Para redirigir automáticamente de una ruta a otra:
 
@@ -205,7 +205,7 @@ Para redirigir automáticamente de una ruta a otra:
 
 ---
 
-## **8. Carga Diferida de Módulos**
+## 8. Carga Diferida de Módulos
 
 La **carga diferida** mejora el rendimiento al cargar módulos solo cuando son necesarios.
 
@@ -233,7 +233,7 @@ export class AdminRoutingModule { }
 
 ---
 
-## **9. Resolución de Datos Previos a la Navegación**
+## 9. Resolución de Datos Previos a la Navegación
 
 Los resolvers cargan datos antes de activar una ruta.
 
@@ -275,7 +275,7 @@ constructor(private route: ActivatedRoute) {
 
 ---
 
-## **10. Ejemplos Prácticos**
+## 10. Ejemplos Prácticos
 
 1. **Barra de navegación dinámica**:
     - Utiliza `routerLink` para enlazar a diferentes secciones.
@@ -290,6 +290,6 @@ constructor(private route: ActivatedRoute) {
 
 ---
 
-## **11. Conclusiones**
+## 11. Conclusiones
 
 El enrutamiento en Angular es una herramienta poderosa que permite crear aplicaciones SPA eficientes y escalables. Dominar sus características, como la carga diferida, las rutas anidadas y los resolvers, te permitirá gestionar mejor la navegación y el rendimiento de tu aplicación.

@@ -1,6 +1,6 @@
-# Pruebas
+﻿# Pruebas
 
-## **Índice**
+## Índice
 
 1. Introducción a las pruebas en Angular
 2. Configuración del entorno de pruebas
@@ -18,7 +18,7 @@
 
 ---
 
-## **1. Introducción a las pruebas en Angular**
+## 1. Introducción a las pruebas en Angular
 
 Las pruebas son esenciales en el desarrollo de aplicaciones para:
 
@@ -30,7 +30,7 @@ Angular ofrece soporte integrado para **pruebas unitarias**, **pruebas de integr
 
 ---
 
-## **2. Configuración del entorno de pruebas**
+## 2. Configuración del entorno de pruebas
 
 El entorno de pruebas en Angular incluye de forma predeterminada:
 
@@ -38,7 +38,7 @@ El entorno de pruebas en Angular incluye de forma predeterminada:
 - **Karma**: Ejecuta pruebas en navegadores.
 - **TestBed**: Herramienta de Angular para configurar y realizar pruebas.
 
-### **Comandos útiles**:
+### Comandos útiles:
 
 - Ejecutar pruebas unitarias:
     
@@ -59,11 +59,11 @@ Esto genera un directorio `coverage` con el informe en HTML.
 
 ---
 
-## **3. Pruebas Unitarias**
+## 3. Pruebas Unitarias
 
 Las pruebas unitarias evalúan funciones, componentes o servicios de forma aislada.
 
-### **Ejemplo de prueba unitaria**
+### Ejemplo de prueba unitaria
 
 Prueba para un servicio simple que devuelve un usuario por ID:
 
@@ -88,11 +88,11 @@ describe('UserService', () => {
 
 ---
 
-## **4. Pruebas de Integración**
+## 4. Pruebas de Integración
 
 Las pruebas de integración verifican la interacción entre componentes y servicios.
 
-### **Ejemplo de prueba de integración**
+### Ejemplo de prueba de integración
 
 Prueba para un componente que depende de un servicio:
 
@@ -135,11 +135,11 @@ describe('UserListComponent', () => {
 
 ---
 
-## **5. Pruebas de Componentes**
+## 5. Pruebas de Componentes
 
 Las pruebas de componentes verifican el comportamiento de los componentes, su apariencia y eventos.
 
-### **Ejemplo de prueba de componente**
+### Ejemplo de prueba de componente
 
 Prueba para un botón que emite un evento al hacer clic:
 
@@ -182,11 +182,11 @@ describe('ButtonComponent', () => {
 
 ---
 
-## **6. Pruebas de Servicios**
+## 6. Pruebas de Servicios
 
 Las pruebas de servicios verifican métodos, lógica de negocio y manejo de datos.
 
-### **Ejemplo de prueba de servicio**
+### Ejemplo de prueba de servicio
 
 Prueba para un servicio que almacena y devuelve datos:
 
@@ -214,11 +214,11 @@ describe('DataService', () => {
 
 ---
 
-## **7. Pruebas de Enrutamiento**
+## 7. Pruebas de Enrutamiento
 
 Las pruebas de enrutamiento verifican la navegación entre rutas y la carga de componentes.
 
-### **Ejemplo de prueba de enrutamiento**
+### Ejemplo de prueba de enrutamiento
 
 Prueba para verificar si el componente correcto se muestra en una ruta específica:
 
@@ -246,7 +246,7 @@ describe('Enrutamiento', () => {
 
 ---
 
-## **8. Conclusión**
+## 8. Conclusión
 
 Las pruebas en Angular son esenciales para garantizar la calidad del código.
 

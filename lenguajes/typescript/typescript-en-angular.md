@@ -1,4 +1,6 @@
-# **Índice**
+﻿# TypeScript en Angular
+
+## Índice
 
 1. **Introducción a TypeScript**
 2. **Tipos básicos en TypeScript**
@@ -12,7 +14,7 @@
 
 ---
 
-# **1. Introducción a TypeScript**
+## 1. Introducción a TypeScript
 
 **TypeScript** es un superconjunto de JavaScript desarrollado por Microsoft que añade características de **tipado estático** y herramientas orientadas a objetos. Angular utiliza TypeScript como su lenguaje principal, ya que proporciona **tipos**, **decoradores**, y otras características que simplifican la creación de aplicaciones robustas.
 
@@ -24,9 +26,9 @@
 
 ---
 
-# **2. Tipos básicos en TypeScript**
+## 2. Tipos básicos en TypeScript
 
-## **Tipos Primitivos**
+## Tipos Primitivos
 
 - **`number`**: Para números (enteros y de punto flotante).
     
@@ -50,7 +52,7 @@
     ```
     
 
-## **Tipos Avanzados**
+## Tipos Avanzados
 
 - **`array`**: Arreglos de elementos de un tipo específico.
     
@@ -88,9 +90,9 @@
 
 ---
 
-# **3. Definición de variables y funciones**
+## 3. Definición de variables y funciones
 
-## **Definición de Variables**
+## Definición de Variables
 
 - Usa `let` o `const` en lugar de `var` para declarar variables.
     
@@ -101,7 +103,7 @@
     ```
     
 
-## **Definición de Funciones**
+## Definición de Funciones
 
 - Puedes especificar los tipos de parámetros y el tipo de retorno.
     
@@ -113,7 +115,7 @@
     ```
     
 
-## **Funciones con Valores Opcionales**
+## Funciones con Valores Opcionales
 
 - Agrega un `?` para marcar parámetros opcionales.
     
@@ -127,11 +129,11 @@
 
 ---
 
-# **4. Interfaces**
+## 4. Interfaces
 
 Las **interfaces** definen la estructura de un objeto, promoviendo un diseño más claro y predecible.
 
-## **Ejemplo Básico de Interface**
+## Ejemplo Básico de Interface
 
 ```tsx
 interface Persona {
@@ -147,18 +149,18 @@ const usuario: Persona = {
 
 ```
 
-## **Ventajas de las Interfaces**
+## Ventajas de las Interfaces
 
 - Mejora la legibilidad y mantenibilidad.
 - Ayuda a evitar errores al estructurar datos.
 
 ---
 
-# **5. Clases**
+## 5. Clases
 
 Las **clases** en TypeScript permiten crear objetos con propiedades, métodos y constructores.
 
-### **Ejemplo de Clase**
+### Ejemplo de Clase
 
 ```tsx
 class Vehiculo {
@@ -180,7 +182,7 @@ console.log(coche.mostrarDetalles());
 
 ```
 
-### **Modificadores de Acceso**
+### Modificadores de Acceso
 
 - **`public`**: Accesible desde cualquier parte.
 - **`private`**: Solo accesible dentro de la clase.
@@ -188,11 +190,11 @@ console.log(coche.mostrarDetalles());
 
 ---
 
-## **6. Decoradores**
+## 6. Decoradores
 
 Los **decoradores** son funciones que proporcionan metadatos o alteran el comportamiento de clases, métodos, propiedades, o parámetros.
 
-### **Ejemplo de Decorador**
+### Ejemplo de Decorador
 
 ```tsx
 function Log(target: any, propertyName: string) {
@@ -210,7 +212,7 @@ class Producto {
 
 ```
 
-### **Decoradores Comunes en Angular**
+### Decoradores Comunes en Angular
 
 - **`@Component`**: Define un componente.
 - **`@NgModule`**: Define un módulo Angular.
@@ -218,11 +220,11 @@ class Producto {
 
 ---
 
-## **7. Módulos y Namespaces**
+## 7. Módulos y Namespaces
 
 TypeScript permite organizar el código en **módulos** para dividir el proyecto en archivos reutilizables.
 
-### **Módulos**
+### Módulos
 
 - Exporta declaraciones usando `export` y usa `import` para utilizarlas.
     
@@ -237,7 +239,7 @@ TypeScript permite organizar el código en **módulos** para dividir el proyecto
     ```
     
 
-### **Namespaces**
+### Namespaces
 
 - Agrupa código dentro de un espacio de nombres para evitar conflictos.
     
@@ -254,11 +256,11 @@ TypeScript permite organizar el código en **módulos** para dividir el proyecto
 
 ---
 
-## **8. Compilación de TypeScript**
+## 8. Compilación de TypeScript
 
 El código TypeScript se transpila a JavaScript antes de ejecutarse en un navegador o Node.js.
 
-### **Comandos Básicos**
+### Comandos Básicos
 
 - Compilar un archivo TypeScript:
     
@@ -275,19 +277,19 @@ El código TypeScript se transpila a JavaScript antes de ejecutarse en un navega
     ```
     
 
-### **Configuración con Angular CLI**
+### Configuración con Angular CLI
 
 Angular CLI incluye un sistema de compilación integrado que convierte automáticamente TypeScript a JavaScript.
 
 ---
 
-## **9. Herramientas y Configuración Avanzada**
+## 9. Herramientas y Configuración Avanzada
 
-### **TSLint/ESLint**
+### TSLint/ESLint
 
 - Analiza el código TypeScript para garantizar que cumpla con las buenas prácticas.
 
-### **Configuración de `tsconfig.json`**
+### Configuración de `tsconfig.json`
 
 - Archivo de configuración que define cómo se compila el código TypeScript.
     
@@ -303,6 +305,6 @@ Angular CLI incluye un sistema de compilación integrado que convierte automáti
     ```
     
 
-### **Integración con IDEs**
+### Integración con IDEs
 
 - Usa **Visual Studio Code** para aprovechar herramientas como autocompletado, refactorización y depuración.

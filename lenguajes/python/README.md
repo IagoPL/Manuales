@@ -1,4 +1,4 @@
-# Manual de Python
+﻿# Manual de Python
 
 ¡Bienvenido al Manual de Python! Este manual te guiará en tu aprendizaje de Python, desde los conceptos básicos hasta niveles más avanzados. A lo largo del manual, encontrarás explicaciones claras, ejemplos de código y ejercicios prácticos para fortalecer tus habilidades en Python.
 
@@ -50,9 +50,7 @@
 ### 1.1. ¿Qué es Python?
 Python es un lenguaje de programación interpretado y de alto nivel, conocido por su simplicidad y legibilidad. Fue creado por Guido van Rossum en la década de 1990 y se ha convertido en uno de los lenguajes más populares en el campo de la ciencia de datos, desarrollo web, automatización de tareas y más.
 
-### 1.2. Instalación de
-
- Python
+### 1.2. Instalación de Python
 Para comenzar a programar en Python, necesitarás instalar Python en tu sistema. Sigue los siguientes pasos:
 
 1. Visita el sitio web oficial de Python en https://www.python.org/.
@@ -645,9 +643,7 @@ data = {
 }
 df = pd.DataFrame(data)
 print(df)
-``
-
-`
+```
 
 #### 10.2.2. Operaciones con DataFrames
 Pandas proporciona numerosas funciones y métodos para realizar operaciones en DataFrames, como filtrado, selección de columnas, cálculos estadísticos y manipulación de datos.

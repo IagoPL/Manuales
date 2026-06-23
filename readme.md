@@ -7,8 +7,8 @@ El objetivo es mantener una base de conocimiento clara, navegable y reutilizable
 ## Categorías principales
 
 - **Full Stack:** frontend, backend, arquitectura, UX, CSS, Angular, React y desarrollo web con PHP.
-- **Ingeniería de Datos:** Apache Spark, Databricks, Apache NiFi y diseño de pipelines.
-- **Bases de Datos:** espacio preparado para SQL, Oracle SQL, MySQL y MongoDB.
+- **Ingeniería de Datos:** Snowflake, Apache Spark, Databricks, Apache NiFi y diseño de pipelines.
+- **Bases de Datos:** SQL, Oracle SQL, MySQL y MongoDB.
 - **Lenguajes:** Python, Java, JavaScript, TypeScript, C++ y Scala.
 - **Herramientas:** Git, terminal, Linux y Docker.
 - **Recursos:** imágenes, plantillas y materiales auxiliares para la futura web de documentación.
@@ -28,6 +28,7 @@ Manuales/
 │   │   └── php/
 │   └── arquitectura/
 ├── data-engineering/
+│   ├── snowflake/
 │   ├── spark/
 │   ├── databricks/
 │   ├── nifi/
@@ -59,7 +60,8 @@ Manuales/
 
 - Frontend: Angular, React, CSS, UX, accesibilidad y diseño centrado en el usuario.
 - Backend: PHP aplicado a una tienda online.
-- Datos: Apache Spark, Databricks, notebooks, procesamiento estructurado y no estructurado, NiFi y flujos de datos.
+- Datos: Snowflake, Apache Spark, Databricks, notebooks, procesamiento estructurado y no estructurado, NiFi y pipelines de datos.
+- Bases de datos: SQL, Oracle SQL, MySQL y MongoDB.
 - Lenguajes: Python, Java, JavaScript, TypeScript, C++ y Scala.
 - Herramientas: Git, repositorios remotos, ramas, conflictos, flujos de trabajo y terminal en Linux.
 
@@ -67,12 +69,19 @@ Manuales/
 
 Proyecto en reorganización activa. La estructura principal ya está orientada a documentación técnica profesional y se ha separado el contenido académico o dudoso en `_revision-pendiente`.
 
+## Prioridades recomendadas
+
+- Completar primero los manuales base con `TODO:`: Snowflake, SQL, Oracle SQL, MySQL, MongoDB, pipelines, arquitectura, Linux y Docker.
+- Crear índices por categoría para facilitar la navegación cuando el repositorio se convierta en web de documentación.
+- Revisar los manuales largos de Python, Java, JavaScript, Scala, Spark, Angular y React para dividirlos si alguna página queda demasiado extensa.
+- Validar ejemplos técnicos antes de ampliar contenido avanzado.
+
 ## Roadmap
 
 - Normalizar el formato interno de todos los manuales.
 - Revisar ortografía, gramática y consistencia de títulos.
 - Añadir índices por categoría.
-- Completar las carpetas de bases de datos, Linux, Docker y arquitectura.
+- Completar los manuales base de Snowflake, bases de datos, pipelines, Linux, Docker y arquitectura.
 - Validar ejemplos técnicos y marcar contenido que requiera revisión.
 - Preparar una web de documentación con Astro Starlight, Docusaurus o VitePress.
 - Publicar la documentación en GitHub Pages.
@@ -85,4 +94,4 @@ GitHub Pages: `https://<usuario>.github.io/<repositorio>/`
 
 ## Autor
 
-Iago P.
+Iago Prieto Lamas

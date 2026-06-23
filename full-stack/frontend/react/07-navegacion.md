@@ -29,10 +29,10 @@ npm install react-router-dom
 
 React Router utiliza varios componentes clave para manejar el enrutamiento:
 
-1. ``**:** Proporciona el contexto para las rutas.
-2. ``**:** Envuelve todas las definiciones de rutas.
-3. ``**:** Define una ruta específica y el componente que debe renderizar.
-4. ``**:** Permite navegar entre rutas sin recargar la página.
+1. **`BrowserRouter`:** Proporciona el contexto para las rutas.
+2. **`Routes`:** Envuelve todas las definiciones de rutas.
+3. **`Route`:** Define una ruta específica y el componente que debe renderizar.
+4. **`Link`:** Permite navegar entre rutas sin recargar la página.
 
 ### Ejemplo básico
 

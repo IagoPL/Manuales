@@ -1,6 +1,6 @@
-# **Enlace de Datos (Data Binding) en Angular**
+﻿# **Enlace de Datos (Data Binding) en Angular**
 
-## **Índice**
+## Índice
 
 1. **Introducción al enlace de datos**
 2. **Tipos de enlace de datos en Angular**
@@ -13,20 +13,20 @@
 
 ---
 
-## **1. Introducción al Enlace de Datos**
+## 1. Introducción al Enlace de Datos
 
 El **enlace de datos** (Data Binding) es una de las características más potentes de Angular. Permite establecer una conexión fluida entre el modelo (los datos en el componente) y la vista (el HTML). Esto asegura que los cambios realizados en uno se reflejen automáticamente en el otro, facilitando la sincronización y actualizaciones dinámicas.
 
-### **Ventajas del enlace de datos en Angular**:
+### Ventajas del enlace de datos en Angular:
 - **Sincronización automática**: Cambios en el componente o en la vista se reflejan instantáneamente.
 - **Menos código**: Simplifica la manipulación del DOM.
 - **Interactividad mejorada**: Ideal para aplicaciones dinámicas y reactivas.
 
 ---
 
-## **2. Tipos de Enlace de Datos en Angular**
+## 2. Tipos de Enlace de Datos en Angular
 
-### **2.1 Interpolación (Interpolation)**
+### 2.1 Interpolación (Interpolation)
 
 La interpolación muestra valores del componente directamente en la vista mediante la sintaxis `{{ }}`.
 
@@ -48,7 +48,7 @@ export class MiComponente {
 
 ---
 
-### **2.2 Enlace de Propiedad (Property Binding)**
+### 2.2 Enlace de Propiedad (Property Binding)
 
 El enlace de propiedad establece valores para propiedades de elementos HTML o componentes utilizando la sintaxis `[ ]`.
 
@@ -70,7 +70,7 @@ export class MiComponente {
 
 ---
 
-### **2.3 Enlace de Evento (Event Binding)**
+### 2.3 Enlace de Evento (Event Binding)
 
 El enlace de evento permite manejar interacciones del usuario (clics, teclas presionadas, etc.) con la sintaxis `( )`.
 
@@ -94,7 +94,7 @@ export class MiComponente {
 
 ---
 
-### **2.4 Enlace Bidireccional (Two-Way Binding)**
+### 2.4 Enlace Bidireccional (Two-Way Binding)
 
 El enlace bidireccional sincroniza el componente y la vista al mismo tiempo utilizando `[(ngModel)]`.
 
@@ -122,9 +122,9 @@ export class MiComponente {
 
 ---
 
-## **3. Ejemplos Prácticos de Enlace de Datos**
+## 3. Ejemplos Prácticos de Enlace de Datos
 
-### **Ejemplo 1: Interpolación**
+### Ejemplo 1: Interpolación
 ```html
 <h1>{{ mensaje }}</h1>
 ```
@@ -142,7 +142,7 @@ export class EjemploInterpolacion {
 
 ---
 
-### **Ejemplo 2: Enlace de Propiedad**
+### Ejemplo 2: Enlace de Propiedad
 ```html
 <img [src]="urlImagen" alt="Imagen dinámica">
 ```
@@ -160,7 +160,7 @@ export class EjemploPropiedad {
 
 ---
 
-### **Ejemplo 3: Enlace de Evento**
+### Ejemplo 3: Enlace de Evento
 ```html
 <button (click)="mostrarAlerta()">¡Alerta!</button>
 ```
@@ -180,7 +180,7 @@ export class EjemploEvento {
 
 ---
 
-### **Ejemplo 4: Enlace Bidireccional**
+### Ejemplo 4: Enlace Bidireccional
 ```html
 <input [(ngModel)]="texto" placeholder="Escribe algo">
 <p>Escribiste: {{ texto }}</p>
@@ -202,7 +202,7 @@ export class EjemploBidireccional {
 
 ---
 
-## **4. Conclusiones**
+## 4. Conclusiones
 
 El **enlace de datos** en Angular permite una comunicación fluida entre el componente y la vista, mejorando la interactividad de las aplicaciones. 
 

@@ -1,6 +1,6 @@
-# Servicios e Inyección de Dependencias
+﻿# Servicios e Inyección de Dependencias
 
-## **Índice**
+## Índice
 
 1. **Introducción a los Servicios y la Inyección de Dependencias**
 2. **Creación de Servicios en Angular**
@@ -14,9 +14,9 @@
 
 ---
 
-## **1. Introducción a los Servicios y la Inyección de Dependencias**
+## 1. Introducción a los Servicios y la Inyección de Dependencias
 
-### **¿Qué son los Servicios?**
+### ¿Qué son los Servicios?
 
 En Angular, los servicios son clases especializadas que contienen lógica y funcionalidades que pueden ser reutilizadas a lo largo de la aplicación. Su propósito principal es:
 
@@ -24,7 +24,7 @@ En Angular, los servicios son clases especializadas que contienen lógica y func
 - **Abstraer la lógica de negocio** del componente.
 - **Centralizar funcionalidades** como manejo de datos, validaciones o autenticación.
 
-### **¿Qué es la Inyección de Dependencias?**
+### ¿Qué es la Inyección de Dependencias?
 
 La inyección de dependencias (Dependency Injection, DI) es un patrón de diseño que permite gestionar de manera automática las instancias de los servicios necesarios en una aplicación. Angular proporciona un sistema de DI integrado que facilita la creación y uso de servicios.
 
@@ -36,9 +36,9 @@ La inyección de dependencias (Dependency Injection, DI) es un patrón de diseñ
 
 ---
 
-## **2. Creación de Servicios en Angular**
+## 2. Creación de Servicios en Angular
 
-### **Cómo crear un servicio**
+### Cómo crear un servicio
 
 Angular CLI simplifica la creación de servicios con el siguiente comando:
 
@@ -70,7 +70,7 @@ export class MiServicioService {
 
 ---
 
-## **3. Utilización de Servicios en Componentes**
+## 3. Utilización de Servicios en Componentes
 
 Para utilizar un servicio, inyecta su instancia en el constructor del componente donde será usado:
 
@@ -98,9 +98,9 @@ export class MiComponenteComponent {
 
 ---
 
-## **4. Inyección de Dependencias en Angular**
+## 4. Inyección de Dependencias en Angular
 
-### **Cómo funciona la DI**
+### Cómo funciona la DI
 
 1. **Registro del Servicio**: Angular necesita saber cómo crear una instancia del servicio. Esto se hace mediante el decorador `@Injectable` o los proveedores.
 2. **Provisión del Servicio**: Angular utiliza el inyector para localizar o crear una instancia del servicio registrado.
@@ -120,13 +120,13 @@ En este caso, el servicio está registrado en el inyector raíz de Angular.
 
 ---
 
-## **5. Inyectores y Proveedores**
+## 5. Inyectores y Proveedores
 
-### **¿Qué es un inyector?**
+### ¿Qué es un inyector?
 
 Un inyector es responsable de crear y administrar las instancias de los servicios. Angular tiene una jerarquía de inyectores que se organiza en módulos y componentes.
 
-### **Tipos de Proveedores**
+### Tipos de Proveedores
 
 1. **Clase** (por defecto):
     
@@ -152,7 +152,7 @@ Un inyector es responsable de crear y administrar las instancias de los servicio
 
 ---
 
-## **6. Jerarquía de Inyectores y Ámbito de los Servicios**
+## 6. Jerarquía de Inyectores y Ámbito de los Servicios
 
 Angular organiza sus inyectores en una jerarquía basada en los módulos y componentes de la aplicación:
 
@@ -189,9 +189,9 @@ export class Componente { }
 
 ---
 
-## **7. Ejemplo Práctico: Creación y Uso de un Servicio**
+## 7. Ejemplo Práctico: Creación y Uso de un Servicio
 
-### **Creación del Servicio**
+### Creación del Servicio
 
 ```tsx
 @Injectable({
@@ -211,7 +211,7 @@ export class DatosService {
 
 ```
 
-### **Uso en un Componente**
+### Uso en un Componente
 
 ```tsx
 @Component({
@@ -245,7 +245,7 @@ export class DatosComponent {
 
 ---
 
-## **8. Buenas Prácticas en el Uso de Servicios**
+## 8. Buenas Prácticas en el Uso de Servicios
 
 1. **Usar `providedIn: 'root'` siempre que sea posible** para simplificar la gestión de inyectores.
 2. **Seguir el principio de responsabilidad única (SRP)**: Cada servicio debe encargarse de una sola funcionalidad.
@@ -255,11 +255,11 @@ export class DatosComponent {
 
 ---
 
-## **9. Conclusiones**
+## 9. Conclusiones
 
 Los servicios y la inyección de dependencias son pilares fundamentales en Angular para desarrollar aplicaciones **modulares**, **reutilizables** y **escalables**.
 
-### **Puntos clave aprendidos**:
+### Puntos clave aprendidos:
 
 - Crear servicios con lógica reutilizable.
 - Inyectar servicios en componentes usando el sistema DI.

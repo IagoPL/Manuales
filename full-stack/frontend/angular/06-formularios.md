@@ -1,8 +1,8 @@
-# **Manual Completo de Angular: Formularios**
+﻿# **Manual Completo de Angular: Formularios**
 
 ---
 
-## **Índice**
+## Índice
 
 1. **Introducción a los Formularios en Angular**  
 2. **Formularios Reactivos**  
@@ -27,7 +27,7 @@
 
 ---
 
-## **1. Introducción a los Formularios en Angular**
+## 1. Introducción a los Formularios en Angular
 
 Los formularios son esenciales para interactuar con los usuarios en una aplicación web. Angular proporciona dos enfoques principales para la creación y manejo de formularios:
 
@@ -38,9 +38,9 @@ Ambos enfoques ofrecen herramientas para gestionar validaciones, eventos y estad
 
 ---
 
-## **2. Formularios Reactivos**
+## 2. Formularios Reactivos
 
-### **2.1 Creación de un Formulario Reactivo**
+### 2.1 Creación de un Formulario Reactivo
 
 Para crear un formulario reactivo:
 
@@ -77,7 +77,7 @@ Para crear un formulario reactivo:
 
 ---
 
-### **2.2 Validación de Formularios Reactivos**
+### 2.2 Validación de Formularios Reactivos
 
 Añade validadores predefinidos o personalizados al configurar los controles:
 
@@ -92,7 +92,7 @@ this.formularioReactivo = new FormGroup({
 
 ---
 
-### **2.3 Manipulación de Valores y Estados**
+### 2.3 Manipulación de Valores y Estados
 
 - **Acceder a los valores**:
   ```typescript
@@ -111,7 +111,7 @@ this.formularioReactivo = new FormGroup({
 
 ---
 
-### **2.4 Presentación de Errores de Validación**
+### 2.4 Presentación de Errores de Validación
 
 Muestra los errores de validación dinámicamente en la plantilla:
 
@@ -124,7 +124,7 @@ Muestra los errores de validación dinámicamente en la plantilla:
 
 ---
 
-### **2.5 Enviar y Restablecer el Formulario**
+### 2.5 Enviar y Restablecer el Formulario
 
 ```html
 <form [formGroup]="formularioReactivo" (ngSubmit)="enviarFormulario()">
@@ -143,9 +143,9 @@ enviarFormulario() {
 
 ---
 
-## **3. Formularios Basados en Plantillas**
+## 3. Formularios Basados en Plantillas
 
-### **3.1 Creación de un Formulario Basado en Plantillas**
+### 3.1 Creación de un Formulario Basado en Plantillas
 
 1. Importa el módulo `FormsModule`:
    ```typescript
@@ -163,7 +163,7 @@ enviarFormulario() {
 
 ---
 
-### **3.2 Validación**
+### 3.2 Validación
 
 Usa atributos HTML y directivas:
 ```html
@@ -175,7 +175,7 @@ Usa atributos HTML y directivas:
 
 ---
 
-### **3.3 Acceso a los Controles**
+### 3.3 Acceso a los Controles
 
 Accede a los controles a través de la referencia del formulario:
 
@@ -191,9 +191,9 @@ enviarFormulario() {
 
 ---
 
-## **4. Formularios Avanzados**
+## 4. Formularios Avanzados
 
-### **4.1 Formularios Anidados**
+### 4.1 Formularios Anidados
 
 Los formularios pueden contener subformularios:
 ```typescript
@@ -207,7 +207,7 @@ const formularioPrincipal = new FormGroup({
 
 ---
 
-### **4.2 Formularios Dinámicos**
+### 4.2 Formularios Dinámicos
 
 Utiliza `FormArray` para manejar grupos dinámicos de campos:
 ```typescript
@@ -224,7 +224,7 @@ agregarItem() {
 
 ---
 
-### **4.3 Validación Personalizada**
+### 4.3 Validación Personalizada
 
 Crea validadores personalizados:
 ```typescript
@@ -235,7 +235,7 @@ function nombreValido(control: FormControl) {
 
 ---
 
-### **4.4 Validación Asíncrona**
+### 4.4 Validación Asíncrona
 
 Realiza validaciones que dependen de llamadas HTTP:
 ```typescript
@@ -250,7 +250,7 @@ function emailUnico(control: AbstractControl): Observable<any> {
 
 ---
 
-### **4.5 Control de Cambios no Guardados**
+### 4.5 Control de Cambios no Guardados
 
 Usa la interfaz `CanDeactivate` para evitar la pérdida de cambios:
 ```typescript
@@ -265,6 +265,6 @@ export class GuardarCambiosGuard implements CanDeactivate<any> {
 
 ---
 
-## **5. Conclusiones**
+## 5. Conclusiones
 
 Angular ofrece herramientas potentes para manejar formularios de cualquier nivel de complejidad. Elige entre **formularios reactivos** para una mayor flexibilidad y control, o **formularios basados en plantillas** para un desarrollo rápido y directo. 

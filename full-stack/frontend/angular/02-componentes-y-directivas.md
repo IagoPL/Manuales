@@ -1,6 +1,6 @@
-# **Componentes y Directivas en Angular**
+﻿# **Componentes y Directivas en Angular**
 
-## **Introducción a Componentes y Directivas**
+## Introducción a Componentes y Directivas
 
 En Angular, los **componentes** y las **directivas** son los bloques de construcción fundamentales para crear aplicaciones dinámicas y reutilizables.
 
@@ -11,11 +11,11 @@ Ambos elementos trabajan juntos para definir cómo se ve y se comporta la aplica
 
 ---
 
-## **Componentes: Creación y Estructura**
+## Componentes: Creación y Estructura
 
 Los componentes en Angular son clases de TypeScript decoradas con el decorador **`@Component`**, que proporciona metadatos esenciales sobre el componente.
 
-### **1. Creación de un nuevo componente**
+### 1. Creación de un nuevo componente
 
 Para crear un componente, Angular CLI ofrece un comando rápido:
 
@@ -47,7 +47,7 @@ export class MiComponenteComponent {
 
 ---
 
-### **2. Elementos clave del decorador `@Component`**
+### 2. Elementos clave del decorador `@Component`
 
 1. **Selector**:
    - Es el identificador único del componente que se utiliza en las plantillas HTML para representarlo.
@@ -84,7 +84,7 @@ export class MiComponenteComponent {
 
 ---
 
-### **3. Propiedades y lógica del componente**
+### 3. Propiedades y lógica del componente
 
 Dentro de la clase del componente puedes definir:
 - **Propiedades**: Para almacenar datos.
@@ -108,13 +108,13 @@ En la plantilla:
 
 ---
 
-## **Directivas: Tipos y Utilización**
+## Directivas: Tipos y Utilización
 
 Las **directivas** en Angular son instrucciones para modificar o crear elementos HTML. Existen tres tipos principales:
 
 ---
 
-### **1. Directivas de Atributo**
+### 1. Directivas de Atributo
 
 Las directivas de atributo cambian el comportamiento o el estilo de elementos HTML existentes.
 
@@ -132,7 +132,7 @@ Ejemplo práctico con **`*ngIf`**:
 
 ---
 
-### **2. Directivas Estructurales**
+### 2. Directivas Estructurales
 
 Estas directivas manipulan la estructura del DOM agregando, eliminando o reemplazando elementos.
 
@@ -156,7 +156,7 @@ Ejemplo con **`*ngIf`**:
 
 ---
 
-### **3. Directivas de Componente**
+### 3. Directivas de Componente
 
 Son directivas basadas en componentes que crean elementos personalizados. Se utilizan como si fueran etiquetas HTML.
 
@@ -168,7 +168,7 @@ En este caso, la directiva **`app-mi-componente`** representa el componente crea
 
 ---
 
-## **Conclusiones**
+## Conclusiones
 
 Los componentes y las directivas son fundamentales para el desarrollo con Angular:
 
