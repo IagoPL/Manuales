@@ -58,9 +58,9 @@ Manuales/
 
 ## Tecnologías y temas incluidos
 
-- Frontend: Angular, React, CSS, UX, accesibilidad y diseño centrado en el usuario.
+- Frontend: Angular, React, CSS, UX, accesibilidad, estado, rendimiento, seguridad, pruebas y despliegue.
 - Backend: PHP aplicado a una tienda online.
-- Datos: Snowflake, Apache Spark, Databricks, notebooks, procesamiento estructurado y no estructurado, NiFi y pipelines de datos.
+- Datos: Snowflake, Apache Spark, Databricks, notebooks, procesamiento estructurado, streaming, optimización, NiFi y pipelines de datos.
 - Bases de datos: SQL, Oracle SQL, MySQL y MongoDB.
 - Lenguajes: Python, Java, JavaScript, TypeScript, C++ y Scala.
 - Herramientas: Git, repositorios remotos, ramas, conflictos, flujos de trabajo y terminal en Linux.
@@ -71,7 +71,7 @@ Proyecto en reorganización activa. La estructura principal ya está orientada a
 
 ## Prioridades recomendadas
 
-- Profundizar los manuales base con más ejemplos reales, ejercicios y casos de uso.
+- Profundizar los manuales por capítulos, desde conceptos básicos hasta patrones avanzados y casos reales.
 - Crear índices por categoría para facilitar la navegación cuando el repositorio se convierta en web de documentación.
 - Revisar los manuales largos de Python, Java, JavaScript, Scala, Spark, Angular y React para dividirlos si alguna página queda demasiado extensa.
 - Validar ejemplos técnicos antes de ampliar contenido avanzado.
@@ -82,7 +82,7 @@ Proyecto en reorganización activa. La estructura principal ya está orientada a
 - Normalizar el formato interno de todos los manuales.
 - Revisar ortografía, gramática y consistencia de títulos.
 - Añadir índices por categoría.
-- Completar ejemplos avanzados en Snowflake, bases de datos, pipelines, Linux, Docker y arquitectura.
+- Completar ejemplos avanzados en Snowflake, bases de datos, pipelines, Angular, React, Spark, Linux, Docker y arquitectura.
 - Validar ejemplos técnicos y marcar contenido que requiera revisión.
 - Preparar una web de documentación con Astro Starlight, Docusaurus o VitePress.
 - Publicar la documentación en GitHub Pages.

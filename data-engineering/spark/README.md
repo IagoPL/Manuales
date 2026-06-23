@@ -44,6 +44,12 @@ Este manual está diseñado para ayudarte a aprender Apache Spark desde cero, ap
     - Optimización de consultas
     - Ajuste de la memoria y recursos
 
+## Capítulos complementarios
+
+- [Arquitectura de Spark y RDDs](02-arquitectura-y-rdds.md)
+- [Structured Streaming](03-structured-streaming.md)
+- [Optimización y buenas prácticas](09-optimizacion-y-buenas-practicas.md)
+
 ## 1. Introducción a Apache Spark
 
 Apache Spark es un framework de computación en clúster de código abierto y rápido, diseñado para el procesamiento y análisis de datos a gran escala. Proporciona una interfaz unificada para el procesamiento de datos en lotes, en tiempo real, de streaming y de aprendizaje automático. Spark se basa en el modelo de datos llamado RDD (Resilient Distributed Dataset), que permite distribuir y procesar datos de manera eficiente en un clúster de máquinas.

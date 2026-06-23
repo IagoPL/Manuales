@@ -26,6 +26,10 @@ Angular es un framework de desarrollo de aplicaciones web desarrollado por Googl
 11. [Formularios y validación](#formularios-y-validación)
 12. [Pruebas unitarias](#pruebas-unitarias)
 13. [Despliegue de la aplicación](#despliegue-de-la-aplicación)
+14. [Gestión de estado](09-gestion-de-estado.md)
+15. [Rendimiento y optimización](10-rendimiento-y-optimizacion.md)
+16. [Seguridad](11-seguridad.md)
+17. [Despliegue y arquitectura](12-despliegue-y-arquitectura.md)
 
 ## Instalación
 
