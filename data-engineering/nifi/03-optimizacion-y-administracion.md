@@ -79,3 +79,112 @@ La administración efectiva de flujos de datos implica el uso de herramientas av
 
 idos.
 - **Ejemplo:** Almacena controladores de servicios compartidos en NiFi Registry y referencia estas versiones específicas en tus flujos para asegurar la consistencia y el control de versiones.
+
+## Gestión operativa
+
+Administrar NiFi implica mantener flujos estables, seguros y observables durante todo su ciclo de vida.
+
+### Versionado con NiFi Registry
+
+NiFi Registry permite versionar process groups y mover flujos entre entornos.
+
+Flujo recomendado:
+
+```txt
+Desarrollo -> commit en Registry -> revisión -> despliegue en test -> despliegue en producción
+```
+
+### Backups
+
+Elementos importantes para respaldar:
+
+- Configuración de NiFi.
+- Flows versionados.
+- Parameter Contexts.
+- Certificados y configuración de seguridad.
+- Configuración de Controller Services.
+
+## Observabilidad
+
+Una operación estable necesita visibilidad.
+
+Métricas útiles:
+
+- FlowFiles entrantes y salientes.
+- Tamaño de colas.
+- Tiempo medio de procesamiento.
+- Errores por procesador.
+- Uso de CPU y memoria.
+- Uso de disco en repositorios internos.
+
+## Tuning de colas y back pressure
+
+El back pressure evita que un flujo sature el sistema.
+
+Configura límites por:
+
+- Cantidad de FlowFiles.
+- Tamaño total de datos en cola.
+
+Buenas prácticas:
+
+- Ajusta límites según capacidad real.
+- Monitoriza colas críticas.
+- Revisa procesadores lentos aguas abajo.
+- No uses colas enormes para ocultar problemas de rendimiento.
+
+## Seguridad operativa
+
+Medidas recomendadas:
+
+- Usa HTTPS.
+- Limita permisos por rol.
+- Protege credenciales con servicios adecuados.
+- Audita cambios en flujos críticos.
+- Separa entornos de desarrollo, test y producción.
+- Evita exponer la UI de NiFi públicamente.
+
+## Plan de despliegue
+
+Antes de pasar un flujo a producción:
+
+1. Validar entradas esperadas.
+2. Probar rutas de error.
+3. Revisar back pressure.
+4. Confirmar permisos y credenciales.
+5. Activar métricas y logs.
+6. Documentar rollback.
+7. Versionar en NiFi Registry.
+
+## Buenas prácticas
+
+- Mantén flujos versionados.
+- Documenta cambios funcionales.
+- Revisa métricas después de cada despliegue.
+- Crea rutas de error observables.
+- Separa configuración de lógica.
+- Define responsables por flujo.
+
+## Errores comunes
+
+- Cambiar flujos en producción sin versionado.
+- No tener rollback claro.
+- Ignorar colas crecientes.
+- Guardar credenciales en propiedades visibles.
+- No monitorizar repositorios internos.
+
+## Chuleta rápida
+
+```txt
+Registry = versionado
+Back pressure = control de colas
+Provenance = trazabilidad
+Controller Services = configuración compartida
+Parameter Contexts = configuración por entorno
+```
+
+## Recursos relacionados
+
+- [Introducción a NiFi](01-introduccion.md)
+- [Diseño y desarrollo de flujos](02-diseno-y-desarrollo-de-flujos.md)
+- [Pipelines de datos](../pipelines/README.md)

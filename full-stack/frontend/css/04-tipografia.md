@@ -62,3 +62,109 @@ En este ejemplo, se personalizan diferentes aspectos tipográficos, incluyendo e
 ---
 
 Este cuarto apartado sobre "Tipografía" te proporciona una comprensión sólida de cómo trabajar con fuentes web, iconos, símbolos y la personalización de fuentes en diseño web. La tipografía es un componente esencial para la estética y la legibilidad de un sitio web.
+## 4.4. Escala tipográfica
+
+Una escala tipográfica define tamaños coherentes para títulos, subtítulos, texto y elementos secundarios.
+
+```css
+:root {
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.25rem;
+  --font-size-xl: 1.5rem;
+  --font-size-2xl: 2rem;
+}
+
+body {
+  font-size: var(--font-size-base);
+}
+
+h1 {
+  font-size: var(--font-size-2xl);
+}
+```
+
+## 4.5. Longitud de línea y legibilidad
+
+Las líneas demasiado largas dificultan la lectura. Una referencia práctica es mantener el contenido de lectura entre 60 y 80 caracteres por línea.
+
+```css
+.article {
+  max-width: 70ch;
+  line-height: 1.7;
+}
+```
+
+## 4.6. Jerarquía visual
+
+La jerarquía tipográfica ayuda a escanear contenido.
+
+Elementos habituales:
+
+- Tamaño de fuente.
+- Peso (`font-weight`).
+- Espaciado vertical.
+- Color secundario.
+- Mayúsculas o estilos especiales con moderación.
+
+```css
+h1,
+h2,
+h3 {
+  line-height: 1.2;
+  margin-block: 0 0.75rem;
+}
+
+p {
+  margin-block: 0 1rem;
+}
+```
+
+## 4.7. Fuentes del sistema
+
+Para interfaces técnicas o dashboards, una pila de fuentes del sistema suele ser rápida y legible.
+
+```css
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+code,
+pre {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+```
+
+## 4.8. Buenas prácticas
+
+- Usa pocas familias tipográficas.
+- Define una escala y reutilízala.
+- Ajusta `line-height` para lectura cómoda.
+- Limita ancho de párrafos largos.
+- Usa fuentes monoespaciadas para código.
+- Comprueba acentos, símbolos y caracteres especiales.
+
+## 4.9. Errores comunes
+
+- Usar tamaños demasiado pequeños en móvil.
+- Abusar de negritas y mayúsculas.
+- Usar muchas fuentes en la misma página.
+- No definir fallback de fuentes.
+- Crear párrafos muy anchos.
+
+## 4.10. Chuleta rápida
+
+```css
+font-family: system-ui, sans-serif;
+font-size: 1rem;
+font-weight: 600;
+line-height: 1.6;
+max-width: 70ch;
+letter-spacing: 0;
+```
+
+## Recursos relacionados
+
+- [Diseño responsivo](03-modelo-responsivo.md)
+- [Colores y gradientes](05-colores-y-gradientes.md)
+- [Accesibilidad](../ux/03-accesibilidad.md)

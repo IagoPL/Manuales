@@ -100,3 +100,116 @@ La transformación de datos es esencial para limpiar, enriquecer y dar forma a l
     - **Ejemplo:**
         - Utiliza JSONPath para extraer valores específicos de un objeto JSON, como "$.usuario.nombre".
 
+
+## Patrones habituales de diseño de flujos
+
+### Ingesta y validación
+
+```txt
+GetFile -> ValidateRecord -> RouteOnAttribute -> PutDatabaseRecord
+```
+
+Este patrón lee datos, valida estructura, separa registros válidos y erróneos, y persiste los datos correctos.
+
+### Enriquecimiento
+
+```txt
+ConsumeKafka -> EvaluateJsonPath -> LookupRecord -> UpdateRecord -> PublishKafka
+```
+
+Permite recibir eventos, extraer campos relevantes, consultar datos de referencia y publicar el resultado enriquecido.
+
+### Rutas de error
+
+Todo flujo productivo debería separar errores técnicos y errores funcionales.
+
+```txt
+success -> siguiente paso
+failure -> log + almacenamiento de error
+retry -> cola de reintento
+```
+
+## Controller Services
+
+Los **Controller Services** centralizan configuraciones compartidas entre procesadores.
+
+Ejemplos:
+
+- Conexiones a bases de datos.
+- Lectores y escritores de registros.
+- Servicios SSL.
+- Cachés distribuidas.
+
+Buenas prácticas:
+
+- Usa nombres descriptivos.
+- Reutiliza servicios comunes.
+- Versiona cambios importantes.
+- Documenta credenciales y dependencias sin exponer secretos.
+
+## Parameter Contexts
+
+Los **Parameter Contexts** permiten externalizar configuración.
+
+Ejemplos de parámetros:
+
+```txt
+input.directory=/data/input
+output.directory=/data/output
+database.url=jdbc:mysql://localhost:3306/app
+```
+
+Ventajas:
+
+- Facilitan mover flujos entre entornos.
+- Evitan valores hardcodeados.
+- Mejoran mantenimiento y despliegue.
+
+## Validación de datos
+
+Antes de escribir datos en un destino, valida:
+
+- Estructura del archivo.
+- Campos obligatorios.
+- Tipos de datos.
+- Reglas de negocio mínimas.
+- Duplicados o claves inexistentes.
+
+Ejemplo de estrategia:
+
+```txt
+entrada -> validar schema -> separar válidos/erróneos -> persistir -> registrar métricas
+```
+
+## Buenas prácticas
+
+- Diseña rutas explícitas para `success`, `failure` y `retry`.
+- Usa Controller Services para configuraciones compartidas.
+- Usa Parameter Contexts para separar entornos.
+- Mantén grupos pequeños y con responsabilidad clara.
+- Añade procesadores de logging en puntos críticos.
+- Documenta formato de entrada y salida.
+
+## Errores comunes
+
+- Hardcodear rutas, credenciales o URLs.
+- No separar errores de validación y errores técnicos.
+- Dejar colas crecer sin back pressure.
+- Crear flujos enormes sin process groups.
+- No probar con datos incompletos o corruptos.
+
+## Chuleta rápida
+
+```txt
+Controller Service = configuración compartida
+Parameter Context = configuración por entorno
+RouteOnAttribute = enrutar por atributos
+ValidateRecord = validar estructura
+failure/retry = rutas obligatorias en producción
+```
+
+## Recursos relacionados
+
+- [Introducción a NiFi](01-introduccion.md)
+- [Optimización y administración](03-optimizacion-y-administracion.md)
+- [Pipelines de datos](../pipelines/README.md)

@@ -81,3 +81,105 @@ Imaginemos que estamos diseñando una aplicación de mensajería instantánea pa
 La Interacción Persona-Ordenador es una disciplina esencial en el desarrollo de sistemas informáticos que sean accesibles, útiles y agradables para los usuarios. A través del diseño centrado en el usuario, la consideración de las personas y el uso adecuado de la tecnología, la IPO busca mejorar la calidad de la interacción entre las personas y las computadoras.
 
 El conocimiento y la aplicación de los principios de IPO son fundamentales para garantizar el éxito de las aplicaciones y sistemas informáticos en el mundo moderno, donde la interacción con la tecnología es cada vez más frecuente y diversa. Con un enfoque en la usabilidad, la experiencia del usuario y la accesibilidad, la IPO contribuye a crear un entorno digital más inclusivo y satisfactorio para todos.
+## 1.5 Heurísticas de usabilidad
+
+Las heurísticas de usabilidad son criterios prácticos para revisar una interfaz antes o durante su desarrollo. Ayudan a detectar problemas frecuentes sin esperar a tener un producto terminado.
+
+### Visibilidad del estado del sistema
+
+El sistema debe informar qué está ocurriendo.
+
+Ejemplos:
+
+- Mostrar un indicador de carga mientras se consulta una API.
+- Confirmar que un formulario se ha enviado correctamente.
+- Indicar si una operación ha fallado y por qué.
+
+### Correspondencia con el mundo real
+
+La interfaz debe usar términos que el usuario entienda, no solo lenguaje interno del sistema.
+
+Ejemplo: en una tienda online, es mejor usar "Carrito" que "Contenedor temporal de productos".
+
+### Control y libertad del usuario
+
+El usuario debe poder cancelar, deshacer o corregir acciones cuando sea razonable.
+
+Ejemplos:
+
+- Botón para deshacer una eliminación reciente.
+- Confirmación antes de borrar información importante.
+- Navegación clara para volver a la pantalla anterior.
+
+### Consistencia
+
+Elementos similares deben comportarse de forma similar.
+
+Ejemplos:
+
+- Mismos estilos para acciones primarias.
+- Mismos mensajes para errores equivalentes.
+- Formularios con estructura consistente.
+
+## 1.6 Métricas de usabilidad
+
+Una interfaz no solo debe parecer usable: conviene medirla.
+
+Métricas habituales:
+
+- **Eficacia:** porcentaje de tareas completadas correctamente.
+- **Eficiencia:** tiempo necesario para completar una tarea.
+- **Errores:** cantidad y gravedad de fallos cometidos por usuarios.
+- **Satisfacción:** percepción del usuario después de usar el sistema.
+- **Aprendizaje:** facilidad con la que una persona nueva entiende la interfaz.
+
+Ejemplo de tabla de evaluación:
+
+| Tarea | Éxito | Tiempo medio | Errores frecuentes |
+| --- | --- | --- | --- |
+| Crear cuenta | 90% | 2 min | Contraseña inválida |
+| Buscar producto | 75% | 1 min | Filtros poco visibles |
+| Finalizar compra | 65% | 4 min | Dudas en métodos de pago |
+
+## 1.7 Proceso recomendado para aplicar IPO
+
+1. Define quién usará el sistema.
+2. Identifica tareas principales.
+3. Diseña flujos simples para esas tareas.
+4. Crea prototipos de baja o media fidelidad.
+5. Evalúa con usuarios o revisiones heurísticas.
+6. Ajusta el diseño antes de implementar.
+7. Mide el uso real después de publicar.
+
+## 1.8 Buenas prácticas
+
+- Diseña desde las tareas principales, no desde pantallas aisladas.
+- Reduce la carga cognitiva evitando opciones innecesarias.
+- Usa textos claros en botones, errores y confirmaciones.
+- Mantén consistencia visual y funcional.
+- Considera accesibilidad desde el inicio.
+- Valida decisiones con personas usuarias cuando sea posible.
+
+## 1.9 Errores comunes
+
+- Diseñar pensando solo en usuarios expertos.
+- Confundir una interfaz bonita con una interfaz usable.
+- Ocultar estados de carga, éxito o error.
+- Usar términos técnicos en acciones importantes.
+- No probar flujos críticos antes de implementarlos.
+
+## 1.10 Chuleta rápida
+
+```txt
+IPO = personas + tareas + tecnología + contexto
+Usabilidad = eficacia + eficiencia + satisfacción
+UX = percepción completa del usuario
+Persona = perfil representativo
+Heurística = regla práctica de evaluación
+```
+
+## Recursos relacionados
+
+- [Diseño Centrado en el Usuario](02-diseno-centrado-en-el-usuario.md)
+- [Accesibilidad](03-accesibilidad.md)
+- [Arquitectura full stack](../../arquitectura/README.md)

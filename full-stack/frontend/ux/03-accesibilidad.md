@@ -73,3 +73,119 @@ Estrategias para mejorar la accesibilidad:
 ## 3.5 Conclusiones
 
 La Accesibilidad en la IPO es esencial para garantizar que la tecnología sea inclusiva y accesible para todos los usuarios. Al considerar las diferentes discapacidades y aplicar los principios del diseño accesible, podemos crear un entorno digital en el que todas las personas tengan igualdad de oportunidades para interactuar con los sistemas informáticos y beneficiarse de las ventajas que ofrece la tecnología. La accesibilidad en la IPO es un paso significativo hacia una sociedad más inclusiva y equitativa en la era digital.
+## 3.6 Accesibilidad web práctica
+
+En desarrollo web, la accesibilidad se aplica con HTML semántico, navegación por teclado, contraste adecuado, formularios claros y compatibilidad con tecnologías de asistencia.
+
+### HTML semántico
+
+Usa elementos HTML según su significado.
+
+```html
+<header>...</header>
+<nav>...</nav>
+<main>...</main>
+<section>...</section>
+<footer>...</footer>
+```
+
+Un botón debe ser un `<button>` si ejecuta una acción. Un enlace debe ser un `<a>` si navega a otra URL.
+
+### Texto alternativo
+
+Las imágenes informativas necesitan `alt` descriptivo.
+
+```html
+<img src="grafico-ventas.png" alt="Gráfico de ventas mensuales de enero a junio">
+```
+
+Las imágenes decorativas pueden usar `alt=""`.
+
+### Formularios accesibles
+
+Cada campo debe tener una etiqueta asociada.
+
+```html
+<label for="email">Email</label>
+<input id="email" name="email" type="email">
+```
+
+Los errores deben explicar qué ocurre y cómo corregirlo.
+
+## 3.7 Navegación por teclado
+
+Una interfaz accesible debe poder usarse sin ratón.
+
+Comprueba que:
+
+- Se puede llegar a todos los controles con `Tab`.
+- El foco visible se aprecia claramente.
+- El orden de tabulación es lógico.
+- No hay trampas de teclado.
+- Los modales devuelven el foco al cerrarse.
+
+## 3.8 ARIA: cuándo usarlo
+
+ARIA ayuda cuando HTML semántico no es suficiente, pero no debe reemplazar elementos nativos.
+
+Regla práctica:
+
+```txt
+Primero HTML semántico.
+Después ARIA solo si hace falta.
+```
+
+Ejemplo:
+
+```html
+<button aria-expanded="false" aria-controls="menu-principal">
+  Menú
+</button>
+```
+
+## 3.9 Checklist de accesibilidad
+
+- La página tiene un título claro.
+- Hay un único `main`.
+- Los encabezados siguen una jerarquía lógica.
+- Los enlaces tienen texto descriptivo.
+- Los formularios tienen labels.
+- Los errores se comunican con texto.
+- El contraste es suficiente.
+- La interfaz funciona con teclado.
+- Las imágenes informativas tienen texto alternativo.
+- No se usa color como único medio de comunicación.
+
+## 3.10 Buenas prácticas
+
+- Diseña accesibilidad desde el inicio.
+- Prueba con teclado durante el desarrollo.
+- Usa componentes nativos cuando sea posible.
+- Incluye estados de foco visibles.
+- Redacta mensajes simples y directos.
+- Revisa contraste en texto, botones y alertas.
+
+## 3.11 Errores comunes
+
+- Usar `div` clicables en lugar de botones.
+- Quitar el contorno de foco sin alternativa visible.
+- Poner placeholder como única etiqueta de un campo.
+- Escribir enlaces como "haz clic aquí".
+- Usar iconos sin texto accesible.
+
+## 3.12 Chuleta rápida
+
+```txt
+button = acción
+link = navegación
+label = nombre de campo
+alt = descripción de imagen
+focus = ubicación del teclado
+ARIA = complemento, no sustituto
+```
+
+## Recursos relacionados
+
+- [Introducción a la IPO](01-introduccion-a-ipo.md)
+- [Diseño Centrado en el Usuario](02-diseno-centrado-en-el-usuario.md)
+- [CSS: colores y gradientes](../css/05-colores-y-gradientes.md)

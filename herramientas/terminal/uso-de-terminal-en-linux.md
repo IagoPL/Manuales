@@ -282,3 +282,220 @@ La Terminal de Linux es una interfaz de línea de comandos que te permite intera
    $ chmod 700 archivo.txt
    ```
 
+
+## 4. Redirecciones y pipes
+
+Las redirecciones permiten enviar entrada y salida entre comandos o archivos.
+
+### Redirigir salida
+
+```bash
+ls > archivos.txt
+```
+
+Sobrescribe `archivos.txt` con la salida de `ls`.
+
+```bash
+ls >> archivos.txt
+```
+
+Añade la salida al final del archivo.
+
+### Redirigir errores
+
+```bash
+comando 2> errores.log
+```
+
+Guarda los errores en un archivo.
+
+### Pipes
+
+Un pipe conecta la salida de un comando con la entrada de otro.
+
+```bash
+ps aux | grep nginx
+```
+
+Ejemplo para contar archivos:
+
+```bash
+ls | wc -l
+```
+
+## 5. Variables de entorno
+
+Las variables de entorno almacenan configuración disponible para procesos.
+
+```bash
+echo $HOME
+echo $PATH
+```
+
+Crear variable temporal:
+
+```bash
+export API_URL="https://api.example.com"
+```
+
+Usarla en un comando:
+
+```bash
+echo $API_URL
+```
+
+## 6. Permisos en profundidad
+
+Los permisos se representan para usuario, grupo y otros.
+
+```txt
+-rwxr-xr--
+```
+
+Interpretación:
+
+```txt
+r = lectura
+w = escritura
+x = ejecución
+```
+
+Ejemplos:
+
+```bash
+chmod 644 archivo.txt
+chmod 755 script.sh
+chmod u+x script.sh
+```
+
+## 7. Scripts básicos
+
+Un script permite automatizar comandos repetitivos.
+
+```bash
+#!/usr/bin/env bash
+
+set -e
+
+echo "Iniciando backup"
+mkdir -p backups
+cp app.log backups/app.log
+```
+
+Dar permisos de ejecución:
+
+```bash
+chmod +x backup.sh
+./backup.sh
+```
+
+## 8. SSH y trabajo remoto
+
+SSH permite conectarse a servidores remotos.
+
+```bash
+ssh usuario@servidor
+```
+
+Copiar archivos con `scp`:
+
+```bash
+scp archivo.txt usuario@servidor:/tmp/
+```
+
+Sincronizar carpetas con `rsync`:
+
+```bash
+rsync -av carpeta/ usuario@servidor:/var/www/app/
+```
+
+## 9. Compresión y archivado
+
+Crear un archivo comprimido:
+
+```bash
+tar -czf proyecto.tar.gz proyecto/
+```
+
+Extraerlo:
+
+```bash
+tar -xzf proyecto.tar.gz
+```
+
+Comprimir con zip:
+
+```bash
+zip -r proyecto.zip proyecto/
+unzip proyecto.zip
+```
+
+## 10. Diagnóstico básico
+
+### Espacio en disco
+
+```bash
+df -h
+du -sh carpeta/
+```
+
+### Memoria
+
+```bash
+free -h
+```
+
+### Red
+
+```bash
+ping example.com
+curl -I https://example.com
+```
+
+### Logs
+
+```bash
+tail -f /var/log/syslog
+journalctl -u nginx -f
+```
+
+## 11. Buenas prácticas
+
+- Revisa rutas antes de ejecutar comandos destructivos.
+- Usa `pwd` si no estás seguro de dónde estás.
+- Prefiere `rm -i` cuando estés aprendiendo.
+- Documenta scripts importantes.
+- Usa variables para rutas repetidas.
+- Comprueba permisos después de copiar archivos.
+- Lee logs antes de reiniciar servicios.
+
+## 12. Errores comunes
+
+- Ejecutar `rm -r` en la carpeta equivocada.
+- Usar `sudo` sin entender el comando.
+- Sobrescribir archivos con `>` en lugar de `>>`.
+- Olvidar permisos de ejecución en scripts.
+- Confundir rutas locales y remotas al usar `scp` o `rsync`.
+
+## 13. Chuleta rápida
+
+```bash
+comando > salida.txt
+comando >> salida.txt
+comando 2> errores.log
+comando1 | comando2
+export NOMBRE=valor
+chmod +x script.sh
+ssh usuario@host
+scp archivo usuario@host:/ruta
+rsync -av origen/ destino/
+tar -czf archivo.tar.gz carpeta/
+df -h
+tail -f archivo.log
+```
+
+## Recursos relacionados
+
+- [Linux](../linux/README.md)
+- [Docker](../docker/README.md)
+- [Git](../git/01-fundamentos-basicos.md)

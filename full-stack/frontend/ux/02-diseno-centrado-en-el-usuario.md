@@ -61,3 +61,118 @@ El Diseño Centrado en el Usuario ofrece una serie de ventajas y beneficios sign
 ## 2.4 Conclusiones
 
 El Diseño Centrado en el Usuario es una metodología esencial en la Interacción Persona-Ordenador que busca desarrollar sistemas informáticos centrados en las necesidades, habilidades y preferencias de los usuarios. Al involucrar a los usuarios en todas las etapas del proceso de diseño, se logran interfaces y sistemas más usables, satisfactorios y eficientes. El DCU es una herramienta valiosa para crear tecnología que realmente mejore la vida de las personas al adaptarse a sus requerimientos y brindar una experiencia de usuario excepcional.
+## 2.5 Técnicas de investigación con usuarios
+
+La investigación permite tomar decisiones de diseño basadas en evidencia. No siempre hace falta un estudio grande: incluso entrevistas cortas o pruebas con pocos usuarios pueden revelar problemas importantes.
+
+### Entrevistas
+
+Sirven para entender motivaciones, contexto y problemas.
+
+Preguntas útiles:
+
+- ¿Qué intentas conseguir con esta herramienta?
+- ¿Qué parte del proceso te resulta más difícil?
+- ¿Qué herramientas usas actualmente?
+- ¿Qué información necesitas para tomar una decisión?
+
+### Encuestas
+
+Son útiles para recoger datos de muchas personas, pero conviene formular preguntas claras y evitar inducir respuestas.
+
+### Observación
+
+Consiste en ver cómo una persona realiza una tarea en su contexto real. Ayuda a detectar problemas que no aparecen en entrevistas.
+
+### Analítica de uso
+
+Los datos de uso ayudan a encontrar patrones:
+
+- Pantallas con abandono alto.
+- Formularios con muchos errores.
+- Funciones poco utilizadas.
+- Búsquedas sin resultados.
+
+## 2.6 Personas y escenarios
+
+Una persona resume un perfil de usuario representativo. Un escenario describe una situación concreta de uso.
+
+Ejemplo:
+
+```txt
+Persona: Marta, responsable de ventas.
+Objetivo: revisar pedidos pendientes antes de llamar a clientes.
+Contexto: usa la aplicación desde un portátil durante reuniones rápidas.
+Necesidad: encontrar pedidos filtrando por estado y fecha sin perder tiempo.
+```
+
+Los escenarios ayudan a diseñar flujos centrados en tareas reales.
+
+## 2.7 Prototipos
+
+Los prototipos permiten validar ideas antes de invertir en desarrollo.
+
+Tipos:
+
+- **Baja fidelidad:** bocetos, papel, wireframes simples.
+- **Media fidelidad:** pantallas con estructura y navegación básica.
+- **Alta fidelidad:** diseño visual cercano al producto final.
+
+Buenas prácticas:
+
+- Prototipa solo lo necesario para validar una hipótesis.
+- No confundas prototipo con producto terminado.
+- Usa prototipos para conversar y aprender.
+
+## 2.8 Pruebas de usabilidad
+
+Una prueba de usabilidad consiste en pedir a una persona que complete tareas mientras se observa qué ocurre.
+
+Pasos recomendados:
+
+1. Define tareas realistas.
+2. Prepara un prototipo o versión funcional.
+3. Observa sin guiar demasiado.
+4. Registra errores, dudas y comentarios.
+5. Agrupa problemas por gravedad.
+6. Prioriza cambios.
+
+Ejemplo de tarea:
+
+```txt
+Encuentra un producto, añádelo al carrito y completa el proceso hasta la pantalla de confirmación.
+```
+
+## 2.9 Buenas prácticas
+
+- Involucra usuarios pronto, no solo al final.
+- Valida problemas antes de diseñar soluciones complejas.
+- Prioriza tareas críticas.
+- Itera con ciclos cortos.
+- Documenta decisiones y evidencias.
+- Combina datos cualitativos y cuantitativos.
+
+## 2.10 Errores comunes
+
+- Preguntar al usuario qué solución quiere en lugar de investigar su problema.
+- Hacer pruebas demasiado tarde.
+- Diseñar solo para un perfil de usuario.
+- Ignorar resultados incómodos de investigación.
+- Confundir preferencias personales con necesidades reales.
+
+## 2.11 Chuleta rápida
+
+```txt
+Investigar = entender problemas
+Persona = perfil representativo
+Escenario = contexto de uso
+Prototipo = herramienta de aprendizaje
+Test = observar tareas reales
+Iterar = mejorar con evidencia
+```
+
+## Recursos relacionados
+
+- [Introducción a la IPO](01-introduccion-a-ipo.md)
+- [Accesibilidad](03-accesibilidad.md)
+- [Plantillas de documentación](../../../recursos/plantillas/README.md)
