@@ -138,6 +138,6 @@ Si la imagen necesita explicación, añade una breve introducción antes o despu
 ## Recursos relacionados
 
 - [Plantillas](../plantillas/README.md)
-- [Arquitectura full stack](../../full-stack/arquitectura/README.md)
+- [Arquitectura full stack](../../full-stack/arquitectura/01-introduccion.md)
 - [Pipelines de datos](../../data-engineering/pipelines/README.md)
-- [Docker](../../herramientas/docker/README.md)
+- [Docker](../../herramientas/docker/01-introduccion.md)

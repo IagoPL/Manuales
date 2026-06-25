@@ -86,15 +86,20 @@ Snowflake queda documentado en [Bases de datos](bases-de-datos/snowflake/01-intr
 - [C++](lenguajes/cpp/00-indice.md)
 - [Scala](lenguajes/scala/01-sintaxis-y-caracteristicas.md)
 
+## Herramientas
+
+- [Git](herramientas/git/01-fundamentos-basicos.md)
+- [Docker](herramientas/docker/01-introduccion.md)
+- [Linux](herramientas/linux/01-introduccion.md)
+- [Terminal](herramientas/terminal/01-introduccion-y-navegacion.md)
+
 ## Cloud y DevOps
 
-- [Docker](herramientas/docker/01-introduccion.md)
 - [Docker Compose](cloud/docker-compose/01-introduccion-y-casos-de-uso.md)
 - [Kubernetes](cloud/kubernetes/01-introduccion-y-arquitectura.md)
 - [Nginx](cloud/nginx/01-introduccion-e-instalacion.md)
 - [Traefik](cloud/traefik/01-introduccion-y-arquitectura.md)
 - [GitHub Actions](cloud/github-actions/01-introduccion-a-workflows.md)
-- [Linux](herramientas/linux/01-introduccion.md)
 - [Bash](devops/bash/01-introduccion-y-terminal.md)
 - [SSH](devops/ssh/01-introduccion-y-claves.md)
 - [Terraform](devops/terraform/01-introduccion-e-instalacion.md)
