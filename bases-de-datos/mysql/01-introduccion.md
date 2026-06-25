@@ -133,6 +133,6 @@ mysqldump -u usuario -p base > backup.sql
 
 ## Recursos relacionados
 
-- [SQL](../sql/README.md)
-- [Oracle SQL](../oracle-sql/README.md)
+- [SQL](../sql/01-introduccion.md)
+- [Oracle SQL](../oracle-sql/01-introduccion.md)
 - [Docker](../../herramientas/docker/01-introduccion.md)

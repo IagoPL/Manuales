@@ -1,8 +1,10 @@
-﻿# Manual de SQL Server
+# SQL Server
 
-Este manual esta preparado como ruta de aprendizaje progresiva. La idea es completarlo por capitulos, desde fundamentos hasta uso profesional, con ejemplos practicos y buenas practicas.
+SQL Server es el sistema gestor de bases de datos relacional de Microsoft. Se usa mucho en entornos empresariales, aplicaciones internas, reporting, integraciones con .NET y plataformas que necesitan herramientas maduras de administracion.
 
-## Capitulos previstos
+Su dialecto SQL es T-SQL y su ecosistema incluye SQL Server Management Studio, Azure SQL, Integration Services, Reporting Services y Analysis Services.
+
+## Capitulos
 
 1. [Introduccion e instalacion](01-introduccion-e-instalacion.md)
 2. [T-SQL esencial](02-t-sql-esencial.md)
@@ -14,8 +16,57 @@ Este manual esta preparado como ruta de aprendizaje progresiva. La idea es compl
 8. [Seguridad backup y restore](08-seguridad-backup-y-restore.md)
 9. [Rendimiento](09-rendimiento.md)
 
-## Enfoque
+## Instalacion con Docker
 
-- Enfoque practico en datos: modelado, procesamiento, rendimiento, calidad, despliegue y operaciones.
-- Cada capitulo debe incluir teoria breve, ejemplos, ejercicios y una seccion de errores habituales.
-- Cuando el tema lo permita, se incorporaran proyectos incrementales para conectar los capitulos entre si.
+```bash
+docker run --name sqlserver-dev \
+  -e "ACCEPT_EULA=Y" \
+  -e "MSSQL_SA_PASSWORD=YourStrong!Passw0rd" \
+  -p 1433:1433 \
+  -d mcr.microsoft.com/mssql/server:2022-latest
+```
+
+Conectar desde herramientas como Azure Data Studio o SQL Server Management Studio:
+
+```txt
+server: localhost,1433
+user: sa
+password: YourStrong!Passw0rd
+```
+
+## Primeras consultas
+
+```sql
+CREATE DATABASE Tienda;
+GO
+
+USE Tienda;
+GO
+
+CREATE TABLE dbo.Clientes (
+  Id INT IDENTITY(1,1) PRIMARY KEY,
+  Nombre NVARCHAR(150) NOT NULL,
+  Email NVARCHAR(255) NOT NULL UNIQUE
+);
+
+INSERT INTO dbo.Clientes (Nombre, Email)
+VALUES ('Ana', 'ana@example.com');
+
+SELECT * FROM dbo.Clientes;
+```
+
+## Cuando usar SQL Server
+
+- Aplicaciones empresariales.
+- Sistemas .NET.
+- Reporting corporativo.
+- Entornos Microsoft o Azure.
+- Bases transaccionales con tooling maduro.
+
+## Buenas practicas iniciales
+
+- Usa schemas explicitamente.
+- No uses `sa` para aplicaciones.
+- Configura backups desde el principio.
+- Aprende a leer planes de ejecucion.
+- Evita `NOLOCK` como solucion rapida.

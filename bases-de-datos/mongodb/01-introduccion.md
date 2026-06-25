@@ -130,6 +130,6 @@ db.productos.createIndex({ campo: 1 })
 
 ## Recursos relacionados
 
-- [SQL](../sql/README.md)
-- [Pipelines de datos](../../data-engineering/pipelines/README.md)
+- [SQL](../sql/01-introduccion.md)
+- [Pipelines de datos](../../data-engineering/pipelines/01-introduccion.md)
 - [Docker](../../herramientas/docker/01-introduccion.md)
