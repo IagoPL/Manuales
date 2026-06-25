@@ -1,1 +1,5 @@
 .agents/
+node_modules/
+.vitepress/.temp/
+.vitepress/cache/
+.vitepress/dist/
