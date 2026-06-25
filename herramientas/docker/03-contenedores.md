@@ -79,3 +79,9 @@ docker run --rm -e APP_ENV=dev alpine env
 ## Ejercicio
 
 Ejecuta un contenedor Alpine, imprime variables de entorno, entra en el shell y comprueba procesos activos.
+
+## Recursos relacionados
+
+- [Namespaces y cgroups](09-namespaces-y-cgroups.md)
+- [Logs, debug y diagnostico](05-logs-debug-y-diagnostico.md)
+- [Troubleshooting](15-troubleshooting.md)

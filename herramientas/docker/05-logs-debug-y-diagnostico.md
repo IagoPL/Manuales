@@ -93,3 +93,8 @@ docker logs nombre
 ## Ejercicio
 
 Ejecuta un contenedor que falle, revisa `docker ps -a`, consulta logs y elimina el contenedor al final.
+
+## Recursos relacionados
+
+- [Troubleshooting](15-troubleshooting.md)
+- [Arquitectura interna](07-arquitectura-interna.md)

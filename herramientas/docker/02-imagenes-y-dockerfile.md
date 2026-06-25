@@ -98,3 +98,9 @@ COPY --from=build /app/dist /usr/share/nginx/html
 ## Ejercicio
 
 Crea una imagen para una app Node sencilla que sirva un `index.js`. Usa `.dockerignore`, etiqueta la imagen y ejecutala publicando un puerto.
+
+## Recursos relacionados
+
+- [Capas y overlay filesystem](08-capas-y-overlay-filesystem.md)
+- [Seguridad](11-seguridad.md)
+- [CI/CD con Docker](14-ci-cd-con-docker.md)

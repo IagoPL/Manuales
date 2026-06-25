@@ -2,6 +2,16 @@
 
 Los volumenes resuelven persistencia. Las redes resuelven comunicacion.
 
+## Diagrama
+
+```mermaid
+flowchart LR
+  A["Container: api"] -->|bridge network| B["Container: db"]
+  A --> C["Named volume: uploads"]
+  B --> D["Named volume: postgres_data"]
+  E["Host folder"] -->|bind mount| A
+```
+
 ## Volumenes
 
 Crear volumen:
@@ -71,3 +81,8 @@ Dentro de la misma red, los contenedores se resuelven por nombre.
 ## Ejercicio
 
 Crea una red `lab_net`, ejecuta PostgreSQL con volumen nombrado y conecta otro contenedor a esa base usando el nombre `db`.
+
+## Recursos relacionados
+
+- [Docker en desarrollo local](12-docker-en-desarrollo-local.md)
+- [Proyecto final](16-proyecto-final.md)
