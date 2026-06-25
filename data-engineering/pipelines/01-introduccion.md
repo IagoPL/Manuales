@@ -118,6 +118,6 @@ Métricas mínimas:
 ## Recursos relacionados
 
 - [Apache NiFi](../nifi/01-introduccion.md)
-- [Apache Spark](../spark/README.md)
+- [Apache Spark](../spark/01-introduccion-a-apache-spark.md)
 - [Databricks](../databricks/01-databricks.md)
-- [Snowflake](../snowflake/README.md)
+- [Snowflake](../../bases-de-datos/snowflake/01-introduccion-y-arquitectura.md)

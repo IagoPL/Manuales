@@ -75,6 +75,8 @@ Manuales/
 - [NiFi](data-engineering/nifi/01-introduccion.md)
 - [Pipelines](data-engineering/pipelines/01-introduccion.md)
 
+Snowflake queda documentado en [Bases de datos](bases-de-datos/snowflake/01-introduccion-y-arquitectura.md) para evitar duplicar contenido entre apartados.
+
 ## Cloud y DevOps
 
 - [Docker](herramientas/docker/01-introduccion.md)

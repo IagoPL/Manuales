@@ -75,4 +75,4 @@ REVOKE SELECT ON TABLE catalog.schema.table FROM `group`;
 
 - [Databricks: introducción](01-databricks.md)
 - [Delta Lake](04-delta-lake.md)
-- [Snowflake](../snowflake/README.md)
+- [Snowflake](../../bases-de-datos/snowflake/01-introduccion-y-arquitectura.md)

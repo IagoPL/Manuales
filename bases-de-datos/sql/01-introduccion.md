@@ -137,6 +137,6 @@ DROP TABLE tabla;
 
 ## Recursos relacionados
 
-- [Oracle SQL](../oracle-sql/README.md)
-- [MySQL](../mysql/README.md)
-- [Snowflake](../../data-engineering/snowflake/README.md)
+- [Oracle SQL](../oracle-sql/01-introduccion.md)
+- [MySQL](../mysql/01-introduccion.md)
+- [Snowflake](../snowflake/01-introduccion-y-arquitectura.md)

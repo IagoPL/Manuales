@@ -125,6 +125,6 @@ SELECT nombre_seq.NEXTVAL FROM dual;
 
 ## Recursos relacionados
 
-- [SQL](../sql/README.md)
-- [MySQL](../mysql/README.md)
-- [Snowflake](../../data-engineering/snowflake/README.md)
+- [SQL](../sql/01-introduccion.md)
+- [MySQL](../mysql/01-introduccion.md)
+- [Snowflake](../snowflake/01-introduccion-y-arquitectura.md)
