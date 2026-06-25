@@ -1,215 +1,182 @@
-# Manual de Diseño y Desarrollo de Flujos con NiFi
+# Diseno y desarrollo de flujos en NiFi
 
-## Procesadores y Componentes
+Disenar en NiFi no consiste en arrastrar procesadores hasta que algo funcione. Un flujo mantenible debe expresar responsabilidades, controlar errores y permitir operar sin miedo.
 
-Los procesadores son las unidades fundamentales de trabajo en Apache NiFi. Cada procesador realiza una acción específica en el flujo de datos y se puede configurar para adaptarse a tus necesidades.
+## Modelo mental
 
-### Tipos de Procesadores
-
-1. **GetFile:**
-    - **Propósito:** Lee archivos de un directorio local y los agrega al flujo.
-    - **Configuración:**
-        - **Directorio:** Ruta al directorio desde el que se leerán los archivos.
-    - **Ejemplo:**
-        - Configura el procesador para leer archivos desde `/ruta/entrada`.
-
-2. **PutDatabaseRecord:**
-    - **Propósito:** Inserta, actualiza o elimina registros en una base de datos.
-    - **Configuración:**
-        - **Controlador de Servicio de BD:** Selecciona el controlador de base de datos.
-        - **Consulta SQL:** Define la consulta que interactuará con la base de datos.
-    - **Ejemplo:**
-        - Conecta NiFi a una base de datos MySQL y utiliza el procesador para insertar registros en una tabla "clientes".
-
-3. **RouteText:**
-    - **Propósito:** Enruta el flujo basado en contenido de texto.
-    - **Configuración:**
-        - **Text:** Contenido de texto en el flujo a evaluar.
-    - **Ejemplo:**
-        - Si el contenido contiene "URGENTE", enruta a la relación "urgente"; de lo contrario, a la relación "normal".
-
-4. **MergeContent:**
-    - **Propósito:** Combina múltiples flujos en uno.
-    - **Configuración:**
-        - **Strategy:** Estrategia de combinación (binario, demarcado, etc.).
-    - **Ejemplo:**
-        - Fusiona dos flujos: uno con datos CSV y otro con datos JSON.
-
-### Configuración y Uso de Procesadores
-
-1. Arrastra un procesador de la paleta y colócalo en el canvas.
-2. Doble clic en el procesador para abrir el panel de configuración.
-3. Ajusta las propiedades según sea necesario, como rutas de archivos, consultas SQL o patrones de enrutamiento.
-4. Conecta los procesadores arrastrando conexiones desde las relaciones de salida a las relaciones de entrada de otros procesadores.
-
-## Gestión de Flujo y Enrutamiento
-
-Una gestión efectiva del flujo y el enrutamiento en NiFi permite un control preciso sobre cómo los datos se mueven y se direccionan a través del sistema.
-
-### Enrutamiento Condicional
-
-1. Utiliza el procesador "RouteText" para evaluar contenido de texto.
-2. **Configuración:**
-    - **Text:** Define el contenido de texto en el flujo a evaluar.
-    - **Expression Language:** Utiliza expresiones regulares o condiciones para evaluar el contenido.
-3. Establece relaciones de salida basadas en los resultados de la evaluación.
-
-### Estrategias de Manejo de Errores
-
-1. Agrega el procesador "LogAttribute" para registrar información sobre los datos en el flujo.
-2. **Configuración:**
-    - **Log Level:** Establece el nivel de detalle de los registros.
-3. Conecta el procesador "LogAttribute" a una relación de registro antes de la siguiente etapa de procesamiento.
-4. Utiliza procesadores como "PutFile" o "PutEmail" en la relación de error para manejar datos que no cumplen ciertas condiciones.
-
-## Transformación de Datos
-
-La transformación de datos es esencial para limpiar, enriquecer y dar forma a los datos a medida que fluyen a través del sistema.
-
-### Procesadores de Transformación
-
-1. **ReplaceText:**
-    - **Propósito:** Reemplaza patrones de texto en el contenido del flujo.
-    - **Configuración:**
-        - **Search Value:** Define el patrón que se buscará en el texto.
-        - **Replacement Value:** Especifica el texto de reemplazo.
-    - **Ejemplo:**
-        - Reemplaza todos los números de teléfono en el texto con la cadena "[NÚMERO DE TELÉFONO]" usando la expresión regular.
-
-2. **SplitText:**
-    - **Propósito:** Divide el contenido de texto en partes más pequeñas.
-    - **Configuración:**
-        - **Line Split Count:** Define el número de partes en las que se dividirá el texto.
-    - **Ejemplo:**
-        - Divide un archivo CSV en líneas individuales para procesar cada línea por separado.
-
-3. **UpdateAttribute:**
-    - **Propósito:** Modifica los atributos del flujo.
-    - **Configuración:**
-        - **Atributos a Agregar/Actualizar:** Define los atributos y sus valores.
-    - **Ejemplo:**
-        - Agrega un atributo "prioridad" con el valor "alta" a los datos del flujo si cumplen ciertas condiciones.
-
-### Expresiones y Consultas
-
-1. Utiliza expresiones regulares para buscar y reemplazar patrones en el contenido del flujo.
-    - **Ejemplo:**
-        - Utiliza una expresión regular para encontrar y reemplazar direcciones de correo electrónico en el texto.
-
-2. Emplea consultas Xpath o JSONPath para extraer datos específicos de contenido estructurado como XML o JSON.
-    - **Ejemplo:**
-        - Utiliza JSONPath para extraer valores específicos de un objeto JSON, como "$.usuario.nombre".
-
-
-## Patrones habituales de diseño de flujos
-
-### Ingesta y validación
+Piensa cada flujo como una serie de etapas:
 
 ```txt
-GetFile -> ValidateRecord -> RouteOnAttribute -> PutDatabaseRecord
+entrada -> normalizacion -> validacion -> routing -> salida -> errores
 ```
 
-Este patrón lee datos, valida estructura, separa registros válidos y erróneos, y persiste los datos correctos.
+Cada etapa deberia poder explicarse con una frase. Si un process group necesita una pagina entera para entenderse, probablemente esta mezclando demasiadas responsabilidades.
 
-### Enriquecimiento
+## Nombres y estructura
+
+Usa nombres orientados a negocio:
 
 ```txt
-ConsumeKafka -> EvaluateJsonPath -> LookupRecord -> UpdateRecord -> PublishKafka
+Ingesta de pedidos desde SFTP
+Validacion de esquema de pedidos
+Publicacion en Kafka ventas.pedidos
+Errores de pedidos invalidos
 ```
 
-Permite recibir eventos, extraer campos relevantes, consultar datos de referencia y publicar el resultado enriquecido.
-
-### Rutas de error
-
-Todo flujo productivo debería separar errores técnicos y errores funcionales.
+Evita nombres genericos:
 
 ```txt
-success -> siguiente paso
-failure -> log + almacenamiento de error
-retry -> cola de reintento
+GetFile 1
+ProcessGroup final
+Test nuevo
+Processor copia
 ```
 
-## Controller Services
+## Process groups recomendados
 
-Los **Controller Services** centralizan configuraciones compartidas entre procesadores.
+Una estructura habitual:
+
+```txt
+01 Entrada
+02 Validacion
+03 Enriquecimiento
+04 Publicacion
+90 Reintentos
+99 Errores
+```
+
+No hace falta seguir exactamente esa numeracion, pero ayuda a que el canvas tenga lectura de izquierda a derecha.
+
+## Relationships
+
+Cada processor tiene salidas posibles llamadas relationships. Algunas comunes:
+
+- `success`
+- `failure`
+- `retry`
+- `original`
+- `matched`
+- `unmatched`
+
+Una relationship sin conectar puede bloquear el processor, salvo que se marque como auto-terminated. Auto-terminar una relacion significa descartar esos FlowFiles, asi que debe ser una decision explicita.
+
+## Routing por atributos
+
+`RouteOnAttribute` permite enviar FlowFiles a rutas distintas segun sus atributos.
+
+Ejemplo:
+
+```txt
+${mime.type:equals('application/json')}
+${filename:endsWith('.csv')}
+${source:equals('crm')}
+```
+
+Uso tipico:
+
+```txt
+entrada -> RouteOnAttribute
+  -> json -> flujo JSON
+  -> csv -> flujo CSV
+  -> unmatched -> errores
+```
+
+## Routing por contenido
+
+Cuando la decision depende del contenido, puedes usar processors como:
+
+- `EvaluateJsonPath`
+- `EvaluateXPath`
+- `ExtractText`
+- `QueryRecord`
+- `ValidateRecord`
+
+Patron comun:
+
+```txt
+EvaluateJsonPath -> RouteOnAttribute -> salida especifica
+```
+
+Extrae lo minimo necesario a atributos. No conviertas cada campo de negocio en atributo si el contenido es grande.
+
+## Formato Record
+
+La familia de processors `Record` permite trabajar con CSV, JSON, Avro, Parquet y otros formatos de manera mas estructurada.
 
 Ejemplos:
 
-- Conexiones a bases de datos.
-- Lectores y escritores de registros.
-- Servicios SSL.
-- Cachés distribuidas.
+- `ConvertRecord`
+- `ValidateRecord`
+- `QueryRecord`
+- `PutDatabaseRecord`
+- `PublishKafkaRecord_2_6`
 
-Buenas prácticas:
+Necesitan lectores y escritores configurados como controller services.
 
-- Usa nombres descriptivos.
-- Reutiliza servicios comunes.
-- Versiona cambios importantes.
-- Documenta credenciales y dependencias sin exponer secretos.
-
-## Parameter Contexts
-
-Los **Parameter Contexts** permiten externalizar configuración.
-
-Ejemplos de parámetros:
+## Ejemplo: ingesta de CSV
 
 ```txt
-input.directory=/data/input
-output.directory=/data/output
-database.url=jdbc:mysql://localhost:3306/app
+GetFile
+  -> UpdateAttribute
+  -> ValidateRecord
+      -> valid -> ConvertRecord -> PutDatabaseRecord
+      -> invalid -> PutFile cuarentena
 ```
 
-Ventajas:
+Controles recomendados:
 
-- Facilitan mover flujos entre entornos.
-- Evitan valores hardcodeados.
-- Mejoran mantenimiento y despliegue.
+- Guardar ruta y nombre original.
+- Anadir identificador de ejecucion.
+- Validar esquema.
+- Separar registros invalidos.
+- Publicar metricas de volumen.
 
-## Validación de datos
-
-Antes de escribir datos en un destino, valida:
-
-- Estructura del archivo.
-- Campos obligatorios.
-- Tipos de datos.
-- Reglas de negocio mínimas.
-- Duplicados o claves inexistentes.
-
-Ejemplo de estrategia:
+## Ejemplo: API a Kafka
 
 ```txt
-entrada -> validar schema -> separar válidos/erróneos -> persistir -> registrar métricas
+GenerateTableFetch
+  -> ExecuteSQLRecord
+  -> ConvertRecord
+  -> PublishKafkaRecord_2_6
 ```
 
-## Buenas prácticas
-
-- Diseña rutas explícitas para `success`, `failure` y `retry`.
-- Usa Controller Services para configuraciones compartidas.
-- Usa Parameter Contexts para separar entornos.
-- Mantén grupos pequeños y con responsabilidad clara.
-- Añade procesadores de logging en puntos críticos.
-- Documenta formato de entrada y salida.
-
-## Errores comunes
-
-- Hardcodear rutas, credenciales o URLs.
-- No separar errores de validación y errores técnicos.
-- Dejar colas crecer sin back pressure.
-- Crear flujos enormes sin process groups.
-- No probar con datos incompletos o corruptos.
-
-## Chuleta rápida
+O para HTTP:
 
 ```txt
-Controller Service = configuración compartida
-Parameter Context = configuración por entorno
-RouteOnAttribute = enrutar por atributos
-ValidateRecord = validar estructura
-failure/retry = rutas obligatorias en producción
+InvokeHTTP
+  -> EvaluateJsonPath
+  -> RouteOnAttribute
+  -> PublishKafkaRecord_2_6
 ```
+
+## Documentacion del flujo
+
+Cada process group importante deberia documentar:
+
+- Objetivo.
+- Fuente.
+- Destino.
+- Frecuencia.
+- Formato esperado.
+- Relaciones de error.
+- Parametros necesarios.
+- Propietario.
+
+NiFi permite anadir comentarios y labels en el canvas. Usalos para decisiones que no sean obvias.
+
+## Checklist de desarrollo
+
+- El flujo tiene grupos por responsabilidad.
+- Los nombres explican intencion.
+- Todas las relationships estan conectadas o terminadas de forma consciente.
+- Hay rutas separadas para exito, retry y fallo definitivo.
+- Las rutas, hosts y credenciales son parametros.
+- Los controller services estan reutilizados.
+- La salida final es idempotente o deduplicable.
+- El flujo queda versionado en Registry.
 
 ## Recursos relacionados
 
-- [Introducción a NiFi](01-introduccion.md)
-- [Optimización y administración](03-optimizacion-y-administracion.md)
-- [Pipelines de datos](../pipelines/README.md)
+- [Procesadores, controller services y parametros](04-procesadores-controller-services-y-parametros.md)
+- [Colas, back pressure y errores](05-colas-back-pressure-y-errores.md)
+- [Pipelines de datos](../pipelines/01-introduccion.md)

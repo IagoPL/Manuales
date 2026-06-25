@@ -1,128 +1,151 @@
-# Manual de Fundamentos de NiFi
+# Apache NiFi
 
-## Introducción a Apache NiFi
+Apache NiFi es una plataforma de flujo de datos orientada a ingesta, routing, transformaciones ligeras y movimiento fiable entre sistemas. Su punto fuerte es que permite disenar flujos de forma visual, observar que ocurre con cada FlowFile y cambiar rutas operativas sin convertir todo en codigo.
 
-Apache NiFi es una plataforma de código abierto que permite el flujo de datos entre sistemas de manera confiable y escalable. Su arquitectura basada en flujos permite capturar, enriquecer y transportar datos de manera eficiente.
+NiFi encaja muy bien cuando necesitas conectar sistemas, mover ficheros, enrutar eventos, enriquecer metadatos, llamar APIs, escribir en colas o bases de datos y dejar trazabilidad de lo que ha ocurrido.
 
-### Conceptos Clave
+## Capitulos
 
-- **Flujo de Datos:** El flujo de datos en NiFi consiste en el movimiento de información entre diferentes componentes, llamados procesadores.
-- **Procesadores:** Son las unidades funcionales que realizan acciones específicas, como leer, transformar, enrutar y escribir datos.
-- **Conexiones:** Representan el enlace entre procesadores y definen la dirección del flujo de datos.
+1. [Introduccion](01-introduccion.md)
+2. [Diseno y desarrollo de flujos](02-diseno-y-desarrollo-de-flujos.md)
+3. [Optimizacion y administracion](03-optimizacion-y-administracion.md)
+4. [Procesadores, controller services y parametros](04-procesadores-controller-services-y-parametros.md)
+5. [Colas, back pressure y errores](05-colas-back-pressure-y-errores.md)
+6. [Registry, despliegue y observabilidad](06-registry-despliegue-y-observabilidad.md)
 
-## Instalación y Configuración
+## Cuando usar NiFi
 
-NiFi se puede instalar en varios sistemas operativos y entornos. A continuación, se presenta un ejemplo de instalación en Linux:
+NiFi es buena eleccion para:
 
-1. Descargar la última versión de NiFi desde [enlace](https://nifi.apache.org/download.html).
-2. Extraer el archivo descargado: `tar -xvzf nifi-1.13.2-bin.tar.gz`.
-3. Navegar a la carpeta extraída: `cd nifi-1.13.2`.
-4. Iniciar NiFi: `./bin/nifi.sh start`.
+- Ingesta desde ficheros, APIs, SFTP, HTTP, bases de datos o colas.
+- Routing visual segun atributos o contenido.
+- Flujos operativos donde importa ver colas, errores y trazabilidad.
+- Integracion entre sistemas con protocolos distintos.
+- Enriquecimiento ligero antes de enviar datos a Kafka, un lake o un warehouse.
+- Procesos donde un equipo de datos necesita operar sin desplegar codigo para cada cambio menor.
 
-### Configuración Básica
+## Cuando no usar NiFi
 
-La configuración de NiFi se realiza en el archivo `nifi.properties`. Aquí hay algunas configuraciones clave:
+NiFi no deberia ser la herramienta principal para todo:
 
-- `nifi.web.http.port`: Puerto HTTP para acceder a la interfaz web.
-- `nifi.security.keystorePasswd`: Contraseña del almacén de claves para SSL.
-- `nifi.flow.configuration.file`: Ubicación del archivo de flujo de datos.
-
-## Interfaz de Usuario y Panel de Control
-
-La interfaz web de NiFi proporciona un panel de control intuitivo para diseñar y monitorear flujos de datos.
-
-### Componentes de la Interfaz
-
-1. **Canvas:** Área principal donde se arrastran y conectan los procesadores.
-2. **Paleta:** Lista de procesadores disponibles para usar.
-3. **Barra de Herramientas:** Contiene opciones para guardar, iniciar y detener el flujo.
-4. **Panel de Configuración:** Permite configurar procesadores y conexiones.
-
-### Creación de un Flujo Básico
-
-1. Arrastra un procesador "GetFile" al canvas.
-2. Configura el procesador para leer archivos de una carpeta.
-3. Conecta el procesador "GetFile" a un procesador "LogAttribute".
-4. Inicia el flujo para capturar y registrar atributos de archivos.
-
-
----
+- Transformaciones analiticas pesadas: suele encajar mejor Spark, SQL, dbt o un motor distribuido.
+- Streaming con estado complejo: Kafka Streams, Flink o Spark Structured Streaming suelen ser mejores.
+- Logica de negocio grande y versionada como aplicacion: un servicio propio puede ser mas mantenible.
+- Modelado de datos en warehouse: dbt o SQL gestionado suelen ser mas adecuados.
 
 ## Componentes principales
 
-### Processor
-
-Un **processor** realiza una acción concreta sobre los datos. Puede leer archivos, transformar contenido, invocar una API, escribir en una base de datos o enrutar eventos.
-
-Ejemplos habituales:
-
-- `GetFile`: lee archivos desde un directorio.
-- `PutFile`: escribe archivos en un directorio.
-- `LogAttribute`: registra atributos del FlowFile.
-- `RouteOnAttribute`: enruta datos según condiciones.
-- `UpdateAttribute`: modifica o añade atributos.
-
 ### FlowFile
 
-Un **FlowFile** representa una unidad de datos dentro de NiFi. Está formado por:
+Un FlowFile es la unidad que se mueve por NiFi. Tiene dos partes:
 
-- **Contenido:** los datos reales.
-- **Atributos:** metadatos asociados al contenido.
+- **Contenido:** bytes reales del dato.
+- **Atributos:** metadatos como nombre de fichero, ruta, MIME type, ids, timestamps o campos calculados.
+
+NiFi intenta evitar copiar contenido innecesariamente. Muchas operaciones modifican atributos o referencias internas.
+
+### Processor
+
+Un processor ejecuta una accion concreta:
+
+- Leer ficheros.
+- Consumir mensajes.
+- Invocar una API.
+- Evaluar condiciones.
+- Modificar atributos.
+- Convertir formatos.
+- Escribir en otro sistema.
+
+Ejemplos:
+
+- `GetFile`
+- `PutFile`
+- `InvokeHTTP`
+- `RouteOnAttribute`
+- `UpdateAttribute`
+- `QueryDatabaseTableRecord`
+- `PublishKafkaRecord_2_6`
 
 ### Connection
 
-Una **connection** une procesadores y almacena temporalmente FlowFiles entre pasos. También permite configurar colas, prioridades y límites de back pressure.
+Una connection une dos componentes y funciona como cola. Permite configurar:
+
+- Relaciones que acepta.
+- Back pressure por cantidad de FlowFiles.
+- Back pressure por tamano total.
+- Priorizadores.
+- Expiracion de datos.
 
 ### Process Group
 
-Un **process group** agrupa procesadores y conexiones para organizar flujos complejos. Es útil para separar responsabilidades y reutilizar diseños.
+Un process group agrupa una parte del flujo. Sirve para dividir responsabilidades:
 
-## Ejemplo práctico: ingesta de archivos
+- Ingesta.
+- Validacion.
+- Enrutado.
+- Publicacion.
+- Errores.
 
-Flujo básico:
+Un buen flujo de NiFi se entiende por grupos bien nombrados, no por cientos de procesadores en el mismo canvas.
+
+### Controller Service
+
+Un controller service define recursos compartidos:
+
+- Conexiones a bases de datos.
+- Lectores y escritores de registros.
+- Clientes SSL.
+- Servicios de cache.
+- Esquemas.
+
+Permite reutilizar configuracion y evitar duplicacion.
+
+### Parameter Context
+
+Un parameter context guarda valores configurables por entorno:
+
+- Hosts.
+- Rutas.
+- Topics.
+- Nombres de tablas.
+- Umbrales.
+- Credenciales sensibles.
+
+Es la forma moderna de separar configuracion de diseno del flujo.
+
+## Flujo minimo
 
 ```txt
 GetFile -> UpdateAttribute -> LogAttribute -> PutFile
 ```
 
-Objetivo:
+Este flujo:
 
-1. Leer archivos desde una carpeta de entrada.
-2. Añadir atributos de control.
-3. Registrar metadatos para depuración.
-4. Escribir los archivos procesados en una carpeta de salida.
+1. Lee archivos de una carpeta.
+2. Anade metadatos.
+3. Registra atributos para depuracion.
+4. Escribe el contenido en otra carpeta.
 
-## Buenas prácticas
+Aunque sea simple, ya aparecen conceptos clave: FlowFiles, processors, relationships, connections y colas.
 
-- Usa nombres descriptivos en procesadores y grupos.
-- Divide flujos grandes en process groups.
-- Configura back pressure para evitar saturación.
-- Revisa las relaciones de éxito y error de cada processor.
-- Registra errores en rutas separadas.
-- Usa NiFi Registry si necesitas versionar flujos.
-- Documenta variables, rutas y dependencias externas.
+## Buenas practicas iniciales
 
-## Errores comunes
+- Nombra los processors por intencion, no solo por tipo.
+- Divide el flujo en process groups pequenos.
+- Conecta o termina todas las relationships.
+- Configura back pressure desde el principio.
+- Separa rutas de exito, fallo y retry.
+- Usa parameter contexts para valores por entorno.
+- Versiona flujos con NiFi Registry.
+- Documenta que entra, que sale y quien es propietario.
 
-- Dejar relaciones sin conectar o sin terminar.
-- No configurar límites de cola.
-- Mezclar demasiada lógica en un único grupo.
-- No separar datos válidos y datos con error.
-- No revisar permisos en rutas de lectura o escritura.
+## Relacion con pipelines
 
-## Chuleta rápida
+NiFi suele ser una pieza dentro de un pipeline de datos. Puede encargarse de ingesta, routing y entrega, mientras que otras herramientas hacen orquestacion, transformacion pesada o modelado analitico.
 
-```txt
-FlowFile = contenido + atributos
-Processor = acción sobre los datos
-Connection = cola entre procesadores
-Process Group = agrupación lógica
-Back pressure = control de saturación
-Relationship = salida posible de un processor
-```
+Recursos relacionados:
 
-## Recursos relacionados
-
-- [Diseño y desarrollo de flujos](02-diseno-y-desarrollo-de-flujos.md)
-- [Optimización y administración](03-optimizacion-y-administracion.md)
-- [Pipelines de datos](../pipelines/README.md)
+- [Pipelines de datos](../pipelines/01-introduccion.md)
+- [Apache Kafka](../kafka/01-introduccion-y-arquitectura.md)
+- [Apache Spark](../spark/01-introduccion-a-apache-spark.md)
+- [Apache Airflow](../airflow/01-introduccion-y-arquitectura.md)

@@ -1,190 +1,131 @@
-# Manual de Optimización y Administración Avanzada con NiFi
+# Optimizacion y administracion de NiFi
 
-## Optimización de Rendimiento
+Optimizar NiFi significa equilibrar rendimiento, estabilidad y operabilidad. No se trata solo de subir concurrencia: tambien hay que controlar colas, repositorios, back pressure, tiempos de ejecucion y dependencias externas.
 
-La optimización de rendimiento en Apache NiFi es una disciplina esencial para garantizar que tus flujos de datos funcionen a la máxima eficiencia y escalabilidad. A continuación, se explorarán técnicas avanzadas para lograr un rendimiento óptimo.
+## Donde se consume rendimiento
 
-### Técnicas de Optimización Avanzadas
+Los cuellos de botella suelen aparecer en:
 
-1. **Balanceo de Carga:**
-    - La distribución de la carga entre los nodos del clúster mejora la velocidad de procesamiento y evita cuellos de botella.
-    - **Ejemplo:** Configura un clúster NiFi con varios nodos y utiliza el procesador "Remote Process Group" para equilibrar la carga entre ellos. De esta manera, los flujos de datos se distribuirán eficientemente, mejorando el rendimiento.
+- Procesadores que esperan red o APIs externas.
+- Escrituras lentas a disco, base de datos o Kafka.
+- Transformaciones pesadas sobre contenido grande.
+- Colas sin back pressure.
+- Reintentos excesivos.
+- Repositorios mal dimensionados.
+- Cluster con nodos desequilibrados.
 
-2. **Paralelización Fina:**
-    - Divide tareas complejas en fragmentos más pequeños y procesa flujos de datos en paralelo, aumentando la velocidad de ejecución.
-    - **Ejemplo:** Utiliza el procesador "SplitText" para fragmentar un archivo CSV en líneas individuales. Luego, procesa estas líneas en paralelo con varios procesadores "ExecuteScript" para realizar operaciones de transformación en cada línea de manera simultánea.
+Mide antes de cambiar parametros globales.
 
-3. **Optimización de Cache:**
-    - Almacenar temporalmente datos intermedios en caché reduce la carga en los recursos de entrada y salida, mejorando la eficiencia.
-    - **Ejemplo:** Configura el procesador "DistributedMapCacheServer" para almacenar en caché datos de referencia que se utilizan con frecuencia. Cuando un procesador necesita estos datos, los recuperará del caché en lugar de acceder al recurso externo, lo que acelera el proceso.
+## Concurrent tasks
 
-4. **Ajuste Fino de Threads:**
-    - Experimenta con el número de threads en los procesadores para optimizar el rendimiento en función de la capacidad de tu hardware.
-    - **Ejemplo:** Incrementa el número de threads en procesadores intensivos en CPU, como procesadores de transformación, para aprovechar al máximo la capacidad de procesamiento. Por otro lado, reduce los threads en procesadores de E/S para evitar cuellos de botella en los recursos de almacenamiento.
+Cada processor puede ejecutar varias tareas concurrentes. Aumentarlas puede mejorar throughput si el processor esta limitado por I/O, pero puede empeorar el sistema si el destino no soporta mas carga.
 
-## Seguridad y Autenticación
+Buenas practicas:
 
-La seguridad y la autenticación son pilares fundamentales en el entorno de NiFi. Asegurarse de que los datos estén protegidos y que los usuarios tengan acceso adecuado es de vital importancia.
+- Sube concurrencia gradualmente.
+- Observa CPU, memoria, disco y latencia del destino.
+- No aumentes todo a la vez.
+- Ajusta primero los processors que realmente bloquean el flujo.
 
-### Configuración Avanzada de Seguridad
+## Run schedule
 
-1. **Autenticación Multifactor (MFA):**
-    - Implementa autenticación de múltiples factores para elevar el nivel de seguridad durante el inicio de sesión.
-    - **Ejemplo:** Configura NiFi para utilizar autenticación con certificados SSL y un mecanismo de autenticación basado en tokens. Los usuarios deberán proporcionar un certificado válido y un token de acceso para autenticarse.
+El run schedule controla cada cuanto se dispara un processor.
 
-2. **Autorización Basada en Roles:**
-    - Define roles de usuario personalizados y políticas de acceso granulares para restringir acciones específicas.
-    - **Ejemplo:** Crea roles como "Administrador", "Analista" y "Usuario" con políticas específicas para controlar quiénes pueden modificar flujos, quiénes pueden verlos y quiénes pueden acceder únicamente a los datos.
+Ejemplos:
 
-## Monitoreo y Diagnóstico Avanzado
+- `0 sec`: intenta ejecutar continuamente.
+- `5 sec`: ejecuta cada cinco segundos.
+- `1 min`: util para polling menos agresivo.
 
-El monitoreo constante y el diagnóstico preciso son esenciales para mantener un alto rendimiento y resolver problemas de manera eficiente.
+Un processor que consulta una API externa no deberia ejecutarse sin pausa si la API tiene limites.
 
-### Herramientas y Estrategias Avanzadas de Monitoreo
+## Back pressure
 
-1. **Integración con Herramientas de Monitoreo Externas:**
-    - Conecta NiFi con herramientas de monitoreo externas como Prometheus y Grafana para obtener métricas avanzadas de rendimiento.
-    - **Ejemplo:** Configura el procesador "MetricsCollector" para enviar métricas de procesamiento y rendimiento a Prometheus. Luego, visualiza estas métricas en Grafana para un análisis detallado.
+Back pressure evita que un flujo produzca mas datos de los que la siguiente fase puede consumir.
 
-2. **Análisis Avanzado de Provenance:**
-    - Utiliza la provenancia extendida para examinar cada evento en el flujo de datos y detectar cuellos de botella o ineficiencias.
-    - **Ejemplo:** Utiliza la provenancia para rastrear el tiempo de procesamiento de cada componente y identificar los procesadores que están afectando el rendimiento global del flujo.
+Se configura en las connections:
 
-## Escalabilidad y Alta Disponibilidad Avanzada
+- Por numero de FlowFiles.
+- Por tamano total en cola.
 
-Garantizar que tus flujos sean escalables y estén disponibles en todo momento es esencial para mantener la continuidad del procesamiento de datos en entornos críticos.
+Sin back pressure, un destino lento puede llenar repositorios y afectar a todo el cluster.
 
-### Estrategias de Escalabilidad Avanzadas
+## Repositorios
 
-1. **Balanceo Dinámico de Carga:**
-    - Implementa un sistema de balanceo de carga dinámico que ajuste automáticamente la distribución de la carga según el rendimiento del clúster.
-    - **Ejemplo:** Utiliza una herramienta de balanceo de carga que monitoree el uso de recursos en los nodos del clúster y redistribuya tareas automáticamente para evitar la congestión.
+NiFi usa varios repositorios internos:
 
-2. **Escalabilidad Horizontal:**
-    - Añade nodos adicionales al clúster NiFi para aumentar la capacidad de procesamiento en respuesta al crecimiento de los flujos de datos.
-    - **Ejemplo:** Durante períodos de alto tráfico, agrega nodos adicionales al clúster para absorber la demanda y mantener un rendimiento constante.
+- **FlowFile Repository:** estado de FlowFiles.
+- **Content Repository:** contenido real.
+- **Provenance Repository:** historial de eventos.
+- **Database Repository:** estado interno en versiones modernas.
 
-## Administración Avanzada de Flujos
+Recomendaciones:
 
-La administración efectiva de flujos de datos implica el uso de herramientas avanzadas para optimizar la eficiencia operativa.
+- Usar discos rapidos para repositorios criticos.
+- Separar content y provenance si el volumen es alto.
+- Configurar retencion de provenance segun necesidades reales.
+- Monitorizar uso de disco.
 
-### Herramientas de Automatización y Orquestación
+## Cluster
 
-1. **Integración con NiFi Registry y Automatización Continua:**
-    - Utiliza NiFi Registry en conjunto con herramientas de automatización como Jenkins para implementar flujos automáticamente en diferentes entornos.
-    - **Ejemplo:** Configura un flujo de integración continua/entrega continua (CI/CD) que automatice el despliegue de flujos desde NiFi Registry a diferentes instancias de NiFi en entornos de desarrollo, prueba y producción.
+En cluster, varios nodos ejecutan el mismo flujo.
 
-2. **Gestión de Dependencias y Versionado:**
-    - Utiliza las capacidades avanzadas de NiFi Registry para gestionar dependencias y versiones de controladores de servicios y componentes compart
+Ten en cuenta:
 
-idos.
-- **Ejemplo:** Almacena controladores de servicios compartidos en NiFi Registry y referencia estas versiones específicas en tus flujos para asegurar la consistencia y el control de versiones.
+- Algunos processors deben ejecutarse solo en el primary node.
+- Las colas pertenecen a nodos concretos.
+- El balanceo de carga entre nodos puede ayudar en flujos distribuidos.
+- Un nodo lento puede acumular cola aunque otros esten sanos.
 
-## Gestión operativa
+## Seguridad
 
-Administrar NiFi implica mantener flujos estables, seguros y observables durante todo su ciclo de vida.
+En produccion, NiFi debe operar con seguridad activada.
 
-### Versionado con NiFi Registry
+Aspectos basicos:
 
-NiFi Registry permite versionar process groups y mover flujos entre entornos.
+- HTTPS.
+- Autenticacion.
+- Autorizacion por politicas.
+- Certificados correctamente gestionados.
+- Credenciales como parametros sensibles.
+- Acceso minimo necesario.
+- Auditoria de cambios.
 
-Flujo recomendado:
+## Mantenimiento
 
-```txt
-Desarrollo -> commit en Registry -> revisión -> despliegue en test -> despliegue en producción
-```
+Tareas habituales:
 
-### Backups
+- Revisar colas acumuladas.
+- Limpiar datos obsoletos.
+- Revisar provenance y retencion.
+- Actualizar processors y extensiones.
+- Versionar cambios en Registry.
+- Validar backups de configuracion.
+- Revisar logs y uso de disco.
 
-Elementos importantes para respaldar:
+## Problemas frecuentes
 
-- Configuración de NiFi.
-- Flows versionados.
-- Parameter Contexts.
-- Certificados y configuración de seguridad.
-- Configuración de Controller Services.
+| Sintoma | Posible causa | Accion |
+| --- | --- | --- |
+| Cola crece sin parar | Destino lento | Revisar back pressure y throughput |
+| CPU alta | Transformacion costosa | Reducir concurrencia o mover a Spark |
+| Disco lleno | Content/provenance acumulado | Ajustar retencion y revisar colas |
+| Muchos retries | Dependencia externa inestable | Separar retry y failure |
+| Cluster desequilibrado | Flujo no balanceado | Revisar load balancing |
 
-## Observabilidad
+## Checklist de produccion
 
-Una operación estable necesita visibilidad.
-
-Métricas útiles:
-
-- FlowFiles entrantes y salientes.
-- Tamaño de colas.
-- Tiempo medio de procesamiento.
-- Errores por procesador.
-- Uso de CPU y memoria.
-- Uso de disco en repositorios internos.
-
-## Tuning de colas y back pressure
-
-El back pressure evita que un flujo sature el sistema.
-
-Configura límites por:
-
-- Cantidad de FlowFiles.
-- Tamaño total de datos en cola.
-
-Buenas prácticas:
-
-- Ajusta límites según capacidad real.
-- Monitoriza colas críticas.
-- Revisa procesadores lentos aguas abajo.
-- No uses colas enormes para ocultar problemas de rendimiento.
-
-## Seguridad operativa
-
-Medidas recomendadas:
-
-- Usa HTTPS.
-- Limita permisos por rol.
-- Protege credenciales con servicios adecuados.
-- Audita cambios en flujos críticos.
-- Separa entornos de desarrollo, test y producción.
-- Evita exponer la UI de NiFi públicamente.
-
-## Plan de despliegue
-
-Antes de pasar un flujo a producción:
-
-1. Validar entradas esperadas.
-2. Probar rutas de error.
-3. Revisar back pressure.
-4. Confirmar permisos y credenciales.
-5. Activar métricas y logs.
-6. Documentar rollback.
-7. Versionar en NiFi Registry.
-
-## Buenas prácticas
-
-- Mantén flujos versionados.
-- Documenta cambios funcionales.
-- Revisa métricas después de cada despliegue.
-- Crea rutas de error observables.
-- Separa configuración de lógica.
-- Define responsables por flujo.
-
-## Errores comunes
-
-- Cambiar flujos en producción sin versionado.
-- No tener rollback claro.
-- Ignorar colas crecientes.
-- Guardar credenciales en propiedades visibles.
-- No monitorizar repositorios internos.
-
-## Chuleta rápida
-
-```txt
-Registry = versionado
-Back pressure = control de colas
-Provenance = trazabilidad
-Controller Services = configuración compartida
-Parameter Contexts = configuración por entorno
-```
+- Seguridad activada.
+- Repositorios dimensionados.
+- Back pressure configurado.
+- Retencion de provenance definida.
+- Flujos versionados.
+- Parametros separados por entorno.
+- Alertas de disco, colas y errores.
+- Runbook de parada, arranque y recuperacion.
 
 ## Recursos relacionados
 
-- [Introducción a NiFi](01-introduccion.md)
-- [Diseño y desarrollo de flujos](02-diseno-y-desarrollo-de-flujos.md)
-- [Pipelines de datos](../pipelines/README.md)
+- [Colas, back pressure y errores](05-colas-back-pressure-y-errores.md)
+- [Registry, despliegue y observabilidad](06-registry-despliegue-y-observabilidad.md)
+- [Pipelines de datos](../pipelines/01-introduccion.md)

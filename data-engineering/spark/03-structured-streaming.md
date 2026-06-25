@@ -86,4 +86,4 @@ sink = destino
 
 - [Arquitectura y RDDs](02-arquitectura-y-rdds.md)
 - [Datos estructurados y SQL](05-datos-estructurados-y-sql.md)
-- [Pipelines de datos](../pipelines/README.md)
+- [Pipelines de datos](../pipelines/01-introduccion.md)

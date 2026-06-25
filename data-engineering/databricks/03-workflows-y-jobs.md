@@ -71,4 +71,4 @@ Job cluster = cómputo por ejecución
 
 - [Databricks: introducción](01-databricks.md)
 - [Notebooks](02-notebooks.md)
-- [Pipelines de datos](../pipelines/README.md)
+- [Pipelines de datos](../pipelines/01-introduccion.md)

@@ -83,4 +83,4 @@ SELECT * FROM tabla VERSION AS OF 1;
 
 - [Databricks: introducción](01-databricks.md)
 - [Apache Spark SQL](../spark/05-datos-estructurados-y-sql.md)
-- [Pipelines de datos](../pipelines/README.md)
+- [Pipelines de datos](../pipelines/01-introduccion.md)

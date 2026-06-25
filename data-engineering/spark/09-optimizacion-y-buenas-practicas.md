@@ -87,4 +87,4 @@ df.write.parquet("/ruta")
 
 - [Transformaciones y acciones](04-transformaciones-y-acciones.md)
 - [Lectura y escritura](07-lectura-y-escritura.md)
-- [Pipelines de datos](../pipelines/README.md)
+- [Pipelines de datos](../pipelines/01-introduccion.md)
