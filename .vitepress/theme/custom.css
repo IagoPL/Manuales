@@ -199,6 +199,12 @@ body {
   transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 }
 
+.vp-doc .library-button,
+.vp-doc .library-button:visited {
+  color: var(--manual-button-text);
+  text-decoration: none;
+}
+
 .library-button:visited,
 .library-button:hover,
 .library-button:focus {
@@ -210,6 +216,12 @@ body {
   color: var(--manual-button-hover-text);
   background: var(--manual-button-hover-bg);
   box-shadow: 0 10px 24px rgba(93, 84, 68, 0.08);
+}
+
+.vp-doc .library-button:hover,
+.vp-doc .library-button:focus {
+  color: var(--manual-button-hover-text);
+  text-decoration: none;
 }
 
 .library-button--primary {
@@ -224,6 +236,15 @@ body {
 .library-button--primary:hover,
 .library-button--primary:focus {
   color: var(--manual-primary-text);
+  text-decoration: none;
+}
+
+.vp-doc .library-button--primary,
+.vp-doc .library-button--primary:visited,
+.vp-doc .library-button--primary:hover,
+.vp-doc .library-button--primary:focus {
+  color: var(--manual-primary-text);
+  text-decoration: none;
 }
 
 .library-button--primary:hover {
