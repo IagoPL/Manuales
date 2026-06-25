@@ -85,4 +85,4 @@ GitHub Pages: `https://<usuario>.github.io/<repositorio>/`
 
 ## Autor
 
-Iago P.
+Iago Prieto Lamas
