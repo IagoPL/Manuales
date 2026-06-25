@@ -77,6 +77,15 @@ Manuales/
 
 Snowflake queda documentado en [Bases de datos](bases-de-datos/snowflake/01-introduccion-y-arquitectura.md) para evitar duplicar contenido entre apartados.
 
+## Lenguajes
+
+- [Python](lenguajes/python/01-introduccion.md)
+- [JavaScript](lenguajes/javascript/01-introduccion.md)
+- [TypeScript](lenguajes/typescript/01-introduccion-y-configuracion.md)
+- [Java](lenguajes/java/01-introduccion.md)
+- [C++](lenguajes/cpp/00-indice.md)
+- [Scala](lenguajes/scala/01-sintaxis-y-caracteristicas.md)
+
 ## Cloud y DevOps
 
 - [Docker](herramientas/docker/01-introduccion.md)

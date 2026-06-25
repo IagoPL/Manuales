@@ -17,7 +17,7 @@ import { data as manuales } from './.vitepress/manuals.data'
     </p>
     <div class="library-actions">
       <a class="library-button library-button--primary" :href="withBase(manuales.categories[0]?.link ?? '/readme')">Explorar manuales</a>
-      <a class="library-button" :href="withBase('/full-stack/frontend/react/README')">React</a>
+      <a class="library-button" :href="withBase('/full-stack/frontend/react/01-introduccion')">React</a>
       <a class="library-button" :href="withBase('/herramientas/git/01-fundamentos-basicos')">Git</a>
     </div>
   </div>
