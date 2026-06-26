@@ -1,15 +1,48 @@
-﻿# Autenticacion JWT y sesiones
+# Autenticación JWT y sesiones
 
-Pendiente de completar.
+Express puede usar JWT, sesiones con cookies o proveedores externos. La decisión depende del tipo de cliente y seguridad requerida.
 
-## Objetivo
+## Middleware JWT
 
-Este capitulo se desarrollara siguiendo el orden del manual.
+```js
+function requireAuth(req, res, next) {
+  const header = req.headers.authorization
+  const token = header?.replace('Bearer ', '')
 
-## Contenido previsto
+  if (!token) return res.status(401).json({ code: 'UNAUTHORIZED' })
 
-- Conceptos fundamentales.
-- Ejemplos practicos.
-- Buenas practicas.
-- Errores habituales.
-- Ejercicios o proyecto guiado cuando aplique.
+  req.user = verifyToken(token)
+  next()
+}
+```
+
+## Proteger ruta
+
+```js
+router.get('/me', requireAuth, (req, res) => {
+  res.json(req.user)
+})
+```
+
+## Sesiones
+
+Para apps web, sesiones con cookies `HttpOnly`, `Secure` y `SameSite` suelen ser seguras.
+
+## Autorización
+
+```js
+function requireRole(role) {
+  return (req, res, next) => {
+    if (!req.user?.roles?.includes(role)) return res.status(403).json({ code: 'FORBIDDEN' })
+    next()
+  }
+}
+```
+
+## Buenas practicas
+
+- HTTPS.
+- Validar expiración y firma.
+- No guardar secretos en JWT.
+- Cookies seguras si usas sesiones.
+- Permisos por recurso.

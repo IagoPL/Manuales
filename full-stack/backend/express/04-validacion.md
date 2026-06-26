@@ -1,15 +1,43 @@
-﻿# Validacion
+# Validación
 
-Pendiente de completar.
+Express no trae validación integrada. Puedes usar Zod, Joi, Yup o express-validator.
 
-## Objetivo
+## Zod
 
-Este capitulo se desarrollara siguiendo el orden del manual.
+```js
+import { z } from 'zod'
 
-## Contenido previsto
+const createProductSchema = z.object({
+  name: z.string().min(1).max(120),
+  price: z.number().nonnegative(),
+})
+```
 
-- Conceptos fundamentales.
-- Ejemplos practicos.
-- Buenas practicas.
-- Errores habituales.
-- Ejercicios o proyecto guiado cuando aplique.
+## Middleware de validación
+
+```js
+function validateBody(schema) {
+  return (req, res, next) => {
+    const result = schema.safeParse(req.body)
+    if (!result.success) {
+      return res.status(400).json({ code: 'VALIDATION_ERROR', errors: result.error.flatten() })
+    }
+    req.body = result.data
+    next()
+  }
+}
+```
+
+## Uso
+
+```js
+router.post('/', validateBody(createProductSchema), createProduct)
+```
+
+## Buenas practicas
+
+- Valida body, params y query.
+- No confíes en tipos del cliente.
+- Reutiliza schemas.
+- Devuelve errores claros.
+- Valida negocio en servicios.

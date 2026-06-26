@@ -13,6 +13,12 @@ Este manual esta preparado como ruta de aprendizaje progresiva. La idea es compl
 7. [Testing](07-testing.md)
 8. [Arquitectura de APIs](08-arquitectura-de-apis.md)
 9. [Despliegue](09-despliegue.md)
+10. [Arquitectura de aplicaciones Express](10-arquitectura-de-aplicaciones-express.md)
+11. [Middleware avanzado y seguridad](11-middleware-avanzado-y-seguridad.md)
+12. [Rendimiento y buenas practicas](12-rendimiento-y-buenas-practicas.md)
+13. [Observabilidad y errores](13-observabilidad-y-errores.md)
+14. [CI/CD para Express](14-ci-cd-para-express.md)
+15. [Proyecto final](15-proyecto-final.md)
 
 ## Enfoque
 

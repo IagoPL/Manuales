@@ -1,15 +1,47 @@
-﻿# Arquitectura de APIs
+# Arquitectura de APIs
 
-Pendiente de completar.
+Express no impone arquitectura. Esa libertad exige convenciones claras.
 
-## Objetivo
+## Estructura
 
-Este capitulo se desarrollara siguiendo el orden del manual.
+```txt
+src/
+  app.js
+  server.js
+  modules/
+    products/
+      product.routes.js
+      product.controller.js
+      product.service.js
+      product.repository.js
+      product.schema.js
+  shared/
+    errors.js
+    logger.js
+```
 
-## Contenido previsto
+## Capas
 
-- Conceptos fundamentales.
-- Ejemplos practicos.
-- Buenas practicas.
-- Errores habituales.
-- Ejercicios o proyecto guiado cuando aplique.
+```txt
+route -> controller -> service -> repository
+```
+
+## Controllers
+
+Traducen HTTP.
+
+## Services
+
+Contienen casos de uso.
+
+## Repositories
+
+Acceden a datos.
+
+## Buenas practicas
+
+- Separar HTTP de negocio.
+- Centralizar validación.
+- Errores consistentes.
+- Versionado de API si hace falta.
+- Documentación OpenAPI.
