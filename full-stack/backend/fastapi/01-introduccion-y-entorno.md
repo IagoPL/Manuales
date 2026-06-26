@@ -13,6 +13,13 @@ Este manual esta preparado como ruta de aprendizaje progresiva. La idea es compl
 7. [Testing](07-testing.md)
 8. [Documentacion OpenAPI](08-documentacion-openapi.md)
 9. [Despliegue](09-despliegue.md)
+10. [Arquitectura de aplicaciones FastAPI](10-arquitectura-de-aplicaciones-fastapi.md)
+11. [Async, concurrencia y tareas en segundo plano](11-async-concurrencia-y-tareas-en-segundo-plano.md)
+12. [Rendimiento y buenas practicas](12-rendimiento-y-buenas-practicas.md)
+13. [Seguridad avanzada](13-seguridad-avanzada.md)
+14. [Observabilidad y errores](14-observabilidad-y-errores.md)
+15. [CI/CD para FastAPI](15-ci-cd-para-fastapi.md)
+16. [Proyecto final](16-proyecto-final.md)
 
 ## Enfoque
 
