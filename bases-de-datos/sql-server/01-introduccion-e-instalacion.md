@@ -15,6 +15,11 @@ Su dialecto SQL es T-SQL y su ecosistema incluye SQL Server Management Studio, A
 7. [Transacciones y bloqueos](07-transacciones-y-bloqueos.md)
 8. [Seguridad backup y restore](08-seguridad-backup-y-restore.md)
 9. [Rendimiento](09-rendimiento.md)
+10. [Arquitectura interna](10-arquitectura-interna.md)
+11. [TempDB, logs y mantenimiento](11-tempdb-logs-y-mantenimiento.md)
+12. [Alta disponibilidad y replicacion](12-alta-disponibilidad-y-replicacion.md)
+13. [Observabilidad y diagnostico](13-observabilidad-y-diagnostico.md)
+14. [Proyecto final](14-proyecto-final.md)
 
 ## Instalacion con Docker
 
