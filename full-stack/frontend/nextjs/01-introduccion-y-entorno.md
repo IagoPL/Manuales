@@ -14,6 +14,12 @@ Este manual esta preparado como ruta de aprendizaje progresiva. La idea es compl
 8. [SEO metadata e imagenes](08-seo-metadata-e-imagenes.md)
 9. [Testing](09-testing.md)
 10. [Despliegue](10-despliegue.md)
+11. [Arquitectura de aplicaciones Next.js](11-arquitectura-de-aplicaciones-nextjs.md)
+12. [Rendimiento y cache avanzada](12-rendimiento-y-cache-avanzada.md)
+13. [Seguridad en Next.js](13-seguridad-en-nextjs.md)
+14. [Observabilidad y errores](14-observabilidad-y-errores.md)
+15. [CI/CD para Next.js](15-ci-cd-para-nextjs.md)
+16. [Proyecto final](16-proyecto-final.md)
 
 ## Enfoque
 
