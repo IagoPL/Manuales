@@ -15,6 +15,13 @@ Su fuerza esta en la latencia muy baja y en operaciones atomicas sobre tipos com
 7. [Seguridad](07-seguridad.md)
 8. [Alta disponibilidad](08-alta-disponibilidad.md)
 9. [Patrones de uso](09-patrones-de-uso.md)
+10. [Arquitectura interna](10-arquitectura-interna.md)
+11. [Memoria, eviction y rendimiento](11-memoria-eviction-y-rendimiento.md)
+12. [Transacciones, Lua y atomicidad](12-transacciones-lua-y-atomicidad.md)
+13. [Sentinel, Cluster y escalado](13-sentinel-cluster-y-escalado.md)
+14. [Observabilidad y operacion](14-observabilidad-y-operacion.md)
+15. [Redis en produccion](15-redis-en-produccion.md)
+16. [Proyecto final](16-proyecto-final.md)
 
 ## Instalacion con Docker
 
