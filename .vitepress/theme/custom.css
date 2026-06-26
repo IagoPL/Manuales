@@ -98,14 +98,11 @@ body {
 }
 
 .VPNavBarTitle .logo {
-  display: grid;
-  width: 28px;
-  height: 28px;
-  place-items: center;
-  border-radius: 7px;
-  background: linear-gradient(135deg, #bfeadf, #c8dcff 55%, #e3d6ff);
-  color: #283044;
-  font-weight: 800;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  object-fit: contain;
+  box-shadow: 0 6px 16px rgba(8, 40, 69, 0.12);
 }
 
 .DocSearch-Button {
