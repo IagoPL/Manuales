@@ -21,7 +21,7 @@ export default defineConfig({
   ignoreDeadLinks: true,
   srcExclude: ['_revision-pendiente/**', 'node_modules/**'],
   themeConfig: {
-    logo: { src: '/logo.svg', alt: 'Manuales' },
+    logo: '/logo.svg',
     nav: navItems(),
     sidebar: generateSidebar(),
     search: {
