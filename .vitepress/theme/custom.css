@@ -98,9 +98,9 @@ body {
 }
 
 .VPNavBarTitle .logo {
-  width: 30px;
-  height: 30px;
-  border-radius: 8px;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
   object-fit: contain;
   box-shadow: 0 6px 16px rgba(8, 40, 69, 0.12);
 }
