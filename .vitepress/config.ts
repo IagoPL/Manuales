@@ -4,7 +4,6 @@ import { generateSidebar, navItems } from './sidebar'
 const repoName = process.env.GITHUB_REPOSITORY?.split('/')[1]
 const base = process.env.DOCS_BASE ?? (process.env.GITHUB_ACTIONS && repoName ? `/${repoName}/` : '/')
 const repoUrl = process.env.GITHUB_REPOSITORY ? `https://github.com/${process.env.GITHUB_REPOSITORY}` : undefined
-const logoPath = `${base}logo.svg`
 const faviconPath = `${base}favicon.svg`
 
 export default defineConfig({
@@ -22,7 +21,7 @@ export default defineConfig({
   ignoreDeadLinks: true,
   srcExclude: ['_revision-pendiente/**', 'node_modules/**'],
   themeConfig: {
-    logo: { src: logoPath, alt: 'Manuales' },
+    logo: { src: '/logo.svg', alt: 'Manuales' },
     nav: navItems(),
     sidebar: generateSidebar(),
     search: {
