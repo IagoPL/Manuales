@@ -11,6 +11,13 @@ MySQL es un sistema gestor de bases de datos relacional muy usado en aplicacione
 5. [Transacciones e InnoDB](05-transacciones-e-innodb.md)
 6. [Usuarios, backup y restore](06-usuarios-backup-y-restore.md)
 7. [Rendimiento y buenas practicas](07-rendimiento-y-buenas-practicas.md)
+8. [Arquitectura interna de InnoDB](08-arquitectura-interna-de-innodb.md)
+9. [Locks, MVCC y niveles de aislamiento](09-locks-mvcc-y-niveles-de-aislamiento.md)
+10. [Binlog, replicacion y alta disponibilidad](10-binlog-replicacion-y-alta-disponibilidad.md)
+11. [Particionado y tablas grandes](11-particionado-y-tablas-grandes.md)
+12. [Observabilidad y diagnostico](12-observabilidad-y-diagnostico.md)
+13. [MySQL en produccion](13-mysql-en-produccion.md)
+14. [Proyecto final](14-proyecto-final.md)
 
 ## Instalacion con Docker
 
