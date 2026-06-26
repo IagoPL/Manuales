@@ -14,6 +14,12 @@ Su unidad principal es el DAG, un grafo aciclico dirigido que describe que tarea
 6. [Testing de DAGs](06-testing-de-dags.md)
 7. [Despliegue](07-despliegue.md)
 8. [Observabilidad y buenas practicas](08-observabilidad-y-buenas-practicas.md)
+9. [Arquitectura interna](09-arquitectura-interna.md)
+10. [DAGs dinamicos y TaskFlow avanzado](10-dags-dinamicos-y-taskflow-avanzado.md)
+11. [Airflow en produccion](11-airflow-en-produccion.md)
+12. [Patrones de pipelines de datos](12-patrones-de-pipelines-de-datos.md)
+13. [CI/CD para DAGs](13-ci-cd-para-dags.md)
+14. [Proyecto final](14-proyecto-final.md)
 
 ## Componentes principales
 
