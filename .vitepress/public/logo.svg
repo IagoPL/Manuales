@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Logo Manuales</title>
+  <desc id="desc">Libro abierto con llaves de codigo, barra diagonal, cursor y acento verde.</desc>
+  <defs>
+    <linearGradient id="book" x1="96" y1="88" x2="430" y2="420" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#04172b"/>
+      <stop offset="1" stop-color="#06233f"/>
+    </linearGradient>
+    <linearGradient id="mint" x1="165" y1="83" x2="352" y2="340" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#68d8bf"/>
+      <stop offset="1" stop-color="#2fa389"/>
+    </linearGradient>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#04172b" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+
+  <rect width="512" height="512" rx="96" fill="#ffffff"/>
+
+  <path
+    d="M106 150
+       C168 148 235 170 256 220
+       C277 170 344 148 406 150
+       L406 371
+       C344 370 285 386 260 424
+       C257 429 255 429 252 424
+       C227 386 168 370 106 371
+       Z"
+    fill="url(#book)"
+    filter="url(#softShadow)"
+  />
+
+  <path
+    d="M148 104
+       C205 113 247 138 278 177
+       C242 151 197 136 148 134
+       Z"
+    fill="url(#mint)"
+  />
+
+  <path
+    d="M179 209
+       C158 209 150 221 150 248
+       C150 268 145 280 132 287
+       C145 294 150 307 150 328
+       C150 354 158 366 179 366"
+    fill="none"
+    stroke="#ffffff"
+    stroke-width="28"
+    stroke-linecap="square"
+    stroke-linejoin="round"
+  />
+
+  <path
+    d="M333 209
+       C354 209 362 221 362 248
+       C362 268 367 280 380 287
+       C367 294 362 307 362 328
+       C362 354 354 366 333 366"
+    fill="none"
+    stroke="#ffffff"
+    stroke-width="28"
+    stroke-linecap="square"
+    stroke-linejoin="round"
+  />
+
+  <path
+    d="M294 171 L239 287"
+    stroke="#ffffff"
+    stroke-width="24"
+    stroke-linecap="square"
+  />
+
+  <path
+    d="M255 305 L211 398"
+    stroke="#ffffff"
+    stroke-width="24"
+    stroke-linecap="square"
+  />
+
+  <rect x="225" y="242" width="10" height="32" fill="#64d2ba"/>
+  <rect x="253" y="236" width="10" height="38" fill="#64d2ba"/>
+  <rect x="281" y="242" width="10" height="32" fill="#64d2ba"/>
+
+  <path
+    d="M271 314
+       L314 342
+       L294 349
+       L309 372
+       L294 381
+       L280 358
+       L265 375
+       Z"
+    fill="url(#mint)"
+  />
+</svg>
