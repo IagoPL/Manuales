@@ -1,15 +1,46 @@
-﻿# Microservicios y eventos
+# Microservicios y eventos
 
-Pendiente de completar.
+NestJS incluye abstracciones para microservicios con transportes como TCP, Redis, NATS, RabbitMQ y Kafka.
 
-## Objetivo
+## Event-driven
 
-Este capitulo se desarrollara siguiendo el orden del manual.
+En sistemas modernos, NestJS puede publicar y consumir eventos.
 
-## Contenido previsto
+```ts
+@EventPattern('order.created')
+handleOrderCreated(@Payload() event: OrderCreatedEvent) {
+  return this.ordersService.handleCreated(event)
+}
+```
 
-- Conceptos fundamentales.
-- Ejemplos practicos.
-- Buenas practicas.
-- Errores habituales.
-- Ejercicios o proyecto guiado cuando aplique.
+## Kafka
+
+```ts
+ClientsModule.register([
+  {
+    name: 'KAFKA_SERVICE',
+    transport: Transport.KAFKA,
+    options: {
+      client: { brokers: ['localhost:9092'] },
+      consumer: { groupId: 'orders-service' },
+    },
+  },
+])
+```
+
+## Idempotencia
+
+Los consumidores deben tolerar duplicados.
+
+```txt
+event_id procesado -> ignorar
+event_id nuevo -> procesar y registrar
+```
+
+## Buenas practicas
+
+- Define contratos de eventos.
+- Consumidores idempotentes.
+- DLT para errores definitivos.
+- Correlation IDs.
+- No uses eventos como RPC disfrazado.

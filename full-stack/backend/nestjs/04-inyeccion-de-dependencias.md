@@ -1,15 +1,42 @@
-﻿# Inyeccion de dependencias
+# Inyeccion de dependencias
 
-Pendiente de completar.
+NestJS usa un contenedor de inyeccion de dependencias inspirado en Angular. Esto permite desacoplar controladores, servicios, repositorios y clientes externos.
 
-## Objetivo
+## Constructor injection
 
-Este capitulo se desarrollara siguiendo el orden del manual.
+```ts
+@Injectable()
+export class OrdersService {
+  constructor(private readonly ordersRepository: OrdersRepository) {}
+}
+```
 
-## Contenido previsto
+## Provider personalizado
 
-- Conceptos fundamentales.
-- Ejemplos practicos.
-- Buenas practicas.
-- Errores habituales.
-- Ejercicios o proyecto guiado cuando aplique.
+```ts
+{
+  provide: 'PAYMENT_CLIENT',
+  useFactory: (config: ConfigService) => new PaymentClient(config.get('PAYMENT_URL')),
+  inject: [ConfigService],
+}
+```
+
+## Interfaces y tokens
+
+TypeScript borra interfaces en runtime. Usa tokens para abstraer implementaciones.
+
+```ts
+export const PRODUCTS_REPOSITORY = Symbol('PRODUCTS_REPOSITORY')
+```
+
+## Scopes
+
+Por defecto, providers son singleton. Request scope existe, pero puede afectar rendimiento.
+
+## Buenas practicas
+
+- Prefiere singleton.
+- Usa tokens para puertos/repositorios.
+- Evita dependencias circulares.
+- Mantén constructores claros.
+- No uses request scope salvo necesidad real.

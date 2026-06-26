@@ -1,15 +1,54 @@
-﻿# DTOs pipes y validacion
+# DTOs, pipes y validacion
 
-Pendiente de completar.
+Los DTOs definen la forma de entrada y salida. Los pipes transforman y validan datos antes de llegar al controlador.
 
-## Objetivo
+## DTO
 
-Este capitulo se desarrollara siguiendo el orden del manual.
+```ts
+export class CreateProductDto {
+  @IsString()
+  @Length(1, 120)
+  name: string
 
-## Contenido previsto
+  @IsNumber()
+  @Min(0)
+  price: number
+}
+```
 
-- Conceptos fundamentales.
-- Ejemplos practicos.
-- Buenas practicas.
-- Errores habituales.
-- Ejercicios o proyecto guiado cuando aplique.
+## ValidationPipe global
+
+```ts
+app.useGlobalPipes(
+  new ValidationPipe({
+    whitelist: true,
+    forbidNonWhitelisted: true,
+    transform: true,
+  }),
+)
+```
+
+## Parametros tipados
+
+```ts
+@Get(':id')
+findOne(@Param('id', ParseIntPipe) id: number) {
+  return this.productsService.findOne(id)
+}
+```
+
+## DTOs separados
+
+```txt
+CreateProductDto
+UpdateProductDto
+ProductResponseDto
+```
+
+## Buenas practicas
+
+- Activa `whitelist`.
+- Separa DTOs de entidades.
+- Usa pipes para parsear parametros.
+- Valida negocio en servicios.
+- No expongas campos internos.
