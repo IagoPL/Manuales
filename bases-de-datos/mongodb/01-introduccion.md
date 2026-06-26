@@ -13,6 +13,13 @@ La clave para usar MongoDB bien es modelar segun patrones de lectura y escritura
 5. [Aggregation pipeline](05-aggregation-pipeline.md)
 6. [Replicacion y sharding](06-replicacion-y-sharding.md)
 7. [Seguridad, backup y buenas practicas](07-seguridad-backup-y-buenas-practicas.md)
+8. [Arquitectura interna](08-arquitectura-interna.md)
+9. [Transacciones y consistencia](09-transacciones-y-consistencia.md)
+10. [Sharding avanzado](10-sharding-avanzado.md)
+11. [Observabilidad y diagnostico](11-observabilidad-y-diagnostico.md)
+12. [MongoDB en produccion](12-mongodb-en-produccion.md)
+13. [Patrones de modelado](13-patrones-de-modelado.md)
+14. [Proyecto final](14-proyecto-final.md)
 
 ## Instalacion con Docker
 
