@@ -13,6 +13,12 @@ Este manual esta preparado como ruta de aprendizaje progresiva. La idea es compl
 7. [Autenticacion permisos y seguridad](07-autenticacion-permisos-y-seguridad.md)
 8. [Testing](08-testing.md)
 9. [Despliegue](09-despliegue.md)
+10. [Arquitectura de aplicaciones Django](10-arquitectura-de-aplicaciones-django.md)
+11. [Rendimiento y optimizacion](11-rendimiento-y-optimizacion.md)
+12. [APIs profesionales con DRF](12-apis-profesionales-con-drf.md)
+13. [Observabilidad y errores](13-observabilidad-y-errores.md)
+14. [CI/CD para Django](14-ci-cd-para-django.md)
+15. [Proyecto final](15-proyecto-final.md)
 
 ## Enfoque
 

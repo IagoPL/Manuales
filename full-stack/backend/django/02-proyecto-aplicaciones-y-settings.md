@@ -1,15 +1,62 @@
-﻿# Proyecto aplicaciones y settings
+# Proyecto, aplicaciones y settings
 
-Pendiente de completar.
+Django organiza un proyecto en aplicaciones. El proyecto contiene configuración global; las apps contienen funcionalidad reutilizable.
 
-## Objetivo
+## Crear proyecto
 
-Este capitulo se desarrollara siguiendo el orden del manual.
+```bash
+django-admin startproject config .
+python manage.py startapp products
+```
 
-## Contenido previsto
+## Estructura
 
-- Conceptos fundamentales.
-- Ejemplos practicos.
-- Buenas practicas.
-- Errores habituales.
-- Ejercicios o proyecto guiado cuando aplique.
+```txt
+config/
+  settings.py
+  urls.py
+  asgi.py
+  wsgi.py
+products/
+  models.py
+  views.py
+  urls.py
+  tests.py
+manage.py
+```
+
+## settings
+
+```python
+INSTALLED_APPS = [
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "products",
+]
+```
+
+## Variables de entorno
+
+No guardes secretos en settings.
+
+```python
+SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
+DEBUG = os.environ.get("DJANGO_DEBUG") == "1"
+```
+
+## URLs
+
+```python
+urlpatterns = [
+    path("admin/", admin.site.urls),
+    path("api/products/", include("products.urls")),
+]
+```
+
+## Buenas practicas
+
+- Una app por dominio.
+- Settings por entorno.
+- Secretos fuera del repo.
+- `DEBUG=False` en produccion.
+- URLs organizadas por app.

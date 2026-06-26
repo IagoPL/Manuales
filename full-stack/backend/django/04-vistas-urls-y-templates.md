@@ -1,15 +1,43 @@
-﻿# Vistas URLs y templates
+# Vistas, URLs y templates
 
-Pendiente de completar.
+Django puede servir HTML tradicional o APIs. Entender vistas y URLs ayuda incluso cuando usas DRF.
 
-## Objetivo
+## Function-based view
 
-Este capitulo se desarrollara siguiendo el orden del manual.
+```python
+def product_list(request):
+    products = Product.objects.all()
+    return render(request, "products/list.html", {"products": products})
+```
 
-## Contenido previsto
+## Class-based view
 
-- Conceptos fundamentales.
-- Ejemplos practicos.
-- Buenas practicas.
-- Errores habituales.
-- Ejercicios o proyecto guiado cuando aplique.
+```python
+class ProductListView(ListView):
+    model = Product
+    template_name = "products/list.html"
+```
+
+## URLs
+
+```python
+urlpatterns = [
+    path("", ProductListView.as_view(), name="product-list"),
+]
+```
+
+## Templates
+
+```html
+{% for product in products %}
+  <p>{{ product.name }}</p>
+{% endfor %}
+```
+
+## Buenas practicas
+
+- URLs con nombres.
+- Vistas finas.
+- Querysets optimizados.
+- Templates sin logica compleja.
+- Separar HTML y API si el proyecto crece.
