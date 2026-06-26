@@ -1,15 +1,53 @@
-﻿# Validacion formularios y requests
+# Validación, formularios y requests
 
-Pendiente de completar.
+Laravel permite validar directamente en controladores o mediante Form Requests.
 
-## Objetivo
+## Validación simple
 
-Este capitulo se desarrollara siguiendo el orden del manual.
+```php
+$validated = $request->validate([
+    'name' => ['required', 'string', 'max:120'],
+    'price' => ['required', 'numeric', 'min:0'],
+]);
+```
 
-## Contenido previsto
+## Form Request
 
-- Conceptos fundamentales.
-- Ejemplos practicos.
-- Buenas practicas.
-- Errores habituales.
-- Ejercicios o proyecto guiado cuando aplique.
+```php
+class StoreProductRequest extends FormRequest
+{
+    public function rules(): array
+    {
+        return [
+            'name' => ['required', 'string', 'max:120'],
+            'price' => ['required', 'numeric', 'min:0'],
+        ];
+    }
+}
+```
+
+## Uso
+
+```php
+public function store(StoreProductRequest $request)
+{
+    Product::create($request->validated());
+}
+```
+
+## Autorización en request
+
+```php
+public function authorize(): bool
+{
+    return $this->user()->can('create', Product::class);
+}
+```
+
+## Buenas practicas
+
+- Form Requests para endpoints importantes.
+- Mensajes claros.
+- Validar entrada y permisos.
+- Reglas de negocio en servicios.
+- No confiar en validación frontend.

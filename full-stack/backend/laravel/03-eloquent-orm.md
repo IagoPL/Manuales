@@ -1,15 +1,58 @@
-﻿# Eloquent ORM
+# Eloquent ORM
 
-Pendiente de completar.
+Eloquent es el ORM de Laravel. Permite trabajar con modelos, relaciones, scopes y consultas expresivas.
 
-## Objetivo
+## Modelo
 
-Este capitulo se desarrollara siguiendo el orden del manual.
+```php
+class Product extends Model
+{
+    protected $fillable = ['name', 'sku', 'price', 'stock'];
+}
+```
 
-## Contenido previsto
+## Consulta
 
-- Conceptos fundamentales.
-- Ejemplos practicos.
-- Buenas practicas.
-- Errores habituales.
-- Ejercicios o proyecto guiado cuando aplique.
+```php
+$products = Product::query()
+    ->where('stock', '>', 0)
+    ->orderBy('name')
+    ->get();
+```
+
+## Relaciones
+
+```php
+class Order extends Model
+{
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+}
+```
+
+## Eager loading
+
+```php
+Order::with('user')->get();
+```
+
+Evita N+1 queries.
+
+## Scopes
+
+```php
+public function scopeActive($query)
+{
+    return $query->where('active', true);
+}
+```
+
+## Buenas practicas
+
+- Define `$fillable`.
+- Usa eager loading.
+- Evita queries en bucles.
+- Usa casts.
+- Revisa SQL en consultas críticas.

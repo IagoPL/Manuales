@@ -1,15 +1,47 @@
-﻿# Queues jobs y eventos
+# Queues, jobs y eventos
 
-Pendiente de completar.
+Laravel permite ejecutar trabajos en segundo plano y publicar eventos de dominio.
 
-## Objetivo
+## Job
 
-Este capitulo se desarrollara siguiendo el orden del manual.
+```php
+class SendOrderEmail implements ShouldQueue
+{
+    public function handle(): void
+    {
+        // enviar email
+    }
+}
+```
 
-## Contenido previsto
+Despachar:
 
-- Conceptos fundamentales.
-- Ejemplos practicos.
-- Buenas practicas.
-- Errores habituales.
-- Ejercicios o proyecto guiado cuando aplique.
+```php
+SendOrderEmail::dispatch($order);
+```
+
+## Configurar cola
+
+```env
+QUEUE_CONNECTION=redis
+```
+
+Worker:
+
+```bash
+php artisan queue:work
+```
+
+## Eventos
+
+```php
+event(new OrderCreated($order));
+```
+
+## Buenas practicas
+
+- Jobs idempotentes.
+- Reintentos y backoff.
+- Dead letter o failed jobs.
+- Monitorizar workers.
+- No hacer tareas lentas en request.

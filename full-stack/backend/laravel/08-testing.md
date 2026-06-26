@@ -1,15 +1,41 @@
-﻿# Testing
+# Testing
 
-Pendiente de completar.
+Laravel incluye PHPUnit/Pest, factories, testing HTTP y helpers de base de datos.
 
-## Objetivo
+## Test HTTP
 
-Este capitulo se desarrollara siguiendo el orden del manual.
+```php
+public function test_health(): void
+{
+    $this->get('/health')->assertOk();
+}
+```
 
-## Contenido previsto
+## Factory
 
-- Conceptos fundamentales.
-- Ejemplos practicos.
-- Buenas practicas.
-- Errores habituales.
-- Ejercicios o proyecto guiado cuando aplique.
+```php
+$product = Product::factory()->create();
+```
+
+## Test API
+
+```php
+$this->postJson('/api/products', [
+    'name' => 'Keyboard',
+    'price' => 49.99,
+])->assertCreated();
+```
+
+## Base de datos
+
+```php
+use RefreshDatabase;
+```
+
+## Buenas practicas
+
+- Tests de features para endpoints.
+- Unit tests para servicios.
+- Factories.
+- Cubrir validación y permisos.
+- Ejecutar en CI.

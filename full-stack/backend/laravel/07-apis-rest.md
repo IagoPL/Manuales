@@ -1,15 +1,43 @@
-﻿# APIs REST
+# APIs REST
 
-Pendiente de completar.
+Laravel permite construir APIs REST con resources, Form Requests, policies y paginación.
 
-## Objetivo
+## API Resource
 
-Este capitulo se desarrollara siguiendo el orden del manual.
+```php
+class ProductResource extends JsonResource
+{
+    public function toArray(Request $request): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'price' => $this->price,
+        ];
+    }
+}
+```
 
-## Contenido previsto
+## Respuesta
 
-- Conceptos fundamentales.
-- Ejemplos practicos.
-- Buenas practicas.
-- Errores habituales.
-- Ejercicios o proyecto guiado cuando aplique.
+```php
+return new ProductResource($product);
+```
+
+## Colección paginada
+
+```php
+return ProductResource::collection(Product::paginate(50));
+```
+
+## Errores
+
+Usa formato consistente para APIs públicas.
+
+## Buenas practicas
+
+- Resources para salida.
+- Form Requests para entrada.
+- Paginación.
+- Policies.
+- Versionado si hay cambios incompatibles.

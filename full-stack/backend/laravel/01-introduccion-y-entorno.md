@@ -14,6 +14,12 @@ Este manual esta preparado como ruta de aprendizaje progresiva. La idea es compl
 8. [Testing](08-testing.md)
 9. [Queues jobs y eventos](09-queues-jobs-y-eventos.md)
 10. [Despliegue](10-despliegue.md)
+11. [Arquitectura de aplicaciones Laravel](11-arquitectura-de-aplicaciones-laravel.md)
+12. [Rendimiento y optimizacion](12-rendimiento-y-optimizacion.md)
+13. [Seguridad avanzada](13-seguridad-avanzada.md)
+14. [Observabilidad y errores](14-observabilidad-y-errores.md)
+15. [CI/CD para Laravel](15-ci-cd-para-laravel.md)
+16. [Proyecto final](16-proyecto-final.md)
 
 ## Enfoque
 

@@ -1,15 +1,46 @@
-﻿# Autenticacion autorizacion y seguridad
+# Autenticación, autorización y seguridad
 
-Pendiente de completar.
+Laravel incluye autenticación, policies, gates, CSRF, hashing y herramientas como Sanctum.
 
-## Objetivo
+## Sanctum
 
-Este capitulo se desarrollara siguiendo el orden del manual.
+Para APIs y SPA:
 
-## Contenido previsto
+```bash
+php artisan install:api
+```
 
-- Conceptos fundamentales.
-- Ejemplos practicos.
-- Buenas practicas.
-- Errores habituales.
-- Ejercicios o proyecto guiado cuando aplique.
+## Middleware auth
+
+```php
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
+```
+
+## Policies
+
+```php
+class ProductPolicy
+{
+    public function update(User $user, Product $product): bool
+    {
+        return $user->is_admin;
+    }
+}
+```
+
+## Gates
+
+```php
+Gate::define('view-admin', fn (User $user) => $user->is_admin);
+```
+
+## Buenas practicas
+
+- Hash de contraseñas con herramientas de Laravel.
+- CSRF en web.
+- Policies para recursos.
+- No guardar secretos en repo.
+- HTTPS en producción.
+- Validar permisos en backend.
