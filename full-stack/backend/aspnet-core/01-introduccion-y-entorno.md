@@ -13,6 +13,12 @@ Este manual esta preparado como ruta de aprendizaje progresiva. La idea es compl
 7. [Autenticacion y autorizacion](07-autenticacion-y-autorizacion.md)
 8. [Testing](08-testing.md)
 9. [Configuracion y despliegue](09-configuracion-y-despliegue.md)
+10. [Arquitectura de aplicaciones ASP.NET Core](10-arquitectura-de-aplicaciones-aspnet-core.md)
+11. [Middleware, filtros y pipeline HTTP](11-middleware-filtros-y-pipeline-http.md)
+12. [Rendimiento y buenas practicas](12-rendimiento-y-buenas-practicas.md)
+13. [Observabilidad y errores](13-observabilidad-y-errores.md)
+14. [CI/CD para ASP.NET Core](14-ci-cd-para-aspnet-core.md)
+15. [Proyecto final](15-proyecto-final.md)
 
 ## Enfoque
 
