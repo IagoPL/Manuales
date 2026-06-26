@@ -1,15 +1,60 @@
-﻿# Lectura y escritura
+# Lectura y escritura
 
-Pendiente de completar.
+La entrada y salida suele dominar el coste de un pipeline Spark. Formato, particionado y modo de escritura importan mucho.
 
-## Objetivo
+## Leer CSV
 
-Este capitulo se desarrollara siguiendo el orden del manual.
+```python
+df = (
+    spark.read
+    .option("header", True)
+    .schema(schema)
+    .csv("/data/orders.csv")
+)
+```
 
-## Contenido previsto
+## Leer Parquet
 
-- Conceptos fundamentales.
-- Ejemplos practicos.
-- Buenas practicas.
-- Errores habituales.
-- Ejercicios o proyecto guiado cuando aplique.
+```python
+df = spark.read.parquet("/data/orders")
+```
+
+Parquet es columnar, comprimido y eficiente para analitica.
+
+## JSON
+
+```python
+df = spark.read.schema(schema).json("/data/events")
+```
+
+Para JSON complejo, define schema explicitamente.
+
+## Escribir
+
+```python
+df.write.mode("overwrite").parquet("/data/marts/orders")
+```
+
+Modos:
+
+- `append`
+- `overwrite`
+- `ignore`
+- `error`
+
+## Particionado de salida
+
+```python
+df.write.partitionBy("event_date").mode("overwrite").parquet(path)
+```
+
+Particiona por columnas usadas en filtros, no por columnas con cardinalidad enorme.
+
+## Buenas practicas
+
+- Prefiere Parquet o Delta para pipelines.
+- Define schemas al leer.
+- Controla modo de escritura.
+- Evita muchos archivos pequeños.
+- Particiona por fecha o dominio consultado.
+- Valida conteos despues de escribir.

@@ -15,6 +15,13 @@ Conviene usar PySpark cuando los datos no caben comodamente en memoria, cuando e
 7. [Streaming](07-streaming.md)
 8. [Optimizacion](08-optimizacion.md)
 9. [Testing y buenas practicas](09-testing-y-buenas-practicas.md)
+10. [Arquitectura interna de Spark](10-arquitectura-interna-de-spark.md)
+11. [Particionado, shuffle y skew](11-particionado-shuffle-y-skew.md)
+12. [Pipelines con Parquet y Delta](12-pipelines-con-parquet-y-delta.md)
+13. [PySpark en produccion](13-pyspark-en-produccion.md)
+14. [Observabilidad y troubleshooting](14-observabilidad-y-troubleshooting.md)
+15. [Patrones de data engineering](15-patrones-de-data-engineering.md)
+16. [Proyecto final](16-proyecto-final.md)
 
 ## Instalacion local
 
