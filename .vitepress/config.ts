@@ -4,7 +4,7 @@ import { generateSidebar, navItems } from './sidebar'
 const repoName = process.env.GITHUB_REPOSITORY?.split('/')[1]
 const base = process.env.DOCS_BASE ?? (process.env.GITHUB_ACTIONS && repoName ? `/${repoName}/` : '/')
 const repoUrl = process.env.GITHUB_REPOSITORY ? `https://github.com/${process.env.GITHUB_REPOSITORY}` : undefined
-const faviconPath = `${base}favicon.svg`
+const faviconPath = `${base}favicon.png`
 
 export default defineConfig({
   title: 'Manuales',
@@ -15,13 +15,13 @@ export default defineConfig({
   lastUpdated: true,
   appearance: true,
   head: [
-    ['link', { rel: 'icon', type: 'image/svg+xml', href: faviconPath }],
-    ['link', { rel: 'shortcut icon', type: 'image/svg+xml', href: faviconPath }]
+    ['link', { rel: 'icon', type: 'image/png', href: faviconPath }],
+    ['link', { rel: 'shortcut icon', type: 'image/png', href: faviconPath }]
   ],
   ignoreDeadLinks: true,
   srcExclude: ['_revision-pendiente/**', 'node_modules/**'],
   themeConfig: {
-    logo: '/logo.svg',
+    logo: '/logo.png',
     nav: navItems(),
     sidebar: generateSidebar(),
     search: {
