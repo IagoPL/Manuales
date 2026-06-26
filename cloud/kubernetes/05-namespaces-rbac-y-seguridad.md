@@ -1,15 +1,70 @@
-﻿# Namespaces RBAC y seguridad
+# Namespaces, RBAC y seguridad
 
-Pendiente de completar.
+Kubernetes debe operarse con aislamiento, permisos minimos y politicas claras.
 
-## Objetivo
+## Namespaces
 
-Este capitulo se desarrollara siguiendo el orden del manual.
+```bash
+kubectl create namespace staging
+```
 
-## Contenido previsto
+Separan recursos logicamente:
 
-- Conceptos fundamentales.
-- Ejemplos practicos.
-- Buenas practicas.
-- Errores habituales.
-- Ejercicios o proyecto guiado cuando aplique.
+```txt
+dev
+staging
+prod
+monitoring
+```
+
+No son una frontera de seguridad completa por si solos.
+
+## RBAC
+
+Role:
+
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: staging
+  name: pod-reader
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "watch"]
+```
+
+RoleBinding:
+
+```yaml
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: read-pods
+  namespace: staging
+subjects:
+  - kind: User
+    name: developer
+roleRef:
+  kind: Role
+  name: pod-reader
+  apiGroup: rbac.authorization.k8s.io
+```
+
+## SecurityContext
+
+```yaml
+securityContext:
+  runAsNonRoot: true
+  allowPrivilegeEscalation: false
+```
+
+## Buenas practicas
+
+- Minimo privilegio.
+- Namespaces por entorno o dominio.
+- No ejecutar contenedores como root.
+- Limitar capabilities.
+- Escanear imagenes.
+- Proteger acceso a Secrets.

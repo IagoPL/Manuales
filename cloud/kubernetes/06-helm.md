@@ -1,15 +1,58 @@
-﻿# Helm
+# Helm
 
-Pendiente de completar.
+Helm empaqueta manifiestos Kubernetes como charts parametrizables.
 
-## Objetivo
+## Chart
 
-Este capitulo se desarrollara siguiendo el orden del manual.
+Estructura:
 
-## Contenido previsto
+```txt
+my-chart/
+  Chart.yaml
+  values.yaml
+  templates/
+    deployment.yaml
+    service.yaml
+```
 
-- Conceptos fundamentales.
-- Ejemplos practicos.
-- Buenas practicas.
-- Errores habituales.
-- Ejercicios o proyecto guiado cuando aplique.
+## Instalar
+
+```bash
+helm install web ./my-chart
+```
+
+Actualizar:
+
+```bash
+helm upgrade web ./my-chart
+```
+
+## values.yaml
+
+```yaml
+image:
+  repository: nginx
+  tag: "1.27"
+replicaCount: 3
+```
+
+Plantilla:
+
+```yaml
+image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+```
+
+## Rollback
+
+```bash
+helm history web
+helm rollback web 1
+```
+
+## Buenas practicas
+
+- Mantén charts simples.
+- Versiona `values` por entorno.
+- No guardes secretos planos en values.
+- Usa `helm template` para revisar salida.
+- Evita plantillas demasiado inteligentes.

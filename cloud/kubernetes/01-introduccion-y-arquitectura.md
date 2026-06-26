@@ -12,6 +12,12 @@ Este manual esta preparado como ruta de aprendizaje progresiva. La idea es compl
 6. [Helm](06-helm.md)
 7. [Observabilidad](07-observabilidad.md)
 8. [Despliegues y escalado](08-despliegues-y-escalado.md)
+9. [Arquitectura interna del cluster](09-arquitectura-interna-del-cluster.md)
+10. [Probes, recursos y scheduling](10-probes-recursos-y-scheduling.md)
+11. [Autoscaling y resiliencia](11-autoscaling-y-resiliencia.md)
+12. [GitOps y CI/CD](12-gitops-y-ci-cd.md)
+13. [Kubernetes en produccion](13-kubernetes-en-produccion.md)
+14. [Proyecto final](14-proyecto-final.md)
 
 ## Enfoque
 
