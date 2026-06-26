@@ -75,3 +75,9 @@ ORDER BY creado_en DESC
 - Usar funciones en filtros sin indice funcional.
 - Ignorar el coste de escritura.
 - Interpretar `EXPLAIN` sin datos reales.
+
+## Recursos relacionados
+
+- [Arquitectura interna](11-arquitectura-interna.md)
+- [Rendimiento y buenas practicas](10-rendimiento-y-buenas-practicas.md)
+- [Vacuum autovacuum y bloat](14-vacuum-autovacuum-y-bloat.md)

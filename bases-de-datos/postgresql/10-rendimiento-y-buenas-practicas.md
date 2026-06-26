@@ -90,3 +90,9 @@ No particiones por moda; particionar tambien aumenta complejidad operativa.
 - Usuarios con minimo privilegio.
 - Logs y metricas activos.
 - Plan claro de crecimiento de datos.
+
+## Recursos relacionados
+
+- [Arquitectura interna](11-arquitectura-interna.md)
+- [Vacuum autovacuum y bloat](14-vacuum-autovacuum-y-bloat.md)
+- [Proyecto final](16-proyecto-final.md)

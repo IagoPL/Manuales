@@ -1,4 +1,4 @@
-# PostgreSQL
+# Guia completa de PostgreSQL
 
 PostgreSQL es una base de datos relacional open source, robusta y extensible. Se usa tanto en aplicaciones transaccionales como en analitica ligera, APIs, sistemas internos y productos SaaS.
 
@@ -16,6 +16,26 @@ Destaca por su soporte SQL, transacciones ACID, tipos avanzados, JSONB, extensio
 8. [JSONB y busqueda](08-jsonb-y-busqueda.md)
 9. [Administracion backup y restore](09-administracion-backup-y-restore.md)
 10. [Rendimiento y buenas practicas](10-rendimiento-y-buenas-practicas.md)
+11. [Arquitectura interna](11-arquitectura-interna.md)
+12. [MVCC y aislamiento](12-mvcc-y-aislamiento.md)
+13. [WAL checkpoints y recuperacion](13-wal-checkpoints-y-recuperacion.md)
+14. [Vacuum autovacuum y bloat](14-vacuum-autovacuum-y-bloat.md)
+15. [Seguridad replicacion y operacion](15-seguridad-replicacion-y-operacion.md)
+16. [Proyecto final](16-proyecto-final.md)
+
+## Mapa mental
+
+```mermaid
+flowchart TD
+  A["Cliente"] --> B["Postmaster"]
+  B --> C["Backend process"]
+  C --> D["Parser / Planner / Executor"]
+  D --> E["Shared buffers"]
+  E --> F["Data files"]
+  C --> G["WAL"]
+  G --> H["Archive / replicas"]
+  I["Autovacuum"] --> F
+```
 
 ## Instalacion con Docker
 
@@ -74,3 +94,9 @@ SELECT * FROM clientes;
 - No probar restauraciones.
 - Crear indices sin medir.
 - Dejar conexiones abiertas sin pool.
+
+## Recursos relacionados
+
+- [Arquitectura interna](11-arquitectura-interna.md)
+- [MVCC y aislamiento](12-mvcc-y-aislamiento.md)
+- [WAL checkpoints y recuperacion](13-wal-checkpoints-y-recuperacion.md)

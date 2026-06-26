@@ -77,3 +77,8 @@ Reducelo:
 - Leer-modificar-escribir sin proteccion ante concurrencia.
 - Confundir bloqueo de fila con bloqueo de tabla.
 - Ignorar deadlocks en logs.
+
+## Recursos relacionados
+
+- [MVCC y aislamiento](12-mvcc-y-aislamiento.md)
+- [WAL checkpoints y recuperacion](13-wal-checkpoints-y-recuperacion.md)

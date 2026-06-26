@@ -80,3 +80,9 @@ Normalmente `autovacuum` se encarga, pero hay que monitorizarlo.
 - No vigilar crecimiento de disco.
 - Ignorar logs de autovacuum.
 - Guardar backups solo en la misma maquina.
+
+## Recursos relacionados
+
+- [WAL checkpoints y recuperacion](13-wal-checkpoints-y-recuperacion.md)
+- [Vacuum autovacuum y bloat](14-vacuum-autovacuum-y-bloat.md)
+- [Seguridad replicacion y operacion](15-seguridad-replicacion-y-operacion.md)
