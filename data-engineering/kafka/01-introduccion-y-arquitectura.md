@@ -14,6 +14,12 @@ Kafka no es simplemente una cola. Su modelo gira alrededor de logs distribuidos,
 6. [Kafka Streams](06-kafka-streams.md)
 7. [Operaciones y seguridad](07-operaciones-y-seguridad.md)
 8. [Patrones de eventos](08-patrones-de-eventos.md)
+9. [Arquitectura interna del log](09-arquitectura-interna-del-log.md)
+10. [Garantias de entrega y orden](10-garantias-de-entrega-y-orden.md)
+11. [Schema evolution y contratos](11-schema-evolution-y-contratos.md)
+12. [Observabilidad y troubleshooting](12-observabilidad-y-troubleshooting.md)
+13. [Kafka en produccion](13-kafka-en-produccion.md)
+14. [Proyecto final](14-proyecto-final.md)
 
 ## Componentes principales
 
