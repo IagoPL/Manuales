@@ -14,6 +14,12 @@ Este manual esta preparado como ruta de aprendizaje progresiva. La idea es compl
 8. [Testing](08-testing.md)
 9. [Observabilidad](09-observabilidad.md)
 10. [Despliegue](10-despliegue.md)
+11. [Arquitectura interna de Spring Boot](11-arquitectura-interna-de-spring-boot.md)
+12. [Transacciones, JPA y rendimiento](12-transacciones-jpa-y-rendimiento.md)
+13. [Arquitectura por capas y hexagonal](13-arquitectura-por-capas-y-hexagonal.md)
+14. [APIs REST profesionales](14-apis-rest-profesionales.md)
+15. [CI/CD y operacion](15-ci-cd-y-operacion.md)
+16. [Proyecto final](16-proyecto-final.md)
 
 ## Enfoque
 
