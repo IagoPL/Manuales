@@ -1,6 +1,8 @@
-﻿# Manual de Domain-Driven Design
+# Manual de Domain-Driven Design
 
-Este manual esta preparado como ruta de aprendizaje progresiva. La idea es completarlo por capitulos, desde fundamentos hasta uso profesional, con ejemplos practicos y buenas practicas.
+Domain-Driven Design, o DDD, es una forma de disenar software alrededor del conocimiento del negocio. Su objetivo principal no es aplicar patrones, sino conseguir que el codigo hable el mismo idioma que el dominio que representa.
+
+DDD aporta mas valor cuando el problema tiene reglas, excepciones, vocabulario propio y decisiones que no se entienden solo mirando tablas o pantallas.
 
 ## Capitulos previstos
 
@@ -11,9 +13,71 @@ Este manual esta preparado como ruta de aprendizaje progresiva. La idea es compl
 5. [Bounded contexts](05-bounded-contexts.md)
 6. [Integracion entre contextos](06-integracion-entre-contextos.md)
 7. [Buenas practicas](07-buenas-practicas.md)
+8. [Modelado estrategico](08-modelado-estrategico.md)
+9. [Eventos de dominio](09-eventos-de-dominio.md)
+10. [DDD tactico en backend](10-ddd-tactico-en-backend.md)
+11. [Testing del dominio](11-testing-del-dominio.md)
+12. [Proyecto final](12-proyecto-final.md)
 
-## Enfoque
+## Por que existe DDD
 
-- Enfoque arquitectonico: decisiones, trade-offs, limites, patrones y ejemplos de sistemas reales.
-- Cada capitulo debe incluir teoria breve, ejemplos, ejercicios y una seccion de errores habituales.
-- Cuando el tema lo permita, se incorporaran proyectos incrementales para conectar los capitulos entre si.
+En muchos proyectos el codigo acaba reflejando tecnologia, no negocio:
+
+```txt
+controllers/
+services/
+repositories/
+models/
+```
+
+Eso puede funcionar, pero no siempre explica conceptos como:
+
+- Pedido confirmado.
+- Factura vencida.
+- Cliente con riesgo.
+- Cupo agotado.
+- Matricula cancelable.
+- Producto reservable.
+
+DDD intenta que esos conceptos vivan en el modelo y no solo en conversaciones, tickets o documentacion externa.
+
+## Dos niveles de DDD
+
+### DDD estrategico
+
+Ayuda a dividir el sistema:
+
+- Subdominios.
+- Bounded contexts.
+- Context maps.
+- Relaciones entre equipos y modelos.
+
+### DDD tactico
+
+Ayuda a disenar el modelo interno:
+
+- Entidades.
+- Value objects.
+- Agregados.
+- Repositorios.
+- Servicios de dominio.
+- Eventos de dominio.
+
+## Cuando usar DDD
+
+- El negocio tiene reglas complejas.
+- Hay muchas excepciones.
+- Distintas areas usan palabras diferentes.
+- El sistema va a crecer durante anos.
+- Los errores de interpretacion son caros.
+
+## Cuando no compensa
+
+- CRUDs simples.
+- Prototipos rapidos.
+- Scripts internos.
+- Aplicaciones donde la logica vive casi toda en otra plataforma.
+
+## Idea central
+
+DDD no empieza en el codigo. Empieza entendiendo el dominio con personas que lo conocen y llevando ese lenguaje al diseno del sistema.

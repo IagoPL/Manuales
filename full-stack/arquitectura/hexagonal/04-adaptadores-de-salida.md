@@ -1,15 +1,69 @@
-﻿# Adaptadores de salida
+# Adaptadores de salida
 
-Pendiente de completar.
+Los adaptadores de salida implementan lo que la aplicacion necesita del exterior.
 
-## Objetivo
+## Tipos habituales
 
-Este capitulo se desarrollara siguiendo el orden del manual.
+- Repositorios de base de datos.
+- Clientes HTTP.
+- Publicadores de eventos.
+- Clientes de cache.
+- Adaptadores de filesystem.
+- Gateways de pago.
+- Servicios de email.
 
-## Contenido previsto
+## Puerto de salida
 
-- Conceptos fundamentales.
-- Ejemplos practicos.
-- Buenas practicas.
-- Errores habituales.
-- Ejercicios o proyecto guiado cuando aplique.
+El caso de uso define lo que necesita:
+
+```txt
+PaymentGateway
+  capture(paymentRequest)
+```
+
+La infraestructura decide como hacerlo:
+
+```txt
+StripePaymentGateway
+FakePaymentGateway
+AdyenPaymentGateway
+```
+
+## Repositorios
+
+Un repositorio debe traducir entre persistencia y dominio.
+
+```txt
+SQL row -> Order
+Order -> SQL row
+```
+
+Evita que modelos de ORM viajen hacia el dominio.
+
+## Clientes externos
+
+Los adaptadores de salida deben controlar:
+
+- Timeouts.
+- Reintentos.
+- Errores.
+- Circuit breakers si aplica.
+- Logs y metricas.
+- Traduccion de respuestas externas.
+
+## Anticorrupcion
+
+Si un proveedor usa conceptos distintos, traduce.
+
+```txt
+ProviderPaymentStatus = SETTLED
+  -> PaymentStatus.captured
+```
+
+## Checklist
+
+- Cada adaptador implementa un puerto claro.
+- Los detalles externos no entran al dominio.
+- Hay mappers explicitos.
+- Los errores externos se traducen.
+- Los timeouts estan configurados.
