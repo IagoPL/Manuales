@@ -1,0 +1,74 @@
+import{_ as s,o as n,c as t,a2 as e}from"./chunks/framework.DCVnL8g5.js";const h=JSON.parse('{"title":"Control de Flujo y Operadores en Java","description":"","frontmatter":{},"headers":[],"relativePath":"lenguajes/java/02-control-de-flujo-y-operadores.md","filePath":"lenguajes/java/02-control-de-flujo-y-operadores.md","lastUpdated":1782521464000}'),p={name:"lenguajes/java/02-control-de-flujo-y-operadores.md"};function l(o,a,d,i,r,c){return n(),t("div",null,[...a[0]||(a[0]=[e(`<h1 id="control-de-flujo-y-operadores-en-java" tabindex="-1">Control de Flujo y Operadores en Java <a class="header-anchor" href="#control-de-flujo-y-operadores-en-java" aria-label="Permalink to &quot;Control de Flujo y Operadores en Java&quot;">​</a></h1><p>El control de flujo y los operadores son esenciales en Java para la ejecución lógica de un programa. Estas herramientas permiten tomar decisiones, repetir tareas y realizar cálculos con precisión.</p><hr><h2 id="estructuras-de-control-de-flujo" tabindex="-1">Estructuras de Control de Flujo <a class="header-anchor" href="#estructuras-de-control-de-flujo" aria-label="Permalink to &quot;Estructuras de Control de Flujo&quot;">​</a></h2><h3 id="_1-condicionales" tabindex="-1">1. Condicionales <a class="header-anchor" href="#_1-condicionales" aria-label="Permalink to &quot;1. Condicionales&quot;">​</a></h3><p>Las estructuras condicionales permiten tomar decisiones basadas en condiciones específicas.</p><h4 id="span-if-span-y-span-else-span" tabindex="-1"><code>&lt;span&gt;if&lt;/span&gt;</code> y <code>&lt;span&gt;else&lt;/span&gt;</code> <a class="header-anchor" href="#span-if-span-y-span-else-span" aria-label="Permalink to &quot;\`&lt;span&gt;if&lt;/span&gt;\` y \`&lt;span&gt;else&lt;/span&gt;\`&quot;">​</a></h4><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>int numero = 10;</span></span>
+<span class="line"><span>if (numero &gt; 0) {</span></span>
+<span class="line"><span>    System.out.println(&quot;El número es positivo&quot;);</span></span>
+<span class="line"><span>} else {</span></span>
+<span class="line"><span>    System.out.println(&quot;El número no es positivo&quot;);</span></span>
+<span class="line"><span>}</span></span></code></pre></div><h4 id="span-else-if-span" tabindex="-1"><code>&lt;span&gt;else if&lt;/span&gt;</code> <a class="header-anchor" href="#span-else-if-span" aria-label="Permalink to &quot;\`&lt;span&gt;else if&lt;/span&gt;\`&quot;">​</a></h4><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>int numero = 0;</span></span>
+<span class="line"><span>if (numero &gt; 0) {</span></span>
+<span class="line"><span>    System.out.println(&quot;El número es positivo&quot;);</span></span>
+<span class="line"><span>} else if (numero &lt; 0) {</span></span>
+<span class="line"><span>    System.out.println(&quot;El número es negativo&quot;);</span></span>
+<span class="line"><span>} else {</span></span>
+<span class="line"><span>    System.out.println(&quot;El número es cero&quot;);</span></span>
+<span class="line"><span>}</span></span></code></pre></div><h4 id="span-switch-span" tabindex="-1"><code>&lt;span&gt;switch&lt;/span&gt;</code> <a class="header-anchor" href="#span-switch-span" aria-label="Permalink to &quot;\`&lt;span&gt;switch&lt;/span&gt;\`&quot;">​</a></h4><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>char letra = &#39;A&#39;;</span></span>
+<span class="line"><span>switch (letra) {</span></span>
+<span class="line"><span>    case &#39;A&#39;:</span></span>
+<span class="line"><span>        System.out.println(&quot;La letra es A&quot;);</span></span>
+<span class="line"><span>        break;</span></span>
+<span class="line"><span>    case &#39;B&#39;:</span></span>
+<span class="line"><span>        System.out.println(&quot;La letra es B&quot;);</span></span>
+<span class="line"><span>        break;</span></span>
+<span class="line"><span>    default:</span></span>
+<span class="line"><span>        System.out.println(&quot;La letra no es A ni B&quot;);</span></span>
+<span class="line"><span>}</span></span></code></pre></div><h3 id="_2-bucles" tabindex="-1">2. Bucles <a class="header-anchor" href="#_2-bucles" aria-label="Permalink to &quot;2. Bucles&quot;">​</a></h3><p>Los bucles permiten ejecutar un bloque de código repetidamente mientras se cumpla una condición.</p><h4 id="span-for-span" tabindex="-1"><code>&lt;span&gt;for&lt;/span&gt;</code> <a class="header-anchor" href="#span-for-span" aria-label="Permalink to &quot;\`&lt;span&gt;for&lt;/span&gt;\`&quot;">​</a></h4><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>for (int i = 0; i &lt; 5; i++) {</span></span>
+<span class="line"><span>    System.out.println(&quot;El valor de i es: &quot; + i);</span></span>
+<span class="line"><span>}</span></span></code></pre></div><h4 id="span-while-span" tabindex="-1"><code>&lt;span&gt;while&lt;/span&gt;</code> <a class="header-anchor" href="#span-while-span" aria-label="Permalink to &quot;\`&lt;span&gt;while&lt;/span&gt;\`&quot;">​</a></h4><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>int contador = 0;</span></span>
+<span class="line"><span>while (contador &lt; 5) {</span></span>
+<span class="line"><span>    System.out.println(&quot;Contador: &quot; + contador);</span></span>
+<span class="line"><span>    contador++;</span></span>
+<span class="line"><span>}</span></span></code></pre></div><h4 id="span-do-while-span" tabindex="-1"><code>&lt;span&gt;do-while&lt;/span&gt;</code> <a class="header-anchor" href="#span-do-while-span" aria-label="Permalink to &quot;\`&lt;span&gt;do-while&lt;/span&gt;\`&quot;">​</a></h4><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>int contador = 0;</span></span>
+<span class="line"><span>do {</span></span>
+<span class="line"><span>    System.out.println(&quot;Contador: &quot; + contador);</span></span>
+<span class="line"><span>    contador++;</span></span>
+<span class="line"><span>} while (contador &lt; 5);</span></span></code></pre></div><hr><h2 id="operadores-en-java" tabindex="-1">Operadores en Java <a class="header-anchor" href="#operadores-en-java" aria-label="Permalink to &quot;Operadores en Java&quot;">​</a></h2><h3 id="_1-operadores-aritmeticos" tabindex="-1">1. Operadores Aritméticos <a class="header-anchor" href="#_1-operadores-aritmeticos" aria-label="Permalink to &quot;1. Operadores Aritméticos&quot;">​</a></h3><table tabindex="0"><thead><tr><th>Operador</th><th>Operación</th><th>Ejemplo</th></tr></thead><tbody><tr><td><code>&lt;span&gt;+&lt;/span&gt;</code></td><td>Suma</td><td><code>&lt;span&gt;a + b&lt;/span&gt;</code></td></tr><tr><td><code>&lt;span&gt;-&lt;/span&gt;</code></td><td>Resta</td><td><code>&lt;span&gt;a - b&lt;/span&gt;</code></td></tr><tr><td><code>&lt;span&gt;*&lt;/span&gt;</code></td><td>Multiplicación</td><td><code>&lt;span&gt;a * b&lt;/span&gt;</code></td></tr><tr><td><code>&lt;span&gt;/&lt;/span&gt;</code></td><td>División</td><td><code>&lt;span&gt;a / b&lt;/span&gt;</code></td></tr><tr><td><code>&lt;span&gt;%&lt;/span&gt;</code></td><td>Módulo</td><td><code>&lt;span&gt;a % b&lt;/span&gt;</code></td></tr></tbody></table><h3 id="_2-operadores-relacionales" tabindex="-1">2. Operadores Relacionales <a class="header-anchor" href="#_2-operadores-relacionales" aria-label="Permalink to &quot;2. Operadores Relacionales&quot;">​</a></h3><table tabindex="0"><thead><tr><th>Operador</th><th>Descripción</th><th>Ejemplo</th></tr></thead><tbody><tr><td><code>&lt;span&gt;==&lt;/span&gt;</code></td><td>Igual a</td><td><code>&lt;span&gt;a == b&lt;/span&gt;</code></td></tr><tr><td><code>&lt;span&gt;!=&lt;/span&gt;</code></td><td>No igual a</td><td><code>&lt;span&gt;a != b&lt;/span&gt;</code></td></tr><tr><td><code>&lt;span&gt;&gt;&lt;/span&gt;</code></td><td>Mayor que</td><td><code>&lt;span&gt;a &gt; b&lt;/span&gt;</code></td></tr><tr><td><code>&lt;span&gt;&lt;&lt;/span&gt;</code></td><td>Menor que</td><td><code>&lt;span&gt;a &lt; b&lt;/span&gt;</code></td></tr><tr><td><code>&lt;span&gt;&gt;=&lt;/span&gt;</code></td><td>Mayor o igual que</td><td><code>&lt;span&gt;a &gt;= b&lt;/span&gt;</code></td></tr><tr><td><code>&lt;span&gt;&lt;=&lt;/span&gt;</code></td><td>Menor o igual que</td><td><code>&lt;span&gt;a &lt;= b&lt;/span&gt;</code></td></tr></tbody></table><h3 id="_3-operadores-logicos" tabindex="-1">3. Operadores Lógicos <a class="header-anchor" href="#_3-operadores-logicos" aria-label="Permalink to &quot;3. Operadores Lógicos&quot;">​</a></h3><table tabindex="0"><thead><tr><th>Operador</th><th>Operación</th><th>Ejemplo</th></tr></thead><tbody><tr><td><code>&lt;span&gt;&amp;&amp;&lt;/span&gt;</code></td><td>AND lógico</td><td><code>&lt;span&gt;a &amp;&amp; b&lt;/span&gt;</code></td></tr><tr><td>\`</td><td></td><td>\`</td></tr><tr><td><code>&lt;span&gt;!&lt;/span&gt;</code></td><td>NOT lógico</td><td><code>&lt;span&gt;!a&lt;/span&gt;</code></td></tr></tbody></table><h3 id="_4-operadores-de-asignacion" tabindex="-1">4. Operadores de Asignación <a class="header-anchor" href="#_4-operadores-de-asignacion" aria-label="Permalink to &quot;4. Operadores de Asignación&quot;">​</a></h3><table tabindex="0"><thead><tr><th>Operador</th><th>Descripción</th><th>Ejemplo</th></tr></thead><tbody><tr><td><code>&lt;span&gt;=&lt;/span&gt;</code></td><td>Asignación simple</td><td><code>&lt;span&gt;a = b&lt;/span&gt;</code></td></tr><tr><td><code>&lt;span&gt;+=&lt;/span&gt;</code></td><td>Suma y asigna</td><td><code>&lt;span&gt;a += b&lt;/span&gt;</code></td></tr><tr><td><code>&lt;span&gt;-=&lt;/span&gt;</code></td><td>Resta y asigna</td><td><code>&lt;span&gt;a -= b&lt;/span&gt;</code></td></tr><tr><td><code>&lt;span&gt;*=&lt;/span&gt;</code></td><td>Multiplica y asigna</td><td><code>&lt;span&gt;a *= b&lt;/span&gt;</code></td></tr><tr><td><code>&lt;span&gt;/=&lt;/span&gt;</code></td><td>Divide y asigna</td><td><code>&lt;span&gt;a /= b&lt;/span&gt;</code></td></tr><tr><td><code>&lt;span&gt;%=&lt;/span&gt;</code></td><td>Módulo y asigna</td><td><code>&lt;span&gt;a %= b&lt;/span&gt;</code></td></tr></tbody></table><hr><h2 id="ejemplo-completo-calculadora-basica" tabindex="-1">Ejemplo Completo: Calculadora Básica <a class="header-anchor" href="#ejemplo-completo-calculadora-basica" aria-label="Permalink to &quot;Ejemplo Completo: Calculadora Básica&quot;">​</a></h2><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>import java.util.Scanner;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>public class Calculadora {</span></span>
+<span class="line"><span>    public static void main(String[] args) {</span></span>
+<span class="line"><span>        Scanner scanner = new Scanner(System.in);</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>        System.out.println(&quot;Introduce el primer número:&quot;);</span></span>
+<span class="line"><span>        double numero1 = scanner.nextDouble();</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>        System.out.println(&quot;Introduce el segundo número:&quot;);</span></span>
+<span class="line"><span>        double numero2 = scanner.nextDouble();</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>        System.out.println(&quot;Elige una operación (+, -, *, /):&quot;);</span></span>
+<span class="line"><span>        char operacion = scanner.next().charAt(0);</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>        double resultado;</span></span>
+<span class="line"><span>        switch (operacion) {</span></span>
+<span class="line"><span>            case &#39;+&#39;:</span></span>
+<span class="line"><span>                resultado = numero1 + numero2;</span></span>
+<span class="line"><span>                break;</span></span>
+<span class="line"><span>            case &#39;-&#39;:</span></span>
+<span class="line"><span>                resultado = numero1 - numero2;</span></span>
+<span class="line"><span>                break;</span></span>
+<span class="line"><span>            case &#39;*&#39;:</span></span>
+<span class="line"><span>                resultado = numero1 * numero2;</span></span>
+<span class="line"><span>                break;</span></span>
+<span class="line"><span>            case &#39;/&#39;:</span></span>
+<span class="line"><span>                if (numero2 != 0) {</span></span>
+<span class="line"><span>                    resultado = numero1 / numero2;</span></span>
+<span class="line"><span>                } else {</span></span>
+<span class="line"><span>                    System.out.println(&quot;Error: División entre cero.&quot;);</span></span>
+<span class="line"><span>                    return;</span></span>
+<span class="line"><span>                }</span></span>
+<span class="line"><span>                break;</span></span>
+<span class="line"><span>            default:</span></span>
+<span class="line"><span>                System.out.println(&quot;Operación no válida.&quot;);</span></span>
+<span class="line"><span>                return;</span></span>
+<span class="line"><span>        }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>        System.out.println(&quot;El resultado es: &quot; + resultado);</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span>}</span></span></code></pre></div><hr><h2 id="conclusion" tabindex="-1">Conclusión <a class="header-anchor" href="#conclusion" aria-label="Permalink to &quot;Conclusión&quot;">​</a></h2><p>El control de flujo y los operadores son la base para desarrollar lógica en Java. Dominar estas herramientas te permitirá resolver problemas de manera eficiente y estructurada.</p>`,36)])])}const g=s(p,[["render",l]]);export{h as __pageData,g as default};
