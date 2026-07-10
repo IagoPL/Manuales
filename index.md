@@ -24,12 +24,15 @@ import { data as manuales } from './.vitepress/manuals.data'
 
   <div class="library-panel" aria-label="Resumen del repositorio">
     <div>
-      <span class="library-stat">{{ manuales.count }}</span>
-      <span class="library-stat-label">manuales publicados</span>
+      <span class="library-stat">{{ manuales.complete }}</span>
+      <span class="library-stat-label">capitulos completos</span>
     </div>
     <div>
-      <span class="library-stat">{{ manuales.categories.length }}</span>
-      <span class="library-stat-label">areas principales</span>
+      <span class="library-stat">{{ manuales.percent }}%</span>
+      <span class="library-stat-label">completitud global</span>
+    </div>
+    <div>
+      <a class="library-button" :href="withBase('/estado')">Ver estado</a>
     </div>
   </div>
 </section>
@@ -42,7 +45,7 @@ import { data as manuales } from './.vitepress/manuals.data'
     :class="`manual-card--${category.slug}`"
     :href="withBase(category.link)"
   >
-    <span class="manual-card__eyebrow">{{ category.count }} documentos</span>
+    <span class="manual-card__eyebrow">{{ category.complete }}/{{ category.count }} completos</span>
     <strong>{{ category.title }}</strong>
     <span>{{ category.description }}</span>
   </a>

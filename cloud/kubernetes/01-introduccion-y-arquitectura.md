@@ -1,26 +1,71 @@
-﻿# Manual de Kubernetes
+# Introduccion Y Arquitectura
 
-Este manual esta preparado como ruta de aprendizaje progresiva. La idea es completarlo por capitulos, desde fundamentos hasta uso profesional, con ejemplos practicos y buenas practicas.
+Este capitulo profundiza en **Introduccion Y Arquitectura** dentro del manual de **Kubernetes**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
 
-## Capitulos previstos
+## Objetivo
 
-1. [Introduccion y arquitectura](01-introduccion-y-arquitectura.md)
-2. [Pods deployments y replicasets](02-pods-deployments-y-replicasets.md)
-3. [Services ingress y networking](03-services-ingress-y-networking.md)
-4. [ConfigMaps secrets y volumes](04-configmaps-secrets-y-volumes.md)
-5. [Namespaces RBAC y seguridad](05-namespaces-rbac-y-seguridad.md)
-6. [Helm](06-helm.md)
-7. [Observabilidad](07-observabilidad.md)
-8. [Despliegues y escalado](08-despliegues-y-escalado.md)
-9. [Arquitectura interna del cluster](09-arquitectura-interna-del-cluster.md)
-10. [Probes, recursos y scheduling](10-probes-recursos-y-scheduling.md)
-11. [Autoscaling y resiliencia](11-autoscaling-y-resiliencia.md)
-12. [GitOps y CI/CD](12-gitops-y-ci-cd.md)
-13. [Kubernetes en produccion](13-kubernetes-en-produccion.md)
-14. [Proyecto final](14-proyecto-final.md)
+Al terminar este capitulo sabras explicar introduccion y arquitectura, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
 
-## Enfoque
+## Conceptos clave
 
-- Enfoque operativo: comandos, configuracion, seguridad, automatizacion y despliegues reproducibles.
-- Cada capitulo debe incluir teoria breve, ejemplos, ejercicios y una seccion de errores habituales.
-- Cuando el tema lo permita, se incorporaran proyectos incrementales para conectar los capitulos entre si.
+- **Introduccion Y Arquitectura:** pieza central de Kubernetes en este capitulo.
+- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
+- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
+- **Introduccion:** aspecto a dominar dentro de Introduccion Y Arquitectura.
+- **Arquitectura:** aspecto a dominar dentro de Introduccion Y Arquitectura.
+
+## Desarrollo del tema
+
+### Enfoque practico
+
+1. Define el problema que resuelve **Introduccion Y Arquitectura**.
+2. Identifica entradas, salidas y dependencias.
+3. Implementa un ejemplo minimo funcional.
+4. Itera midiendo resultado y calidad.
+
+### Flujo recomendado
+
+```txt
+lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
+```
+
+## Ejemplo
+
+```yaml
+# Ejemplo de configuracion (Kubernetes)
+version: "3.9"
+services:
+  app:
+    image: nginx:1.27
+    ports:
+      - "8080:80"
+```
+
+Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+
+## Errores habituales
+
+- Aplicar el concepto sin leer requisitos previos del manual.
+- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
+- Optimizar prematuramente antes de tener mediciones.
+- Ignorar seguridad en escenarios de introduccion y arquitectura.
+- No probar casos limite ni errores esperados.
+
+## Buenas practicas
+
+- Documenta decisiones y limites del enfoque.
+- Valida en entorno de prueba antes de produccion.
+- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
+- Infra como codigo y cambios revisados.
+- Principio de minimo privilegio.
+
+## Ejercicios
+
+1. Reproduce el ejemplo minimo del capitulo sobre **Introduccion Y Arquitectura**.
+2. Modifica un parametro y observa el cambio en el resultado.
+3. Anade un caso de error controlado y verifica el manejo.
+4. Integra el concepto con un capitulo anterior del mismo manual.
+
+## Siguiente paso
+
+Continua con [Pods Deployments Y Replicasets](02-pods-deployments-y-replicasets.md).

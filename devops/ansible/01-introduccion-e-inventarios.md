@@ -1,19 +1,71 @@
-﻿# Manual de Ansible
+# Introduccion E Inventarios
 
-Este manual esta preparado como ruta de aprendizaje progresiva. La idea es completarlo por capitulos, desde fundamentos hasta uso profesional, con ejemplos practicos y buenas practicas.
+Este capitulo profundiza en **Introduccion E Inventarios** dentro del manual de **Ansible**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
 
-## Capitulos previstos
+## Objetivo
 
-1. [Introduccion e inventarios](01-introduccion-e-inventarios.md)
-2. [Playbooks tasks y handlers](02-playbooks-tasks-y-handlers.md)
-3. [Variables facts y templates](03-variables-facts-y-templates.md)
-4. [Roles](04-roles.md)
-5. [Vault y secretos](05-vault-y-secretos.md)
-6. [Idempotencia](06-idempotencia.md)
-7. [Testing y buenas practicas](07-testing-y-buenas-practicas.md)
+Al terminar este capitulo sabras explicar introduccion e inventarios, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
 
-## Enfoque
+## Conceptos clave
 
-- Enfoque operativo: comandos, configuracion, seguridad, automatizacion y despliegues reproducibles.
-- Cada capitulo debe incluir teoria breve, ejemplos, ejercicios y una seccion de errores habituales.
-- Cuando el tema lo permita, se incorporaran proyectos incrementales para conectar los capitulos entre si.
+- **Introduccion E Inventarios:** pieza central de Ansible en este capitulo.
+- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
+- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
+- **Introduccion:** aspecto a dominar dentro de Introduccion E Inventarios.
+- **Inventarios:** aspecto a dominar dentro de Introduccion E Inventarios.
+
+## Desarrollo del tema
+
+### Enfoque practico
+
+1. Define el problema que resuelve **Introduccion E Inventarios**.
+2. Identifica entradas, salidas y dependencias.
+3. Implementa un ejemplo minimo funcional.
+4. Itera midiendo resultado y calidad.
+
+### Flujo recomendado
+
+```txt
+lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
+```
+
+## Ejemplo
+
+```yaml
+# Ejemplo de configuracion (Ansible)
+version: "3.9"
+services:
+  app:
+    image: nginx:1.27
+    ports:
+      - "8080:80"
+```
+
+Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+
+## Errores habituales
+
+- Aplicar el concepto sin leer requisitos previos del manual.
+- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
+- Optimizar prematuramente antes de tener mediciones.
+- Ignorar seguridad en escenarios de introduccion e inventarios.
+- No probar casos limite ni errores esperados.
+
+## Buenas practicas
+
+- Documenta decisiones y limites del enfoque.
+- Valida en entorno de prueba antes de produccion.
+- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
+- Scripts idempotentes y logs claros.
+- Secrets fuera del repositorio.
+
+## Ejercicios
+
+1. Reproduce el ejemplo minimo del capitulo sobre **Introduccion E Inventarios**.
+2. Modifica un parametro y observa el cambio en el resultado.
+3. Anade un caso de error controlado y verifica el manejo.
+4. Integra el concepto con un capitulo anterior del mismo manual.
+
+## Siguiente paso
+
+Continua con [Playbooks Tasks Y Handlers](02-playbooks-tasks-y-handlers.md).

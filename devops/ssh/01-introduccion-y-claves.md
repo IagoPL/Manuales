@@ -1,18 +1,67 @@
-﻿# Manual de SSH
+# Introduccion Y Claves
 
-Este manual esta preparado como ruta de aprendizaje progresiva. La idea es completarlo por capitulos, desde fundamentos hasta uso profesional, con ejemplos practicos y buenas practicas.
+Este capitulo profundiza en **Introduccion Y Claves** dentro del manual de **SSH**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
 
-## Capitulos previstos
+## Objetivo
 
-1. [Introduccion y claves](01-introduccion-y-claves.md)
-2. [Conexion y configuracion](02-conexion-y-configuracion.md)
-3. [Agentes y forwarding](03-agentes-y-forwarding.md)
-4. [SCP SFTP y tunnels](04-scp-sftp-y-tunnels.md)
-5. [Hardening del servidor](05-hardening-del-servidor.md)
-6. [Troubleshooting](06-troubleshooting.md)
+Al terminar este capitulo sabras explicar introduccion y claves, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
 
-## Enfoque
+## Conceptos clave
 
-- Enfoque operativo: comandos, configuracion, seguridad, automatizacion y despliegues reproducibles.
-- Cada capitulo debe incluir teoria breve, ejemplos, ejercicios y una seccion de errores habituales.
-- Cuando el tema lo permita, se incorporaran proyectos incrementales para conectar los capitulos entre si.
+- **Introduccion Y Claves:** pieza central de SSH en este capitulo.
+- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
+- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
+- **Introduccion:** aspecto a dominar dentro de Introduccion Y Claves.
+- **Claves:** aspecto a dominar dentro de Introduccion Y Claves.
+
+## Desarrollo del tema
+
+### Enfoque practico
+
+1. Define el problema que resuelve **Introduccion Y Claves**.
+2. Identifica entradas, salidas y dependencias.
+3. Implementa un ejemplo minimo funcional.
+4. Itera midiendo resultado y calidad.
+
+### Flujo recomendado
+
+```txt
+lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
+```
+
+## Ejemplo
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+echo "Tarea: Introduccion Y Claves"
+```
+
+Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+
+## Errores habituales
+
+- Aplicar el concepto sin leer requisitos previos del manual.
+- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
+- Optimizar prematuramente antes de tener mediciones.
+- Ignorar seguridad en escenarios de introduccion y claves.
+- No probar casos limite ni errores esperados.
+
+## Buenas practicas
+
+- Documenta decisiones y limites del enfoque.
+- Valida en entorno de prueba antes de produccion.
+- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
+- Scripts idempotentes y logs claros.
+- Secrets fuera del repositorio.
+
+## Ejercicios
+
+1. Reproduce el ejemplo minimo del capitulo sobre **Introduccion Y Claves**.
+2. Modifica un parametro y observa el cambio en el resultado.
+3. Anade un caso de error controlado y verifica el manejo.
+4. Integra el concepto con un capitulo anterior del mismo manual.
+
+## Siguiente paso
+
+Continua con [Conexion Y Configuracion](02-conexion-y-configuracion.md).

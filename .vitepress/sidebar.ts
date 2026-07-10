@@ -1,6 +1,15 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import type { DefaultTheme } from 'vitepress'
+import {
+  cleanMarkdownTitle,
+  featuredLinks,
+  isDraftFile,
+  linkForMarkdown,
+  manualFolders,
+  readMarkdownFile,
+  titleFromSlug
+} from './lib/content'
 
 const root = process.cwd()
 const ignoredDirs = new Set(['.git', '.github', '.vitepress', 'node_modules', '_revision-pendiente', 'recursos'])
@@ -13,12 +22,12 @@ const categoryMeta: Record<string, { title: string; description: string; order: 
   },
   'data-engineering': {
     title: 'Data Engineering',
-    description: 'Spark, Databricks, NiFi y pipelines de datos.',
+    description: 'Spark, Kafka, Airflow, dbt y pipelines de datos.',
     order: 20
   },
   'bases-de-datos': {
     title: 'Bases de Datos',
-    description: 'SQL, motores relacionales y documentales.',
+    description: 'SQL, motores relacionales, documentales y analiticos.',
     order: 30
   },
   lenguajes: {
@@ -30,21 +39,31 @@ const categoryMeta: Record<string, { title: string; description: string; order: 
     title: 'Herramientas',
     description: 'Git, terminal, Linux, Docker y flujo de trabajo.',
     order: 50
+  },
+  cloud: {
+    title: 'Cloud',
+    description: 'Kubernetes, Nginx, Traefik, Docker Compose y GitHub Actions.',
+    order: 60
+  },
+  devops: {
+    title: 'DevOps',
+    description: 'CI/CD, Terraform, Ansible, Bash y SSH.',
+    order: 70
+  },
+  ia: {
+    title: 'IA',
+    description: 'RAG, LangChain, MCP, LLMs locales y vector databases.',
+    order: 80
   }
 }
 
-type TreeItem = {
-  text: string
-  path: string
-  isDir: boolean
-  items?: TreeItem[]
-}
-
 export function navItems(): DefaultTheme.NavItem[] {
-  return topLevelCategories().map((category) => ({
+  const items = topLevelCategories().map((category) => ({
     text: categoryMeta[category]?.title ?? titleFromSlug(category),
     link: firstLinkForCategory(category)
   }))
+
+  return [...items, { text: 'Estado', link: '/estado' }]
 }
 
 export function generateSidebar(): DefaultTheme.Sidebar {
@@ -58,33 +77,59 @@ export function generateSidebar(): DefaultTheme.Sidebar {
 export function manualSummary() {
   const categories = topLevelCategories().map((category) => {
     const files = markdownFiles(path.join(root, category))
+    const drafts = files.filter((file) => isDraftFile(file)).length
 
     return {
       slug: category,
       title: categoryMeta[category]?.title ?? titleFromSlug(category),
       description: categoryMeta[category]?.description ?? 'Manuales y apuntes tecnicos.',
       link: firstLinkForCategory(category),
-      count: files.length
+      count: files.length,
+      drafts,
+      complete: files.length - drafts
     }
   })
 
-  const featured = categories
-    .flatMap((category) =>
-      markdownFiles(path.join(root, category.slug))
-        .filter((file) => !/README\.md$/i.test(file))
-        .slice(0, 3)
-        .map((file) => ({
-          area: category.title,
-          title: titleForFile(file),
-          link: linkForMarkdown(path.relative(root, file))
-        }))
-    )
-    .slice(0, 8)
+  const featured = featuredLinks
+    .map((link) => {
+      const relative = link.replace(/^\//, '').replace(/\//g, path.sep) + '.md'
+      const absolute = path.join(root, relative)
+      if (!fs.existsSync(absolute)) return null
+
+      const category = relative.split(path.sep)[0]
+      const categoryTitle = categoryMeta[category]?.title ?? titleFromSlug(category)
+
+      return {
+        area: categoryTitle,
+        title: titleForFile(absolute),
+        link
+      }
+    })
+    .filter((item): item is NonNullable<typeof item> => item !== null)
+
+  const totals = categories.reduce(
+    (acc, category) => ({
+      count: acc.count + category.count,
+      drafts: acc.drafts + category.drafts,
+      complete: acc.complete + category.complete
+    }),
+    { count: 0, drafts: 0, complete: 0 }
+  )
+
+  const manuals = categories.flatMap((category) =>
+    manualFolders(category.slug).map((manual) => ({
+      ...manual,
+      category: category.title,
+      categorySlug: category.slug
+    }))
+  )
 
   return {
-    count: categories.reduce((total, category) => total + category.count, 0),
+    ...totals,
+    percent: totals.count > 0 ? Math.round((totals.complete / totals.count) * 100) : 0,
     categories,
-    featured
+    featured,
+    manuals
   }
 }
 
@@ -109,7 +154,6 @@ function buildItems(directory: string, relativeDirectory: string): DefaultTheme.
 
     if (entry.isDirectory()) {
       const items = buildItems(absolutePath, relativePath)
-
       if (items.length === 0) return []
 
       return [
@@ -123,9 +167,12 @@ function buildItems(directory: string, relativeDirectory: string): DefaultTheme.
 
     if (!entry.name.toLowerCase().endsWith('.md')) return []
 
+    const draft = isDraftFile(absolutePath)
+    const title = titleForFile(absolutePath)
+
     return [
       {
-        text: titleForFile(absolutePath),
+        text: draft ? `${title} (borrador)` : title,
         link: linkForMarkdown(relativePath)
       }
     ]
@@ -159,36 +206,10 @@ function markdownFiles(directory: string): string[] {
 }
 
 function titleForFile(filePath: string) {
-  const content = fs.readFileSync(filePath, 'utf8')
+  const content = readMarkdownFile(filePath)
   const heading = content.match(/^#\s+(.+)$/m)?.[1]?.trim()
 
   return cleanMarkdownTitle(heading ?? titleFromSlug(path.basename(filePath, '.md')))
-}
-
-function linkForMarkdown(filePath: string) {
-  const normalized = filePath.replaceAll(path.sep, '/').replace(/\.md$/i, '')
-
-  if (/^README$/i.test(normalized)) return '/'
-
-  return `/${normalized}`
-}
-
-function titleFromSlug(value: string) {
-  return value
-    .replace(/^\d+[-_]/, '')
-    .replaceAll('-', ' ')
-    .replaceAll('_', ' ')
-    .replace(/\b\w/g, (letter) => letter.toUpperCase())
-}
-
-function cleanMarkdownTitle(value: string) {
-  return value
-    .replace(/^\s*#+\s*/, '')
-    .replaceAll('**', '')
-    .replaceAll('__', '')
-    .replace(/`([^`]+)`/g, '$1')
-    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
-    .trim()
 }
 
 function sortName(value: string) {

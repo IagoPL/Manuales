@@ -480,3 +480,127 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+.manual-draft-banner {
+  position: sticky;
+  top: var(--vp-nav-height, 64px);
+  z-index: 19;
+  padding: 10px 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #5c4a12;
+  background: #fff4cc;
+  border-bottom: 1px solid #ecd27a;
+}
+
+.dark .manual-draft-banner {
+  color: #f6e7b8;
+  background: #3d3418;
+  border-bottom-color: #6b5a24;
+}
+
+.manual-draft-banner strong {
+  margin-right: 6px;
+}
+
+.status-hero {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 32px 24px 12px;
+}
+
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin: 24px 0 32px;
+}
+
+.status-stat {
+  padding: 18px 20px;
+  border-radius: 14px;
+  background: var(--manual-card-bg);
+  border: 1px solid var(--vp-c-divider);
+  box-shadow: var(--manual-shadow);
+}
+
+.status-stat strong {
+  display: block;
+  font-size: 28px;
+  line-height: 1.1;
+  margin-bottom: 6px;
+  color: var(--vp-c-text-1);
+}
+
+.status-stat span {
+  color: var(--vp-c-text-2);
+  font-size: 14px;
+}
+
+.status-table-wrap {
+  max-width: 1120px;
+  margin: 0 auto 48px;
+  padding: 0 24px;
+  overflow-x: auto;
+}
+
+.status-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.status-table th,
+.status-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--vp-c-divider);
+  text-align: left;
+}
+
+.status-table th {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--vp-c-text-2);
+}
+
+.status-pill {
+  display: inline-block;
+  min-width: 42px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.status-pill--ok {
+  background: #d7f0df;
+  color: #1f5f36;
+}
+
+.status-pill--mid {
+  background: #fff0cc;
+  color: #7a5a00;
+}
+
+.status-pill--low {
+  background: #fde2e2;
+  color: #8a2f2f;
+}
+
+.dark .status-pill--ok {
+  background: #234a31;
+  color: #b8e8c8;
+}
+
+.dark .status-pill--mid {
+  background: #4a3d14;
+  color: #f3df9a;
+}
+
+.dark .status-pill--low {
+  background: #4a2323;
+  color: #f5bcbc;
+}
+

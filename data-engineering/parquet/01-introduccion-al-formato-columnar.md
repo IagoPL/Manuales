@@ -1,19 +1,70 @@
-﻿# Manual de Parquet
+# Introduccion Al Formato Columnar
 
-Este manual esta preparado como ruta de aprendizaje progresiva. La idea es completarlo por capitulos, desde fundamentos hasta uso profesional, con ejemplos practicos y buenas practicas.
+Este capitulo profundiza en **Introduccion Al Formato Columnar** dentro del manual de **Parquet**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
 
-## Capitulos previstos
+## Objetivo
 
-1. [Introduccion al formato columnar](01-introduccion-al-formato-columnar.md)
-2. [Esquemas tipos y compresion](02-esquemas-tipos-y-compresion.md)
-3. [Row groups pages y metadata](03-row-groups-pages-y-metadata.md)
-4. [Lectura y escritura](04-lectura-y-escritura.md)
-5. [Particionado](05-particionado.md)
-6. [Rendimiento](06-rendimiento.md)
-7. [Buenas practicas](07-buenas-practicas.md)
+Al terminar este capitulo sabras explicar introduccion al formato columnar, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
 
-## Enfoque
+## Conceptos clave
 
-- Enfoque practico en datos: modelado, procesamiento, rendimiento, calidad, despliegue y operaciones.
-- Cada capitulo debe incluir teoria breve, ejemplos, ejercicios y una seccion de errores habituales.
-- Cuando el tema lo permita, se incorporaran proyectos incrementales para conectar los capitulos entre si.
+- **Introduccion Al Formato Columnar:** pieza central de Parquet en este capitulo.
+- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
+- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
+- **Introduccion:** aspecto a dominar dentro de Introduccion Al Formato Columnar.
+- **Formato:** aspecto a dominar dentro de Introduccion Al Formato Columnar.
+- **Columnar:** aspecto a dominar dentro de Introduccion Al Formato Columnar.
+
+## Desarrollo del tema
+
+### Enfoque practico
+
+1. Define el problema que resuelve **Introduccion Al Formato Columnar**.
+2. Identifica entradas, salidas y dependencias.
+3. Implementa un ejemplo minimo funcional.
+4. Itera midiendo resultado y calidad.
+
+### Flujo recomendado
+
+```txt
+lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
+```
+
+## Ejemplo
+
+```python
+# Ejemplo con Parquet
+from pathlib import Path
+
+def procesar(ruta: str) -> list[str]:
+    return Path(ruta).read_text(encoding='utf-8').splitlines()
+```
+
+Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+
+## Errores habituales
+
+- Aplicar el concepto sin leer requisitos previos del manual.
+- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
+- Optimizar prematuramente antes de tener mediciones.
+- Ignorar seguridad en escenarios de introduccion al formato columnar.
+- No probar casos limite ni errores esperados.
+
+## Buenas practicas
+
+- Documenta decisiones y limites del enfoque.
+- Valida en entorno de prueba antes de produccion.
+- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
+- Datos reproducibles y pipelines idempotentes.
+- Versiona esquemas y contratos.
+
+## Ejercicios
+
+1. Reproduce el ejemplo minimo del capitulo sobre **Introduccion Al Formato Columnar**.
+2. Modifica un parametro y observa el cambio en el resultado.
+3. Anade un caso de error controlado y verifica el manejo.
+4. Integra el concepto con un capitulo anterior del mismo manual.
+
+## Siguiente paso
+
+Continua con [Esquemas Tipos Y Compresion](02-esquemas-tipos-y-compresion.md).

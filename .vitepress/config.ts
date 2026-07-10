@@ -1,10 +1,13 @@
 import { defineConfig } from 'vitepress'
+import fs from 'node:fs'
+import path from 'node:path'
 import { generateSidebar, navItems } from './sidebar'
+import { isDraftContent } from './lib/content'
 
 const repoName = process.env.GITHUB_REPOSITORY?.split('/')[1]
 const base = process.env.DOCS_BASE ?? (process.env.GITHUB_ACTIONS && repoName ? `/${repoName}/` : '/')
 const repoUrl = process.env.GITHUB_REPOSITORY ? `https://github.com/${process.env.GITHUB_REPOSITORY}` : undefined
-const faviconPath = `${base}favicon.png`
+const strictLinks = process.env.CI_VALIDATE_LINKS === 'true'
 
 export default defineConfig({
   title: 'Manuales',
@@ -15,11 +18,18 @@ export default defineConfig({
   lastUpdated: true,
   appearance: true,
   head: [
-    ['link', { rel: 'icon', type: 'image/png', href: faviconPath }],
-    ['link', { rel: 'shortcut icon', type: 'image/png', href: faviconPath }]
+    ['link', { rel: 'icon', type: 'image/png', href: '/favicon.png' }],
+    ['link', { rel: 'shortcut icon', type: 'image/png', href: '/favicon.png' }]
   ],
-  ignoreDeadLinks: true,
+  ignoreDeadLinks: strictLinks ? false : true,
   srcExclude: ['_revision-pendiente/**', 'node_modules/**'],
+  transformPageData(pageData) {
+    const filePath = path.join(process.cwd(), pageData.relativePath)
+    if (fs.existsSync(filePath)) {
+      const content = fs.readFileSync(filePath, 'utf8')
+      pageData.isDraft = isDraftContent(content)
+    }
+  },
   themeConfig: {
     logo: '/logo.png',
     nav: navItems(),
