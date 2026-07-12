@@ -99,7 +99,7 @@ Deploy: publicación
 
 ## Recursos relacionados
 
-- [Angular](../frontend/angular/README.md)
-- [React](../frontend/react/README.md)
-- [PHP](../backend/php/tienda-online-con-php.md)
-- [SQL](../../bases-de-datos/sql/README.md)
+- [Angular](../frontend/angular/01-introduccion.md)
+- [React](../frontend/react/01-introduccion.md)
+- [PHP](../backend/php/01-introduccion-a-php-y-entorno.md)
+- [SQL](../../bases-de-datos/sql/01-introduccion.md)

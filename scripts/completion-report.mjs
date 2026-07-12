@@ -52,26 +52,42 @@ function manualFolders(category) {
   const categoryPath = path.join(root, category)
   if (!fs.existsSync(categoryPath)) return []
 
-  return fs
-    .readdirSync(categoryPath, { withFileTypes: true })
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => {
-      const folderPath = path.join(categoryPath, entry.name)
-      const files = fs.readdirSync(folderPath).filter((name) => name.toLowerCase().endsWith('.md'))
-      const drafts = files.filter((name) => isDraftFile(path.join(folderPath, name))).length
+  const manuals = []
+
+  function collect(directory) {
+    const entries = fs.readdirSync(directory, { withFileTypes: true })
+    const files = entries
+      .filter((entry) => entry.isFile() && entry.name.toLowerCase().endsWith('.md'))
+      .map((entry) => entry.name)
+      .sort((a, b) => a.localeCompare(b, 'es', { numeric: true }))
+
+    if (files.length > 0) {
+      const relativeDirectory = path.relative(root, directory).replaceAll(path.sep, '/')
+      const drafts = files.filter((name) => isDraftFile(path.join(directory, name))).length
       const chapters = files.length
 
-      return {
-        path: path.join(category, entry.name).replaceAll(path.sep, '/'),
-        slug: entry.name,
+      manuals.push({
+        path: relativeDirectory,
+        slug: path.basename(directory),
+        title: relativeDirectory
+          .split('/')
+          .slice(1)
+          .map(titleFromSlug)
+          .join(' / '),
         chapters,
         drafts,
         complete: chapters - drafts,
         percent: chapters > 0 ? Math.round(((chapters - drafts) / chapters) * 100) : 0
-      }
-    })
-    .filter((manual) => manual.chapters > 0)
-    .sort((a, b) => a.slug.localeCompare(b.slug, 'es', { numeric: true }))
+      })
+    }
+
+    for (const entry of entries) {
+      if (entry.isDirectory()) collect(path.join(directory, entry.name))
+    }
+  }
+
+  collect(categoryPath)
+  return manuals.sort((a, b) => a.path.localeCompare(b.path, 'es', { numeric: true }))
 }
 
 const categories = fs
@@ -103,7 +119,7 @@ for (const category of categories.sort()) {
 
   for (const manual of manuals) {
     const bar = manual.percent === 100 ? 'OK' : manual.percent >= 50 ? '~~' : '!!'
-    console.log(`  [${bar}] ${manual.slug}: ${manual.complete}/${manual.chapters} (${manual.percent}%)`)
+    console.log(`  [${bar}] ${manual.title || manual.slug}: ${manual.complete}/${manual.chapters} (${manual.percent}%)`)
   }
 
   console.log('')

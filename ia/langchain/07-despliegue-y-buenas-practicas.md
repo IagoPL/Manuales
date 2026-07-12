@@ -1,3 +1,5 @@
+
+::: v-pre
 ﻿# Despliegue y buenas practicas
 
 Llevar una aplicacion LangChain a produccion requiere API estable, configuracion por entorno, observabilidad y controles de seguridad. Este capitulo resume patrones habituales sin atarte a un unico proveedor cloud.
@@ -164,3 +166,5 @@ Job nightly: eval completo con dataset gold + umbral de metricas.
 ## Cierre del manual
 
 Has visto el recorrido LangChain: prompts, modelos, LCEL, tools, agents, RAG, memoria, evaluacion y despliegue. Combinalo con [RAG](../rag/01-introduccion-y-arquitectura.md) para fundamentos y con [MCP](../mcp/01-introduccion-al-model-context-protocol.md) para exponer capacidades a clientes externos.
+
+:::

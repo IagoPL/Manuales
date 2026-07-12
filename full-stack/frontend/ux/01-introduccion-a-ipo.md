@@ -182,4 +182,4 @@ Heurística = regla práctica de evaluación
 
 - [Diseño Centrado en el Usuario](02-diseno-centrado-en-el-usuario.md)
 - [Accesibilidad](03-accesibilidad.md)
-- [Arquitectura full stack](../../arquitectura/README.md)
+- [Arquitectura full stack](../../arquitectura/01-introduccion.md)

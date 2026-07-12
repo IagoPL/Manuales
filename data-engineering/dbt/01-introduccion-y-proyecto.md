@@ -1,5 +1,7 @@
 # Manual de dbt
 
+::: v-pre
+
 dbt es una herramienta para transformar datos dentro de un data warehouse o lakehouse usando SQL, control de versiones, tests, documentacion y dependencias entre modelos.
 
 No sustituye a Airflow, Spark ni Snowflake. dbt se centra en la capa de transformacion analitica: convertir tablas crudas en modelos limpios, consistentes y documentados.
@@ -107,3 +109,5 @@ dbt docs serve
 3. Crea `fct_orders`.
 4. Anade tests para `order_id` unico y no nulo.
 5. Genera documentacion del proyecto.
+
+:::

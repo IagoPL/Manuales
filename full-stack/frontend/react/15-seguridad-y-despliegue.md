@@ -1,5 +1,7 @@
 # Seguridad y despliegue en React
 
+::: v-pre
+
 Una aplicación React se ejecuta en el navegador, por lo que no debe contener secretos ni confiar solo en validaciones del cliente. El despliegue consiste en compilar la aplicación y publicar archivos estáticos.
 
 ## Conceptos clave
@@ -83,4 +85,6 @@ Backend = permisos reales
 
 - [Navegación](07-navegacion.md)
 - [Integración con APIs](08-integracion-con-apis.md)
-- [Arquitectura full stack](../../arquitectura/README.md)
+- [Arquitectura full stack](../../arquitectura/01-introduccion.md)
+
+:::

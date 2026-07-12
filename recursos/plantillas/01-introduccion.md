@@ -172,5 +172,5 @@ tecnologia/
 
 ## Recursos relacionados
 
-- [Imágenes y recursos visuales](../imagenes/README.md)
-- [README principal](../../README.md)
+- [Imágenes y recursos visuales](../imagenes/01-introduccion.md)
+- [README principal](../../readme.md)

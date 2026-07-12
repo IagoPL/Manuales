@@ -1,5 +1,7 @@
 # Seguridad avanzada
 
+::: v-pre
+
 Laravel trae muchas protecciones, pero hay que configurarlas correctamente.
 
 ## CSRF
@@ -34,3 +36,5 @@ RateLimiter::for('api', fn (Request $request) => Limit::perMinute(60));
 - Rate limiting.
 - Secrets fuera del repo.
 - Dependencias actualizadas.
+
+:::

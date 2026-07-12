@@ -1,5 +1,7 @@
 # Proyecto final
 
+::: v-pre
+
 El objetivo es construir un pipeline Airflow de ventas diarias con extraccion, validacion, carga, transformacion, calidad, alertas y despliegue.
 
 ## Arquitectura
@@ -110,3 +112,4 @@ El proyecto final debe incluir:
 - Logs y alertas con contexto.
 - Guia de backfill.
 
+:::

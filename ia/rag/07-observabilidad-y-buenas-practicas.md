@@ -143,4 +143,4 @@ Asi correlacionas regresiones con cambios concretos.
 
 ## Cierre del manual
 
-Has recorrido el ciclo completo: ingesta, chunking, embeddings, vector store, retrieval, reranking, generacion, evaluacion y operacion. El siguiente paso natural es integrar estos patrones con [LangChain](../../langchain/01-introduccion.md) o construir un servidor con [MCP](../../mcp/01-introduccion-al-model-context-protocol.md) para exponer herramientas a agentes.
+Has recorrido el ciclo completo: ingesta, chunking, embeddings, vector store, retrieval, reranking, generacion, evaluacion y operacion. El siguiente paso natural es integrar estos patrones con [LangChain](../langchain/01-introduccion.md) o construir un servidor con [MCP](../mcp/01-introduccion-al-model-context-protocol.md) para exponer herramientas a agentes.

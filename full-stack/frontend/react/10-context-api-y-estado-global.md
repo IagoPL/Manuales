@@ -1,5 +1,7 @@
 # Context API y Gestión de Estado Global en React
 
+::: v-pre
+
 La **Context API** de React es una herramienta poderosa para gestionar estados globales. Permite compartir datos entre múltiples componentes sin necesidad de pasar props manualmente en cada nivel del árbol de componentes.
 
 ---
@@ -174,3 +176,5 @@ Para estados globales más complejos, considera usar bibliotecas como:
 ## Conclusiones
 
 La Context API es una solución sencilla y eficaz para manejar estados globales en React. Combinada con hooks como `useReducer`, permite manejar lógica de estado más compleja sin necesidad de librerías externas. Dominar esta herramienta es esencial para construir aplicaciones escalables y mantenibles.
+
+:::

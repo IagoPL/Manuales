@@ -175,4 +175,4 @@ Iterar = mejorar con evidencia
 
 - [Introducción a la IPO](01-introduccion-a-ipo.md)
 - [Accesibilidad](03-accesibilidad.md)
-- [Plantillas de documentación](../../../recursos/plantillas/README.md)
+- [Plantillas de documentación](../../../recursos/plantillas/01-introduccion.md)

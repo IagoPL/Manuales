@@ -1,5 +1,7 @@
 # Helm
 
+::: v-pre
+
 Helm empaqueta manifiestos Kubernetes como charts parametrizables.
 
 ## Chart
@@ -56,3 +58,5 @@ helm rollback web 1
 - No guardes secretos planos en values.
 - Usa `helm template` para revisar salida.
 - Evita plantillas demasiado inteligentes.
+
+:::

@@ -1,5 +1,7 @@
 # Manual de Angular
 
+::: v-pre
+
 ## Introducción a Angular
 
 Angular es un framework de desarrollo de aplicaciones web desarrollado por Google. Utiliza el lenguaje de programación TypeScript y se basa en el patrón de diseño Modelo-Vista-Controlador (MVC). Este manual tiene como objetivo proporcionar una guía completa para comenzar con Angular desde cero y avanzar rápidamente hasta un nivel avanzado.
@@ -377,3 +379,5 @@ ng build --prod
 ```
 
 Esto generará los archivos estáticos de tu aplicación en la carpeta `dist`. Luego, puedes cargar estos archivos en tu servidor web para que la aplicación esté disponible en línea.
+
+:::

@@ -1,3 +1,5 @@
+
+::: v-pre
 ﻿# Matrices y cache
 
 Las **matrices** ejecutan el mismo job con varias combinaciones de parametros en paralelo. El **cache** acelera instalacion de dependencias reutilizando capas entre ejecuciones.
@@ -165,3 +167,5 @@ Orden recomendado:
 ## Siguiente paso
 
 El [capitulo 7](07-ci-cd-para-aplicaciones.md) monta pipelines completos para APIs, frontends y contenedores.
+
+:::

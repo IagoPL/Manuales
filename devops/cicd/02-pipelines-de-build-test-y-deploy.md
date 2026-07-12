@@ -1,5 +1,7 @@
 ﻿# Pipelines de build, test y deploy
 
+::: v-pre
+
 Un pipeline CI/CD bien diseñado valida el codigo en capas, produce un artefacto inmutable y lo promociona entre entornos con gates claros. Este capitulo estructura jobs, dependencias y despliegues usando patrones aplicables a cualquier plataforma.
 
 ## Anatomia tipica
@@ -165,6 +167,7 @@ GitHub `environment` puede exigir revisores antes de ejecutar.
     path: dist/
 
 # job posterior
+
 - uses: actions/download-artifact@v4
   with:
     name: dist
@@ -200,7 +203,7 @@ exit 1
 ## Errores habituales
 
 - `npm install` en vez de `npm ci` (builds no reproducibles).
-- Secrets en logs (`echo ${{ secrets.X }}`).
+- Secrets en logs (`echo $&#123;&#123; secrets.X &#125;&#125;`).
 - Deploy a prod desde rama feature.
 - Tests que dependen de orden de ejecucion.
 - Sin smoke test tras deploy.
@@ -208,3 +211,5 @@ exit 1
 ## Siguiente paso
 
 El [capitulo 3](03-versionado-y-artefactos.md) profundiza en versionado semantico, tags y gestion de artefactos.
+
+:::

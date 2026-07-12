@@ -1,3 +1,5 @@
+
+::: v-pre
 ﻿# Servicios e Inyección de Dependencias
 
 ## Índice
@@ -264,3 +266,5 @@ Los servicios y la inyección de dependencias son pilares fundamentales en Angul
 - Crear servicios con lógica reutilizable.
 - Inyectar servicios en componentes usando el sistema DI.
 - Comprender la jerarquía de inyectores y cómo afecta el ámbito de los servicios.
+
+:::

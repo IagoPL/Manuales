@@ -1,3 +1,5 @@
+
+::: v-pre
 ﻿# Actions reutilizables
 
 Las **actions** encapsulan pasos repetidos (checkout, setup, deploy). Puedes usar las oficiales, del marketplace o crear las propias en el repositorio.
@@ -160,3 +162,5 @@ Cada servicio un workflow; steps comunes en composite actions.
 ## Siguiente paso
 
 El [capitulo 5](05-secrets-permisos-y-seguridad.md) cubre secrets, `permissions` y hardening.
+
+:::

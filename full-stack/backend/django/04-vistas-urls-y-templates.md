@@ -1,5 +1,7 @@
 # Vistas, URLs y templates
 
+::: v-pre
+
 Django puede servir HTML tradicional o APIs. Entender vistas y URLs ayuda incluso cuando usas DRF.
 
 ## Function-based view
@@ -41,3 +43,5 @@ urlpatterns = [
 - Querysets optimizados.
 - Templates sin logica compleja.
 - Separar HTML y API si el proyecto crece.
+
+:::

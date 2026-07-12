@@ -1,5 +1,7 @@
 # Componentes y Composición en React
 
+::: v-pre
+
 La composición es una de las técnicas fundamentales en React que permite construir interfaces de usuario complejas a partir de componentes más pequeños y reutilizables. Gracias a esta característica, React fomenta la modularidad y el mantenimiento eficiente del código.
 
 ---
@@ -169,3 +171,5 @@ function App() {
 ## Conclusiones
 
 La composición es una de las características clave que hace que React sea tan poderoso. Al dividir la interfaz en componentes pequeños y combinarlos de manera eficiente, puedes crear aplicaciones modulares, mantenibles y escalables. Dominar la composición te permitirá aprovechar al máximo el potencial de React.
+
+:::

@@ -1,3 +1,5 @@
+
+::: v-pre
 ﻿# Calidad, seguridad y gates
 
 Los **gates** son comprobaciones automaticas o humanas que bloquean un despliegue si no se cumplen criterios minimos de calidad y seguridad. Sin gates, el pipeline solo "compila" pero no protege produccion.
@@ -132,3 +134,5 @@ No bloquees por ruido o el equipo saltara los gates.
 ## Siguiente paso
 
 El [capitulo 6](06-rollback-y-observabilidad.md) trata como revertir despliegues fallidos y monitorizar pipelines.
+
+:::

@@ -114,6 +114,8 @@ Workflow invocado desde otro:
 
 ```yaml
 # .github/workflows/reusable-test.yml
+
+::: v-pre
 on:
   workflow_call:
     inputs:
@@ -183,3 +185,5 @@ concurrency:
 ## Siguiente paso
 
 El [capitulo 4](04-actions-reutilizables.md) explica actions del marketplace y workflows compartidos.
+
+:::

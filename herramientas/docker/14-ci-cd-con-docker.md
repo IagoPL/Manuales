@@ -1,5 +1,7 @@
 # CI/CD con Docker
 
+::: v-pre
+
 Docker encaja muy bien en CI/CD porque permite construir, probar y publicar artefactos reproducibles.
 
 ## Flujo recomendado
@@ -80,3 +82,5 @@ docker run --rm app:test npm test
 - No cachear dependencias.
 - Exponer secretos en logs.
 - Saltarse tests antes del push.
+
+:::

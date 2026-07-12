@@ -1,3 +1,5 @@
+
+::: v-pre
 ﻿# **Componentes y Directivas en Angular**
 
 ## Introducción a Componentes y Directivas
@@ -181,3 +183,5 @@ Los componentes y las directivas son fundamentales para el desarrollo con Angula
    - Permiten la creación de elementos personalizados y reutilizables.
 
 **Dominar los componentes y directivas te permitirá construir aplicaciones robustas y modulares.** 
+
+:::

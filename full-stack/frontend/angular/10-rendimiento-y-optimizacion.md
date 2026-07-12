@@ -1,5 +1,7 @@
 # Rendimiento y optimización en Angular
 
+::: v-pre
+
 Optimizar una aplicación Angular consiste en reducir trabajo innecesario, cargar menos código al inicio y mejorar la experiencia percibida por el usuario.
 
 ## Conceptos clave
@@ -110,3 +112,5 @@ Medir primero = optimización útil
 - [Enrutamiento](05-enrutamiento.md)
 - [Componentes y directivas](02-componentes-y-directivas.md)
 - [Pruebas](08-pruebas.md)
+
+:::

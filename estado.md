@@ -87,7 +87,7 @@ function pillClass(percent) {
       <tr v-for="manual in manuales.manuals" :key="manual.path">
         <td>{{ manual.category }}</td>
         <td>
-          <a :href="withBase(manual.link)">{{ manual.slug }}</a>
+          <a :href="withBase(manual.link)">{{ manual.title || manual.slug }}</a>
         </td>
         <td>{{ manual.complete }}</td>
         <td>{{ manual.drafts }}</td>

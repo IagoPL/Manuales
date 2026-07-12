@@ -1,5 +1,7 @@
 # Manejo de Eventos en React
 
+::: v-pre
+
 El manejo de eventos en React es similar al manejo de eventos en JavaScript nativo, pero con diferencias importantes en la sintaxis y el enfoque. React utiliza un sistema de delegación de eventos que mejora el rendimiento y la compatibilidad entre navegadores.
 
 ---
@@ -166,3 +168,5 @@ function Parent() {
 ## Conclusiones
 
 El manejo de eventos en React es un proceso sencillo y poderoso que permite capturar y responder a interacciones del usuario. Dominar los eventos y su propagación es clave para crear interfaces interactivas y dinámicas.
+
+:::

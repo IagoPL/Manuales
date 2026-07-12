@@ -1,3 +1,5 @@
+
+::: v-pre
 ﻿# CI/CD para aplicaciones
 
 Este capitulo une conceptos previos en pipelines reales: API backend, frontend estatico, imagen Docker y despliegue. Complementa el manual de [CI/CD](../../devops/cicd/01-introduccion-y-principios.md).
@@ -211,3 +213,5 @@ Evita un workflow gigante que corre siempre.
 ## Siguiente paso
 
 El [capitulo 8](08-buenas-practicas.md) resume recomendaciones para operar GitHub Actions a largo plazo.
+
+:::

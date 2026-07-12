@@ -1,5 +1,7 @@
 # Seguridad en Angular
 
+::: v-pre
+
 La seguridad en Angular combina buenas prácticas del framework con decisiones correctas de arquitectura, autenticación, autorización y comunicación con backend.
 
 ## Conceptos clave
@@ -92,4 +94,6 @@ No secrets = nada sensible en frontend
 
 - [Enrutamiento](05-enrutamiento.md)
 - [Comunicación con el servidor](07-comunicacion-con-servidor.md)
-- [Arquitectura full stack](../../arquitectura/README.md)
+- [Arquitectura full stack](../../arquitectura/01-introduccion.md)
+
+:::

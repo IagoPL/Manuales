@@ -10,6 +10,8 @@ crontab -e
 
 ```cron
 # min hora dia mes dia_semana comando
+
+::: v-pre
 0 3 * * * /opt/scripts/backup.sh >> /var/log/backup.log 2>&1
 */15 * * * * /opt/scripts/healthcheck.sh
 ```
@@ -133,3 +135,5 @@ trap 'notify_slack "Deploy FALLIDO"' ERR
 ## Siguiente paso
 
 El [capitulo 8](08-buenas-practicas.md) resume estilo, seguridad y herramientas de apoyo.
+
+:::

@@ -1,5 +1,7 @@
 # Logs debug y diagnostico
 
+::: v-pre
+
 Docker ofrece comandos para entender que ocurre dentro de contenedores e imagenes.
 
 ## Logs
@@ -98,3 +100,5 @@ Ejecuta un contenedor que falle, revisa `docker ps -a`, consulta logs y elimina 
 
 - [Troubleshooting](15-troubleshooting.md)
 - [Arquitectura interna](07-arquitectura-interna.md)
+
+:::

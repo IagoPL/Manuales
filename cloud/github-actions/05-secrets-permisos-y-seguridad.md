@@ -1,3 +1,5 @@
+
+::: v-pre
 ﻿# Secrets, permisos y seguridad
 
 Los workflows tienen acceso al codigo, secretos y API de GitHub. Configurar **permissions** minimas y proteger **secrets** es obligatorio en repositorios serios.
@@ -153,3 +155,5 @@ Complementa Actions:
 ## Siguiente paso
 
 El [capitulo 6](06-matrices-y-cache.md) optimiza pipelines con matrices de versiones y cache de dependencias.
+
+:::

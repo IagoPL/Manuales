@@ -187,6 +187,8 @@ jobs:
     path: dist/
 
 # otro job
+
+::: v-pre
 - uses: actions/download-artifact@v4
   with:
     name: build-output
@@ -212,3 +214,5 @@ jobs:
 ## Siguiente paso
 
 El [capitulo 3](03-eventos-y-triggers.md) detalla que eventos disparan workflows: push, PR, schedule, manual y mas.
+
+:::

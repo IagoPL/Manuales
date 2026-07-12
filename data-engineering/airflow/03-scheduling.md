@@ -1,5 +1,7 @@
 # Scheduling
 
+::: v-pre
+
 El scheduling define cuando debe ejecutarse un DAG y que intervalo de datos representa cada ejecucion.
 
 ## Conceptos clave
@@ -74,3 +76,5 @@ Util cuando la dependencia real es la llegada de datos, no solo el reloj.
 - Diseña tareas por intervalo.
 - Documenta backfills.
 - No uses scheduling para resolver dependencias de datos si necesitas sensors o datasets.
+
+:::

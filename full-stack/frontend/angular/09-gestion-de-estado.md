@@ -1,5 +1,7 @@
 # Gestión de estado en Angular
 
+::: v-pre
+
 La gestión de estado consiste en organizar la información que necesita una aplicación para funcionar: datos de usuario, filtros, formularios, resultados de API, preferencias y estados de carga o error.
 
 ## Conceptos clave
@@ -119,3 +121,5 @@ Loading/Error/Data = estados mínimos de vista
 - [Servicios e inyección de dependencias](04-servicios-e-inyeccion-de-dependencias.md)
 - [Comunicación con el servidor](07-comunicacion-con-servidor.md)
 - [Pruebas](08-pruebas.md)
+
+:::

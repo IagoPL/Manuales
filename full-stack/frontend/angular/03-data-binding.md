@@ -1,3 +1,5 @@
+
+::: v-pre
 ﻿# **Enlace de Datos (Data Binding) en Angular**
 
 ## Índice
@@ -210,3 +212,5 @@ El **enlace de datos** en Angular permite una comunicación fluida entre el comp
 - Usa **Enlace de Propiedad** para manipular atributos HTML.
 - Usa **Enlace de Evento** para responder a interacciones del usuario.
 - Usa **Enlace Bidireccional** para sincronizar datos entre el componente y el DOM.
+
+:::

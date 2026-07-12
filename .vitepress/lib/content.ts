@@ -67,6 +67,8 @@ export function lineCount(filePath: string): number {
 export type ManualFolder = {
   path: string
   slug: string
+  title: string
+  link: string
   chapters: number
   drafts: number
   complete: number
@@ -77,33 +79,44 @@ export function manualFolders(category: string): ManualFolder[] {
   const categoryPath = path.join(root, category)
   if (!fs.existsSync(categoryPath)) return []
 
-  return fs
-    .readdirSync(categoryPath, { withFileTypes: true })
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => {
-      const folderPath = path.join(categoryPath, entry.name)
-      const files = fs
-        .readdirSync(folderPath)
-        .filter((name) => name.toLowerCase().endsWith('.md'))
-        .sort((a, b) => a.localeCompare(b, 'es', { numeric: true }))
-      const drafts = files.filter((name) => isDraftFile(path.join(folderPath, name))).length
+  const manuals: ManualFolder[] = []
+
+  function collect(directory: string) {
+    const entries = fs.readdirSync(directory, { withFileTypes: true })
+    const files = entries
+      .filter((entry) => entry.isFile() && entry.name.toLowerCase().endsWith('.md'))
+      .map((entry) => entry.name)
+      .sort((a, b) => a.localeCompare(b, 'es', { numeric: true }))
+
+    if (files.length > 0) {
+      const relativeDirectory = path.relative(root, directory).replaceAll(path.sep, '/')
+      const drafts = files.filter((name) => isDraftFile(path.join(directory, name))).length
       const chapters = files.length
       const firstChapter = files[0]
 
-      return {
-        path: path.join(category, entry.name).replaceAll(path.sep, '/'),
-        slug: entry.name,
-        link: firstChapter
-          ? linkForMarkdown(path.join(category, entry.name, firstChapter).replaceAll(path.sep, '/'))
-          : `/${category}/${entry.name}`,
+      manuals.push({
+        path: relativeDirectory,
+        slug: path.basename(directory),
+        title: relativeDirectory
+          .split('/')
+          .slice(1)
+          .map(titleFromSlug)
+          .join(' / '),
+        link: linkForMarkdown(path.join(relativeDirectory, firstChapter).replaceAll(path.sep, '/')),
         chapters,
         drafts,
         complete: chapters - drafts,
         percent: chapters > 0 ? Math.round(((chapters - drafts) / chapters) * 100) : 0
-      }
-    })
-    .filter((manual) => manual.chapters > 0)
-    .sort((a, b) => a.slug.localeCompare(b.slug, 'es', { numeric: true }))
+      })
+    }
+
+    for (const entry of entries) {
+      if (entry.isDirectory()) collect(path.join(directory, entry.name))
+    }
+  }
+
+  collect(categoryPath)
+  return manuals.sort((a, b) => a.path.localeCompare(b.path, 'es', { numeric: true }))
 }
 
 export const featuredLinks = [
