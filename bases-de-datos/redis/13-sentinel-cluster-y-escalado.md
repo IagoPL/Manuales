@@ -46,7 +46,7 @@ Sentinel necesita acuerdo para declarar caido un primario. Por eso se usan varia
 
 Configuracion conceptual:
 
-```conf
+```ini
 sentinel monitor mymaster 10.0.0.10 6379 2
 ```
 

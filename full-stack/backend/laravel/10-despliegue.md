@@ -18,7 +18,7 @@ Laravel suele desplegarse con Nginx + PHP-FPM o plataformas gestionadas.
 
 ## Variables
 
-```env
+```ini
 APP_ENV=production
 APP_DEBUG=false
 APP_KEY=...

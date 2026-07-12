@@ -13,7 +13,7 @@ Medidas basicas:
 
 Configuracion orientativa:
 
-```conf
+```ini
 bind 127.0.0.1
 protected-mode yes
 ```

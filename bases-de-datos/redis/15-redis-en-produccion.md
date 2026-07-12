@@ -18,7 +18,7 @@ Antes de desplegar:
 
 Ejemplo orientativo:
 
-```conf
+```ini
 bind 0.0.0.0
 protected-mode yes
 port 6379

@@ -28,7 +28,7 @@ Evita que la aplicacion use superusuario. Separa:
 
 Controla desde donde y como se autentican clientes:
 
-```conf
+```ini
 host    tienda    app_user    10.0.0.0/24    scram-sha-256
 ```
 

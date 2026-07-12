@@ -8,7 +8,7 @@ Bash conecta tareas programadas, servicios del sistema y pipelines CI. Este capi
 crontab -e
 ```
 
-```cron
+```txt
 # min hora dia mes dia_semana comando
 
 ::: v-pre
@@ -23,7 +23,7 @@ Buenas practicas en cron:
 - Redirigir stdout/stderr a log.
 - Usar `flock` para evitar solapamiento.
 
-```cron
+```txt
 0 2 * * * flock -n /var/lock/backup.lock /opt/scripts/backup.sh
 ```
 

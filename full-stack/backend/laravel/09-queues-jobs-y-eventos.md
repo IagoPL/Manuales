@@ -22,7 +22,7 @@ SendOrderEmail::dispatch($order);
 
 ## Configurar cola
 
-```env
+```ini
 QUEUE_CONNECTION=redis
 ```
 

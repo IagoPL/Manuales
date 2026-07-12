@@ -125,42 +125,42 @@ g++ -g programa.cpp -o programa
   ```
 - **Establecer un punto de interrupción**:
 
-  ```gdb
+  ```txt
   (gdb) break main
   ```
 - **Ejecutar el programa**:
 
-  ```gdb
+  ```txt
   (gdb) run
   ```
 - **Ejecutar la siguiente línea (sin entrar en funciones)**:
 
-  ```gdb
+  ```txt
   (gdb) next
   ```
 - **Entrar en una función**:
 
-  ```gdb
+  ```txt
   (gdb) step
   ```
 - **Continuar hasta el siguiente punto de interrupción**:
 
-  ```gdb
+  ```txt
   (gdb) continue
   ```
 - **Imprimir el valor de una variable**:
 
-  ```gdb
+  ```txt
   (gdb) print variable
   ```
 - **Listar código fuente**:
 
-  ```gdb
+  ```txt
   (gdb) list
   ```
 - **Salir de `gdb`**:
 
-  ```gdb
+  ```txt
   (gdb) quit
   ```
 

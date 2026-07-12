@@ -19,7 +19,7 @@ Campos importantes:
 
 ## Configurar limite
 
-```conf
+```ini
 maxmemory 2gb
 maxmemory-policy allkeys-lru
 ```
@@ -88,7 +88,7 @@ SLOWLOG LEN
 
 Configurar umbral:
 
-```conf
+```ini
 slowlog-log-slower-than 10000
 ```
 

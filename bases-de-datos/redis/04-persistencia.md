@@ -18,7 +18,7 @@ Riesgo:
 
 Ejemplo de idea:
 
-```conf
+```ini
 save 900 1
 save 300 10
 save 60 10000
@@ -28,7 +28,7 @@ save 60 10000
 
 Append Only File registra operaciones de escritura.
 
-```conf
+```ini
 appendonly yes
 appendfsync everysec
 ```

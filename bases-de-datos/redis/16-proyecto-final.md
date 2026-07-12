@@ -143,7 +143,7 @@ XACK shop:events:orders email-workers 1690000000000-0
 
 ## Configuracion recomendada
 
-```conf
+```ini
 maxmemory 2gb
 maxmemory-policy allkeys-lru
 appendonly yes

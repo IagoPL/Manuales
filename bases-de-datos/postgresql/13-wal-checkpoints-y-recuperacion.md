@@ -37,7 +37,7 @@ Demasiados checkpoints pueden generar I/O intenso. Checkpoints muy separados pue
 
 Para recuperacion a punto en el tiempo necesitas archivar WAL:
 
-```conf
+```ini
 archive_mode = on
 archive_command = 'cp %p /backups/wal/%f'
 ```

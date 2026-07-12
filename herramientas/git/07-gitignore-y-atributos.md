@@ -8,7 +8,7 @@ Los archivos `.gitignore` y `.gitattributes` permiten controlar qué entra al re
 
 Ejemplo:
 
-```gitignore
+```txt
 node_modules/
 dist/
 .env
@@ -18,7 +18,7 @@ coverage/
 
 ## Patrones comunes
 
-```gitignore
+```txt
 # Dependencias
 node_modules/
 vendor/
@@ -59,7 +59,7 @@ git rm -r --cached carpeta/
 
 Ejemplo para normalizar finales de línea:
 
-```gitattributes
+```txt
 * text=auto
 *.sh text eol=lf
 *.bat text eol=crlf
@@ -92,7 +92,7 @@ git rm --cached archivo
 git rm -r --cached carpeta/
 ```
 
-```gitignore
+```txt
 .env
 node_modules/
 dist/
