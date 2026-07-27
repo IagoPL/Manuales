@@ -1,68 +1,160 @@
-# Integracion Con Aplicaciones
+# Integracion con aplicaciones
 
-Este capitulo profundiza en **Integracion Con Aplicaciones** dentro del manual de **Ollama**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+Ollama se integra como un servicio HTTP local. Puedes usar la API nativa, el cliente oficial de Python o SDKs compatibles con OpenAI apuntando a `/v1`.
 
-## Objetivo
-
-Al terminar este capitulo sabras explicar integracion con aplicaciones, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
-
-## Conceptos clave
-
-- **Integracion Con Aplicaciones:** pieza central de Ollama en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Integracion:** aspecto a dominar dentro de Integracion Con Aplicaciones.
-- **Con:** aspecto a dominar dentro de Integracion Con Aplicaciones.
-- **Aplicaciones:** aspecto a dominar dentro de Integracion Con Aplicaciones.
-
-## Desarrollo del tema
-
-### Enfoque practico
-
-1. Define el problema que resuelve **Integracion Con Aplicaciones**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
-```
-
-## Ejemplo
+## Python: cliente oficial
 
 ```bash
-#!/usr/bin/env bash
-set -euo pipefail
-echo "Tarea: Integracion Con Aplicaciones"
+pip install ollama
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+```python
+import ollama
+
+response = ollama.chat(
+    model="llama3.2:1b",
+    messages=[
+        {"role": "system", "content": "Responde en una frase."},
+        {"role": "user", "content": "Que es Ollama?"},
+    ],
+)
+
+print(response["message"]["content"])
+```
+
+Streaming:
+
+```python
+import ollama
+
+for chunk in ollama.chat(
+    model="llama3.2:1b",
+    messages=[{"role": "user", "content": "Lista 3 usos de RAG"}],
+    stream=True,
+):
+    print(chunk["message"]["content"], end="", flush=True)
+```
+
+Generate y embeddings:
+
+```python
+import ollama
+
+gen = ollama.generate(model="llama3.2:1b", prompt="Di hola")
+emb = ollama.embeddings(model="nomic-embed-text", prompt="consulta de prueba")
+print(gen["response"])
+print(len(emb["embedding"]))
+```
+
+## Python: OpenAI SDK
+
+```bash
+pip install openai
+```
+
+```python
+from openai import OpenAI
+
+client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")
+
+completion = client.chat.completions.create(
+    model="llama3.2:1b",
+    messages=[{"role": "user", "content": "Explica keep_alive en Ollama"}],
+)
+print(completion.choices[0].message.content)
+```
+
+Util cuando ya tienes codigo escrito para OpenAI y quieres probar en local.
+
+## JavaScript / Node
+
+```bash
+npm install ollama
+```
+
+```javascript
+import ollama from "ollama";
+
+const response = await ollama.chat({
+  model: "llama3.2:1b",
+  messages: [{ role: "user", content: "Resume que es un Modelfile" }],
+});
+
+console.log(response.message.content);
+```
+
+Con `fetch` crudo:
+
+```javascript
+const res = await fetch("http://localhost:11434/api/chat", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    model: "llama3.2:1b",
+    messages: [{ role: "user", content: "Hola" }],
+    stream: false,
+  }),
+});
+const data = await res.json();
+console.log(data.message.content);
+```
+
+## Patron tipico en un servicio
+
+```txt
+App (API) -> cliente Ollama -> localhost:11434 -> modelo en GPU/CPU
+                |
+                +-> timeout, reintentos, modelo configurable por env
+```
+
+Variables de entorno recomendadas:
+
+```bash
+export OLLAMA_HOST=http://127.0.0.1:11434
+export OLLAMA_MODEL=llama3.2:1b
+export OLLAMA_EMBED_MODEL=nomic-embed-text
+```
+
+En codigo, lee `OLLAMA_MODEL` en lugar de hardcodear el nombre.
+
+## Timeouts y disponibilidad
+
+```python
+import httpx
+import ollama
+
+client = ollama.Client(host="http://127.0.0.1:11434", timeout=120.0)
+try:
+    print(client.list())
+except (httpx.ConnectError, ConnectionError):
+    raise SystemExit("Ollama no esta en marcha: ejecuta ollama serve")
+```
+
+En produccion interna: healthcheck a `/api/tags` antes de aceptar trafico.
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de integracion con aplicaciones.
-- No probar casos limite ni errores esperados.
+- Apuntar a `https://api.openai.com` por dejar el `base_url` por defecto.
+- No manejar modelo ausente (`pull` previo o mensaje claro al usuario).
+- Bloquear el event loop con llamadas sync largas en servidores async.
+- Concatenar historial sin limite hasta superar `num_ctx`.
+- Exponer el puerto de Ollama en la misma red que usuarios finales sin proxy.
 
 ## Buenas practicas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Fija version de modelo y dataset.
-- Evalua antes de desplegar.
+- Configura modelo, host y timeouts por entorno (dev/staging).
+- Separa clientes de chat y de embeddings.
+- Usa streaming en UIs; `stream: false` en jobs batch simples.
+- Cachea embeddings de documentos; no re-embebas en cada request.
+- Aisla fallos de Ollama con circuit breaker o cola si hay picos.
 
 ## Ejercicios
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Integracion Con Aplicaciones**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Escribe un script Python que lea una pregunta por CLI y llame a `chat`.
+2. Reimplementa el mismo flujo con el SDK de OpenAI y `/v1`.
+3. En Node, imprime tokens en streaming a consola.
+4. Anade un check: si el modelo no esta en `list`, muestra como hacer `pull`.
 
 ## Siguiente paso
 
-Continua con [Rendimiento](06-rendimiento.md).
+El [capitulo 6](06-rendimiento.md) trata GPU, VRAM, concurrencia y ajustes de latencia.

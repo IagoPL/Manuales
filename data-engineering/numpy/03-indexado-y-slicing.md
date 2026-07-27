@@ -1,69 +1,98 @@
-# Indexado Y Slicing
+# Indexado y slicing
 
-Este capitulo profundiza en **Indexado Y Slicing** dentro del manual de **NumPy**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+El indexado de NumPy parece el de listas, pero anade indices multidimensionales, mascaras booleanas e indexado fancy. Ademas, muchos slices son **vistas**: mutarlos muta el array original.
 
-## Objetivo
-
-Al terminar este capitulo sabras explicar indexado y slicing, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
-
-## Conceptos clave
-
-- **Indexado Y Slicing:** pieza central de NumPy en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Indexado:** aspecto a dominar dentro de Indexado Y Slicing.
-- **Slicing:** aspecto a dominar dentro de Indexado Y Slicing.
-
-## Desarrollo del tema
-
-### Enfoque practico
-
-1. Define el problema que resuelve **Indexado Y Slicing**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
-```
-
-## Ejemplo
+## Basico
 
 ```python
-# Ejemplo con NumPy
-from pathlib import Path
+import numpy as np
 
-def procesar(ruta: str) -> list[str]:
-    return Path(ruta).read_text(encoding='utf-8').splitlines()
+a = np.arange(10)
+a[0], a[-1]
+a[2:7]
+a[::2]
+a[:5] = 0          # modifica a
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+## 2D
+
+```python
+m = np.arange(12).reshape(3, 4)
+m[1, 2]            # elemento
+m[0:2, 1:3]        # submatriz
+m[:, 0]            # primera columna
+m[1, :]            # segunda fila
+```
+
+## Vistas vs copias
+
+```python
+m = np.arange(6).reshape(2, 3)
+v = m[0, :]        # vista
+v[:] = 99
+print(m)           # la primera fila cambio
+
+c = m[0, :].copy()
+c[:] = 0
+print(m)           # intacto
+```
+
+Regla: si vas a modificar un recorte y no quieres side effects, `.copy()`.
+
+## Mascaras booleanas
+
+```python
+a = np.array([3, 1, 4, 1, 5, 9])
+a[a > 3]
+a[a > 3] = 0
+```
+
+Combinaciones:
+
+```python
+mask = (a >= 1) & (a <= 5)
+a[mask]
+```
+
+Usa `& | ~` con parentesis; `and`/`or` de Python no funcionan elemento a elemento.
+
+## Fancy indexing
+
+```python
+a = np.array([10, 20, 30, 40])
+a[[0, 2, 3]]
+m = np.arange(12).reshape(3, 4)
+m[[0, 2], :]
+```
+
+Fancy indexing suele devolver **copia**, no vista.
+
+## np.where
+
+```python
+a = np.array([3, -1, 2, -4])
+np.where(a >= 0, a, 0)       # clip negativo a 0
+idx = np.where(a < 0)        # indices
+```
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de indexado y slicing.
-- No probar casos limite ni errores esperados.
+- Modificar una vista y corromper el dataset original.
+- Indexar con `and` en vez de `&`.
+- Asumir que `m[0]` y `m[0, :]` siempre copian.
 
 ## Buenas practicas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Datos reproducibles y pipelines idempotentes.
-- Versiona esquemas y contratos.
+- Filtra con mascaras en vez de bucles.
+- Documenta cuando una funcion devuelve vista.
+- Para asignaciones complejas, prefiere `np.where` o mascaras claras.
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Indexado Y Slicing**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Dado `arange(16).reshape(4, 4)`, extrae el bloque central 2x2.
+2. Pon a `-1` todos los pares con mascara.
+3. Demuestra una vista mutando un slice y una copia segura.
 
 ## Siguiente paso
 
-Continua con [Operaciones Vectorizadas](04-operaciones-vectorizadas.md).
+Continua con [Operaciones vectorizadas](04-operaciones-vectorizadas.md).

@@ -1,67 +1,141 @@
-# Hardening Del Servidor
+# Hardening del servidor
 
-Este capitulo profundiza en **Hardening Del Servidor** dentro del manual de **SSH**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+Un `sshd` por defecto "funciona", pero en Internet recibe fuerza bruta constante. El hardening reduce superficie: menos autenticacion debil, menos usuarios, menos protocolos viejos y mejor observabilidad.
 
-## Objetivo
+Trabaja siempre con **dos sesiones abiertas** al cambiar `sshd_config`: si te bloqueas, la sesion vieja sigue viva.
 
-Al terminar este capitulo sabras explicar hardening del servidor, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
-
-## Conceptos clave
-
-- **Hardening Del Servidor:** pieza central de SSH en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Hardening:** aspecto a dominar dentro de Hardening Del Servidor.
-- **Del:** aspecto a dominar dentro de Hardening Del Servidor.
-- **Servidor:** aspecto a dominar dentro de Hardening Del Servidor.
-
-## Desarrollo del tema
-
-### Enfoque practico
-
-1. Define el problema que resuelve **Hardening Del Servidor**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
-```
-
-## Ejemplo
+## Archivo principal
 
 ```bash
-#!/usr/bin/env bash
-set -euo pipefail
-echo "Tarea: Hardening Del Servidor"
+sudo nano /etc/ssh/sshd_config
+# o drop-ins en /etc/ssh/sshd_config.d/*.conf
+sudo sshd -t && sudo systemctl reload sshd
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+`sshd -t` valida sintaxis antes de recargar.
+
+## Ajustes minimos recomendados
+
+```sshdconfig
+Port 22
+Protocol 2
+PermitRootLogin no
+PasswordAuthentication no
+PubkeyAuthentication yes
+KbdInteractiveAuthentication no
+ChallengeResponseAuthentication no
+UsePAM yes
+X11Forwarding no
+AllowTcpForwarding yes
+PermitTunnel no
+MaxAuthTries 3
+LoginGraceTime 30
+ClientAliveInterval 300
+ClientAliveCountMax 2
+AllowUsers deploy
+```
+
+Notas:
+
+- **Desactiva root por SSH**: entra como usuario normal y usa `sudo`.
+- **Desactiva passwords** solo cuando las claves ya funcionan.
+- `AllowUsers` / `AllowGroups` limitan quien puede entrar.
+- Cambiar el puerto (p. ej. 2222) reduce ruido, **no** es seguridad real por si solo.
+
+## authorized_keys con restricciones
+
+En `~/.ssh/authorized_keys` puedes restringir una clave:
+
+```txt
+from="203.0.113.0/24",no-agent-forwarding,no-port-forwarding ssh-ed25519 AAAA... deploy-ci
+```
+
+Opciones utiles:
+
+| Opcion | Efecto |
+|--------|--------|
+| `from="IP/CIDR"` | Solo desde esas redes |
+| `command="..."` | Fuerza un comando (deploy keys) |
+| `no-port-forwarding` | Bloquea tunnels |
+| `no-agent-forwarding` | Bloquea `-A` |
+| `restrict` | Paquete restrictivo moderno |
+
+Ejemplo deploy solo rsync:
+
+```txt
+command="rrsync -wo /var/www/app",restrict ssh-ed25519 AAAA... rsync-deploy
+```
+
+## fail2ban (opcional pero util)
+
+Banear IPs tras intentos fallidos:
+
+```bash
+sudo apt install fail2ban
+sudo systemctl enable --now fail2ban
+```
+
+Jail basico SSH en `/etc/fail2ban/jail.local`:
+
+```ini
+[sshd]
+enabled = true
+port = ssh
+maxretry = 5
+bantime = 1h
+```
+
+## Firewall
+
+Solo el puerto SSH (y 80/443 si aplica) desde Internet:
+
+```bash
+sudo ufw allow OpenSSH
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+sudo ufw enable
+```
+
+En cloud, replica reglas en el Security Group / NSG.
+
+## Actualizaciones y banner
+
+```bash
+sudo apt update && sudo apt upgrade
+```
+
+Banner legal opcional (`Banner /etc/issue.net`) no anade seguridad tecnica; sirve de aviso.
+
+## Checklist rapido
+
+1. Root login desactivado.
+2. Solo pubkey.
+3. Usuarios limitados (`AllowUsers`).
+4. `sshd -t` + reload sin cortar tu sesion de backup.
+5. Firewall activo.
+6. Claves con passphrase en clientes admin.
+7. Logs revisables (`/var/log/auth.log` o `journalctl -u ssh`).
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de hardening del servidor.
-- No probar casos limite ni errores esperados.
+- Desactivar `PasswordAuthentication` antes de probar la clave -> lockout.
+- Editar `sshd_config` y reiniciar en vez de `reload` con sintaxis rota.
+- Dejar `PermitRootLogin prohibit-password` pensando que root queda bloqueado del todo (sigue con clave).
+- Abrir SSH a `0.0.0.0/0` en cloud y confiar solo en "puerto raro".
 
 ## Buenas practicas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Scripts idempotentes y logs claros.
-- Secrets fuera del repositorio.
+- Bastion unico expuesto; privados solo en red interna / VPN.
+- Cuentas personales nominativas, no `ubuntu` compartido en prod.
+- Rotacion de claves de CI y revocacion inmediata al offboarding.
+- Alertas ante picos de `Failed password` / `Invalid user`.
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Hardening Del Servidor**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. En una VM de laboratorio, desactiva login root y passwords.
+2. Restringe `AllowUsers` a tu usuario.
+3. Anade una clave de CI con `restrict` y `command=...`.
+4. Verifica con una segunda sesion antes de cerrar la primera.
 
 ## Siguiente paso
 

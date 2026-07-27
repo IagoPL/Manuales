@@ -1,69 +1,79 @@
-# Algebra Lineal
+# Algebra lineal
 
-Este capitulo profundiza en **Algebra Lineal** dentro del manual de **NumPy**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+NumPy expone operaciones de algebra lineal usadas en regresion, PCA, embeddings y resolucion de sistemas. El submodulo clave es `numpy.linalg`.
 
-## Objetivo
-
-Al terminar este capitulo sabras explicar algebra lineal, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
-
-## Conceptos clave
-
-- **Algebra Lineal:** pieza central de NumPy en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Algebra:** aspecto a dominar dentro de Algebra Lineal.
-- **Lineal:** aspecto a dominar dentro de Algebra Lineal.
-
-## Desarrollo del tema
-
-### Enfoque practico
-
-1. Define el problema que resuelve **Algebra Lineal**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
-```
-
-## Ejemplo
+## Producto matricial
 
 ```python
-# Ejemplo con NumPy
-from pathlib import Path
+import numpy as np
 
-def procesar(ruta: str) -> list[str]:
-    return Path(ruta).read_text(encoding='utf-8').splitlines()
+A = np.array([[1., 2.], [3., 4.]])
+v = np.array([5., 6.])
+A @ v
+A.T
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+## Sistemas lineales
+
+Resolver `Ax = b`:
+
+```python
+A = np.array([[3., 1.], [1., 2.]])
+b = np.array([9., 8.])
+x = np.linalg.solve(A, b)
+print(A @ x)
+```
+
+Prefiere `solve` a invertir la matriz (`inv`) y multiplicar: es mas estable y rapido.
+
+## Normas, det, rank
+
+```python
+np.linalg.norm(v)
+np.linalg.norm(A, ord="fro")
+np.linalg.det(A)
+np.linalg.matrix_rank(A)
+```
+
+## Autovalores y SVD
+
+```python
+w, Q = np.linalg.eig(A)
+U, S, Vt = np.linalg.svd(A, full_matrices=False)
+```
+
+SVD aparece en reduccion de dimensionalidad, recomendaciones y compresion.
+
+## Minimos cuadrados
+
+```python
+X = np.array([[1., 1.], [1., 2.], [1., 3.]])
+y = np.array([1., 2., 2.5])
+coef, residuals, rank, s = np.linalg.lstsq(X, y, rcond=None)
+```
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de algebra lineal.
-- No probar casos limite ni errores esperados.
+- Matrices singulares en `solve` -> `LinAlgError`.
+- Confundir fila/columna en vectores 1D.
+- Invertir matrices mal condicionadas sin revisar el numero de condicion:
+
+```python
+np.linalg.cond(A)
+```
 
 ## Buenas practicas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Datos reproducibles y pipelines idempotentes.
-- Versiona esquemas y contratos.
+- Trabaja en `float64` salvo necesidad de memoria.
+- Valida shapes antes de `@`.
+- Para problemas grandes y dispersos, mira SciPy (`scipy.sparse.linalg`).
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Algebra Lineal**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Resuelve un sistema 2x2 y verifica `A @ x - b`.
+2. Calcula la norma L2 de un vector de 1000 gaussianas.
+3. Ajusta una recta por minimos cuadrados a 20 puntos ruidosos.
 
 ## Siguiente paso
 
-Continua con [Aleatoriedad Y Simulacion](06-aleatoriedad-y-simulacion.md).
+Continua con [Aleatoriedad y simulacion](06-aleatoriedad-y-simulacion.md).

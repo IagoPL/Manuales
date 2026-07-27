@@ -1,68 +1,89 @@
-# Rendimiento
+# Rendimiento en NumPy
 
-Este capitulo profundiza en **Rendimiento** dentro del manual de **NumPy**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+NumPy es rapido cuando los datos son contiguos, tipados y las operaciones estan vectorizadas. Deja de serlo con bucles Python, dtypes objeto o copias ocultas.
 
-## Objetivo
-
-Al terminar este capitulo sabras explicar rendimiento, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
-
-## Conceptos clave
-
-- **Rendimiento:** pieza central de NumPy en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Rendimiento:** aspecto a dominar dentro de Rendimiento.
-
-## Desarrollo del tema
-
-### Enfoque practico
-
-1. Define el problema que resuelve **Rendimiento**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
-```
-
-## Ejemplo
+## Contigüidad
 
 ```python
-# Ejemplo con NumPy
-from pathlib import Path
+import numpy as np
 
-def procesar(ruta: str) -> list[str]:
-    return Path(ruta).read_text(encoding='utf-8').splitlines()
+a = np.arange(12).reshape(3, 4)
+print(a.flags.c_contiguous)
+b = a.T
+print(b.flags.c_contiguous)
+c = np.ascontiguousarray(b)
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+Algunas rutinas BLAS exigen memoria contigua; si no, NumPy copia internamente.
+
+## Evitar dtype=object
+
+```python
+# Lento: array de punteros Python
+np.array([1, 2, "x"], dtype=object)
+```
+
+Mantén columnas numericas en dtypes nativos.
+
+## Preallocar
+
+```python
+out = np.empty(10_000)
+for i in range(10_000):
+    out[i] = i * i
+# Mejor:
+i = np.arange(10_000)
+out = i * i
+```
+
+Si el bucle es inevitable, prealloca; no hagas `list.append` + `np.array` al final en hot paths enormes sin medir.
+
+## Medir
+
+```python
+import timeit
+
+setup = "import numpy as np; a=np.arange(1000000)"
+print(timeit.timeit("a*a", setup=setup, number=100))
+```
+
+En notebooks: `%timeit a * a`.
+
+## Reducir memoria
+
+```python
+a = np.arange(1_000_000, dtype=np.float64)
+b = a.astype(np.float32, copy=False)
+```
+
+Views (`ravel`, slices) ahorran RAM frente a `flatten` / copias.
+
+## Cuando salir de NumPy
+
+| Escala | Opcion |
+|--------|--------|
+| Cabecera en RAM, tabular | Pandas / Polars |
+| SQL analitico local | DuckDB |
+| No cabe en una maquina | PySpark / Dask / warehouse |
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de rendimiento.
-- No probar casos limite ni errores esperados.
+- Concatenar en bucle con `np.concatenate` repetido (coste cuadratico).
+- Convertir a lista, procesar, volver a array.
+- Ignorar warnings de overflow en enteros pequenos.
 
 ## Buenas practicas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Datos reproducibles y pipelines idempotentes.
-- Versiona esquemas y contratos.
+- Perfila antes de reescribir.
+- Unifica dtypes al leer datos.
+- Prefiere operaciones in-place (`np.multiply(a, a, out=a)`) solo cuando midas beneficio y legibilidad no sufra.
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Rendimiento**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Compara `%timeit` de un bucle Python vs `a*a` en 1e6 elementos.
+2. Mide `a.T.sum(axis=0)` vs `ascontiguousarray(a.T).sum(axis=0)`.
+3. Reescribe un `concatenate` en bucle por preallocacion.
 
 ## Siguiente paso
 
-Continua con [Integracion Con Pandas](08-integracion-con-pandas.md).
+Continua con [Integracion con Pandas](08-integracion-con-pandas.md).

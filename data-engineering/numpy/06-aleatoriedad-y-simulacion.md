@@ -1,68 +1,75 @@
-# Aleatoriedad Y Simulacion
+# Aleatoriedad y simulacion
 
-Este capitulo profundiza en **Aleatoriedad Y Simulacion** dentro del manual de **NumPy**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+Las simulaciones, tests y muestreos necesitan aleatoriedad **reproducible**. El generador moderno de NumPy es `np.random.default_rng`.
 
-## Objetivo
-
-Al terminar este capitulo sabras explicar aleatoriedad y simulacion, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
-
-## Conceptos clave
-
-- **Aleatoriedad Y Simulacion:** pieza central de NumPy en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Aleatoriedad:** aspecto a dominar dentro de Aleatoriedad Y Simulacion.
-- **Simulacion:** aspecto a dominar dentro de Aleatoriedad Y Simulacion.
-
-## Desarrollo del tema
-
-### Enfoque practico
-
-1. Define el problema que resuelve **Aleatoriedad Y Simulacion**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
-```
-
-## Ejemplo
+## Generator recomendado
 
 ```python
-# Ejemplo con NumPy
-from pathlib import Path
+import numpy as np
 
-def procesar(ruta: str) -> list[str]:
-    return Path(ruta).read_text(encoding='utf-8').splitlines()
+rng = np.random.default_rng(42)
+rng.random(5)                 # uniform [0, 1)
+rng.normal(loc=0, scale=1, size=5)
+rng.integers(0, 10, size=5)
+rng.choice(["a", "b", "c"], size=5, replace=True)
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+Evita el API legacy `np.random.seed` + funciones globales en codigo nuevo: es menos seguro con hilos y menos explicito.
+
+## Distribuciones utiles
+
+```python
+rng.uniform(0, 10, size=(3, 3))
+rng.binomial(n=10, p=0.3, size=1000)
+rng.poisson(lam=4, size=1000)
+```
+
+## Permutaciones y shuffling
+
+```python
+x = np.arange(10)
+rng.shuffle(x)                # in-place
+y = rng.permutation(10)       # nuevo array
+```
+
+Train/test split manual:
+
+```python
+n = 100
+idx = rng.permutation(n)
+train_idx, test_idx = idx[:80], idx[80:]
+```
+
+## Simulacion Monte Carlo (ejemplo)
+
+Estimar Pi:
+
+```python
+rng = np.random.default_rng(0)
+n = 1_000_000
+pts = rng.random((n, 2))
+inside = np.count_nonzero((pts ** 2).sum(axis=1) <= 1.0)
+pi_hat = 4 * inside / n
+print(pi_hat)
+```
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de aleatoriedad y simulacion.
-- No probar casos limite ni errores esperados.
+- Olvidar la semilla y no poder reproducir un bug.
+- Usar la misma `rng` compartida en tests paralelos sin cuidado.
+- `sample` con `replace=False` pidiendo mas elementos que la poblacion.
 
 ## Buenas practicas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Datos reproducibles y pipelines idempotentes.
-- Versiona esquemas y contratos.
+- Pasa `seed` por constructor de clases / CLI.
+- Un `rng` por experimento o por worker.
+- Documenta la semilla en resultados de notebooks.
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Aleatoriedad Y Simulacion**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Genera 10_000 muestras N(0,1) con semilla fija y comprueba media ~0.
+2. Simula 1000 tiradas de un dado justo y estima P(>=5).
+3. Haz un split 70/30 reproducible de un array de indices.
 
 ## Siguiente paso
 

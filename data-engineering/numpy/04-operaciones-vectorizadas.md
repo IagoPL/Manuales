@@ -1,69 +1,88 @@
-# Operaciones Vectorizadas
+# Operaciones vectorizadas
 
-Este capitulo profundiza en **Operaciones Vectorizadas** dentro del manual de **NumPy**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+Vectorizar significa expresar el calculo sobre arrays enteros en vez de bucles Python. NumPy delega en codigo compilado (y a veces BLAS) y aprovecha SIMD.
 
-## Objetivo
-
-Al terminar este capitulo sabras explicar operaciones vectorizadas, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
-
-## Conceptos clave
-
-- **Operaciones Vectorizadas:** pieza central de NumPy en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Operaciones:** aspecto a dominar dentro de Operaciones Vectorizadas.
-- **Vectorizadas:** aspecto a dominar dentro de Operaciones Vectorizadas.
-
-## Desarrollo del tema
-
-### Enfoque practico
-
-1. Define el problema que resuelve **Operaciones Vectorizadas**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
-```
-
-## Ejemplo
+## Aritmetica y ufuncs
 
 ```python
-# Ejemplo con NumPy
-from pathlib import Path
+import numpy as np
 
-def procesar(ruta: str) -> list[str]:
-    return Path(ruta).read_text(encoding='utf-8').splitlines()
+a = np.array([1.0, 2.0, 3.0])
+b = np.array([10.0, 20.0, 30.0])
+
+a + b
+a * b
+a ** 2
+np.sqrt(a)
+np.exp(a)
+np.log1p(a)
+np.clip(a, 0, 2)
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+Las **ufuncs** operan elemento a elemento y soportan broadcasting.
+
+## Agregaciones
+
+```python
+m = np.arange(1, 7).reshape(2, 3)
+m.sum(), m.mean(), m.std()
+m.min(axis=0)
+m.max(axis=1)
+np.percentile(m, 95)
+```
+
+## Comparaciones y logica
+
+```python
+a = np.array([1, 2, 3, 4])
+a > 2
+np.all(a > 0)
+np.any(a > 3)
+np.count_nonzero(a > 2)
+```
+
+## Algebra element-wise vs matmul
+
+```python
+A = np.array([[1, 2], [3, 4]])
+B = np.array([[2, 0], [1, 2]])
+A * B          # elemento a elemento
+A @ B          # producto matricial
+np.dot(A, B)
+```
+
+## Evitar bucles
+
+```python
+# Evitar
+out = []
+for x in a:
+    out.append(x ** 2)
+
+# Preferir
+out = a ** 2
+```
+
+Si el algoritmo no se vectoriza limpio, considera `np.vectorize` (comodidad, no magia de velocidad) o Numba.
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de operaciones vectorizadas.
-- No probar casos limite ni errores esperados.
+- Usar `*` cuando queriamos `@`.
+- Agregar sin `axis` y aplanar mentalmente mal el resultado.
+- `np.vectorize` pensando que es tan rapido como una ufunc C.
 
 ## Buenas practicas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Datos reproducibles y pipelines idempotentes.
-- Versiona esquemas y contratos.
+- Encadena ufuncs legibles; si la linea supera ~80-100 chars, parte en pasos nombrados.
+- Usa agregaciones con `axis` explicito.
+- Mide con `%timeit` antes de micro-optimizar.
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Operaciones Vectorizadas**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Dado un array de temperaturas en C, convierte a F de forma vectorizada.
+2. Calcula media y desviacion por columna de una matriz `(100, 4)` aleatoria.
+3. Cuenta cuantos valores estan fuera de `[mean-2std, mean+2std]`.
 
 ## Siguiente paso
 
-Continua con [Algebra Lineal](05-algebra-lineal.md).
+Continua con [Algebra lineal](05-algebra-lineal.md).

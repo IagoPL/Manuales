@@ -16,6 +16,22 @@ Pandas brilla cuando el volumen cabe razonablemente en memoria y necesitas itera
 8. [Rendimiento](08-rendimiento.md)
 9. [Proyecto de analisis](09-proyecto-de-analisis.md)
 
+## Que es Pandas (y que no es)
+
+Pandas es:
+
+- Una API flexible sobre arrays de NumPy (y tipos Arrow en versiones recientes).
+- Ideal para exploracion, limpieza y transformaciones tabulares.
+- Rapido de prototipar en notebooks y scripts.
+
+Pandas no es:
+
+- Un motor columnar out-of-core como DuckDB (aunque puede combinar con el).
+- Un cluster distribuido: todo vive en la RAM de un proceso.
+- Un sustituto de SQL para consultas analiticas muy pesadas sobre Parquet masivo.
+
+Regla practica: dataset que cabe en memoria y logica en Python -> Pandas. SQL analitico sobre archivos grandes sin cargar todo -> DuckDB. Escala horizontal -> Spark u otro motor distribuido.
+
 ## Instalacion
 
 ```bash
@@ -31,6 +47,13 @@ source .venv/bin/activate
 ```
 
 `pyarrow` es importante para trabajar bien con Parquet y tipos modernos. `openpyxl` permite leer y escribir Excel.
+
+Comprueba la version:
+
+```python
+import pandas as pd
+print(pd.__version__)
+```
 
 ## Primer DataFrame
 
@@ -118,3 +141,7 @@ summary.to_parquet("country_summary.parquet", index=False)
 3. Convierte `amount` a numero y `created_at` a fecha.
 4. Calcula ventas totales por pais.
 5. Guarda el resultado en Parquet.
+
+## Siguiente paso
+
+Con el entorno listo, el [capitulo 2](02-series-y-dataframes.md) explica Series, DataFrames e indices: la base sobre la que se apoya el resto del manual.

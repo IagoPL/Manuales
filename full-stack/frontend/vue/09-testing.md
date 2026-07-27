@@ -1,69 +1,104 @@
-# Testing
+# Testing en Vue
 
-Este capitulo profundiza en **Testing** dentro del manual de **Vue**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+Los tests protegen componentes y composables cuando el UI crece. En Vue 3 el stack habitual es **Vitest** + **Vue Test Utils** (+ Playwright/Cypress para e2e).
 
-## Objetivo
+## Setup tipico (Vitest)
 
-Al terminar este capitulo sabras explicar testing, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+Con un proyecto Vite/Vue:
 
-## Conceptos clave
-
-- **Testing:** pieza central de Vue en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Testing:** aspecto a dominar dentro de Testing.
-
-## Desarrollo del tema
-
-### Enfoque practico
-
-1. Define el problema que resuelve **Testing**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
+```bash
+npm install -D vitest @vue/test-utils jsdom @vitest/coverage-v8
 ```
 
-## Ejemplo
+`vite.config.ts`:
 
-```javascript
-// Ejemplo en Vue
-const config = { debug: true, retries: 3 };
+```typescript
+import { defineConfig } from "vite"
+import vue from "@vitejs/plugin-vue"
 
-export function setup() {
-  console.log('Inicializando', config);
-}
+export default defineConfig({
+  plugins: [vue()],
+  test: {
+    environment: "jsdom",
+    globals: true,
+  },
+})
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+Script:
+
+```json
+"test": "vitest run"
+```
+
+## Test de componente
+
+`ButtonCounter.vue`:
+
+```vue
+<script setup>
+import { ref } from "vue"
+const n = ref(0)
+</script>
+
+<template>
+  <button @click="n++">Count: {{ n }}</button>
+</template>
+```
+
+```typescript
+import { mount } from "@vue/test-utils"
+import { describe, it, expect } from "vitest"
+import ButtonCounter from "./ButtonCounter.vue"
+
+describe("ButtonCounter", () => {
+  it("incrementa al hacer click", async () => {
+    const wrapper = mount(ButtonCounter)
+    await wrapper.get("button").trigger("click")
+    expect(wrapper.text()).toContain("Count: 1")
+  })
+})
+```
+
+## Test de composable
+
+```typescript
+import { describe, it, expect } from "vitest"
+import { useCounter } from "./useCounter"
+
+describe("useCounter", () => {
+  it("suma", () => {
+    const { count, inc } = useCounter(0)
+    inc()
+    expect(count.value).toBe(1)
+  })
+})
+```
+
+## Que testear
+
+| Capa | Prioridad |
+|------|-----------|
+| Composables / utils | Alta |
+| Componentes con logica | Alta |
+| Stores Pinia | Alta |
+| Snapshots de markup | Baja |
+| E2E flujos criticos | Selectiva |
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de testing.
-- No probar casos limite ni errores esperados.
+- Montar la app entera para un boton.
+- Depender de delays reales en vez de `await` + `trigger`.
+- Tests acoplados a clases CSS fragiles.
 
 ## Buenas practicas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Componentiza y evita estado global innecesario.
-- Prueba interacciones criticas.
+- Queries por rol/texto (`get("button")`, roles de Testing Library si la usas).
+- Un assert principal por test.
+- CI: `vitest run` en cada PR.
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Testing**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
-
-## Siguiente paso
-
-Continua con [Despliegue](10-despliegue.md).
+1. Anade Vitest a un proyecto Vue.
+2. Testea un componente con input + emit.
+3. Testea un composable de fetch mockeando `global.fetch`.

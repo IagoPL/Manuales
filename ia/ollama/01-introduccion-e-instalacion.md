@@ -1,67 +1,132 @@
-# Introduccion E Instalacion
+# Ollama: introduccion e instalacion
 
-Este capitulo profundiza en **Introduccion E Instalacion** dentro del manual de **Ollama**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+Ollama es una herramienta para ejecutar modelos de lenguaje (LLM) en local con una CLI y una API HTTP. Descarga, gestiona y sirve modelos cuantizados sin depender de APIs cloud en cada peticion.
 
-## Objetivo
+## Capitulos
 
-Al terminar este capitulo sabras explicar introduccion e instalacion, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+1. [Introduccion e instalacion](01-introduccion-e-instalacion.md)
+2. [Modelos locales](02-modelos-locales.md)
+3. [API de Ollama](03-api-de-ollama.md)
+4. [Modelfiles](04-modelfiles.md)
+5. [Integracion con aplicaciones](05-integracion-con-aplicaciones.md)
+6. [Rendimiento](06-rendimiento.md)
+7. [Buenas practicas](07-buenas-practicas.md)
+
+## Que problema resuelve
+
+Sin Ollama:
+
+- Cada proveedor cloud tiene SDK, precios y limites distintos.
+- Datos sensibles salen a Internet en cada prompt.
+- Probar modelos implica cuentas, claves y facturacion.
+
+Con Ollama:
+
+```txt
+ollama pull modelo -> ollama run / API :11434 -> respuestas locales
+```
+
+Ideal para desarrollo, RAG privado, demos offline y prototipos sin coste por token.
 
 ## Conceptos clave
 
-- **Introduccion E Instalacion:** pieza central de Ollama en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Introduccion:** aspecto a dominar dentro de Introduccion E Instalacion.
-- **Instalacion:** aspecto a dominar dentro de Introduccion E Instalacion.
+| Concepto | Descripcion |
+|----------|-------------|
+| **Modelo** | Pesos + plantilla de chat (p. ej. `llama3.2`, `mistral`) |
+| **Tag** | Variante o tamano (`llama3.2:1b`, `llama3.2:3b`) |
+| **Cuantizacion** | Compresion de pesos (Q4, Q5, Q8) para ahorrar RAM/VRAM |
+| **Daemon** | Servicio en `http://127.0.0.1:11434` |
+| **Modelfile** | Receta para crear un modelo personalizado |
 
-## Desarrollo del tema
+## Instalacion
 
-### Enfoque practico
+### Windows
 
-1. Define el problema que resuelve **Introduccion E Instalacion**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
+Descarga el instalador desde [ollama.com](https://ollama.com/download) o:
 
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
+```powershell
+winget install Ollama.Ollama
 ```
 
-## Ejemplo
+Tras instalar, el servicio arranca en segundo plano.
+
+### macOS
 
 ```bash
-#!/usr/bin/env bash
-set -euo pipefail
-echo "Tarea: Introduccion E Instalacion"
+brew install ollama
+# o descarga .dmg desde ollama.com
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+### Linux
 
-## Errores habituales
+```bash
+curl -fsSL https://ollama.com/install.sh | sh
+```
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de introduccion e instalacion.
-- No probar casos limite ni errores esperados.
+Verifica:
 
-## Buenas practicas
+```bash
+ollama --version
+ollama list
+```
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Fija version de modelo y dataset.
-- Evalua antes de desplegar.
+Si el daemon no responde:
 
-## Ejercicios
+```bash
+ollama serve
+```
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Introduccion E Instalacion**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+En Linux suele quedar como servicio systemd (`systemctl status ollama`).
+
+## Ejemplo minimo
+
+```bash
+ollama pull llama3.2:1b
+ollama run llama3.2:1b "Explica que es un LLM en una frase"
+```
+
+Desde otra terminal, misma respuesta via API:
+
+```bash
+curl http://localhost:11434/api/generate -d "{
+  \"model\": \"llama3.2:1b\",
+  \"prompt\": \"Di hola en una frase\",
+  \"stream\": false
+}"
+```
+
+## Docker (opcional)
+
+```bash
+docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
+docker exec -it ollama ollama pull llama3.2:1b
+```
+
+Con GPU NVIDIA anade `--gpus=all` y los drivers del host.
+
+## Errores comunes
+
+- Puerto `11434` ocupado: cambia con `OLLAMA_HOST=0.0.0.0:11435`.
+- `connection refused`: el daemon no esta en marcha (`ollama serve`).
+- Modelo no encontrado: falta `ollama pull` o el tag esta mal escrito.
+- En WSL2, Ollama en Windows y el cliente en Linux pueden no verse; unifica entorno o usa la IP del host.
+- Espacio en disco insuficiente: los modelos ocupan de cientos de MB a varios GB.
+
+## Buenas practicas iniciales
+
+- Empieza con un modelo pequeno (`1b` / `3b`) para validar el entorno.
+- Fija el tag exacto en scripts (`llama3.2:1b`, no solo `llama3.2` si importa reproducibilidad).
+- No expongas `11434` a Internet sin autenticacion o proxy.
+- Separa modelos de prueba y de uso diario (`ollama list` / `ollama rm`).
+- Documenta version de Ollama y modelos en el README del proyecto.
+
+## Ejercicio
+
+1. Instala Ollama y comprueba `ollama --version`.
+2. Haz `pull` de `llama3.2:1b` y ejecuta un prompt con `run`.
+3. Repite la misma pregunta con `curl` a `/api/generate` y `stream: false`.
+4. Lista modelos con `ollama list` y elimina uno de prueba con `ollama rm`.
 
 ## Siguiente paso
 
-Continua con [Modelos Locales](02-modelos-locales.md).
+El [capitulo 2](02-modelos-locales.md) cubre catalogo de modelos, tags, cuantizacion y gestio diaria con la CLI.

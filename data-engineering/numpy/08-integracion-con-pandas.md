@@ -1,66 +1,70 @@
-# Integracion Con Pandas
+# Integracion con Pandas
 
-Este capitulo profundiza en **Integracion Con Pandas** dentro del manual de **NumPy**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+Pandas usa NumPy por debajo: cada columna de un `DataFrame` (en el motor clasico) es, en esencia, un array tipado. Saber cruzar ambos evita conversiones innecesarias y permite vectorizar limpiezas.
 
-## Objetivo
-
-Al terminar este capitulo sabras explicar integracion con pandas, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
-
-## Conceptos clave
-
-- **Integracion Con Pandas:** pieza central de NumPy en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Integracion:** aspecto a dominar dentro de Integracion Con Pandas.
-- **Con:** aspecto a dominar dentro de Integracion Con Pandas.
-- **Pandas:** aspecto a dominar dentro de Integracion Con Pandas.
-
-## Desarrollo del tema
-
-### Enfoque practico
-
-1. Define el problema que resuelve **Integracion Con Pandas**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
-```
-
-## Ejemplo
+## De NumPy a Pandas
 
 ```python
-# Ejemplo con NumPy
-from pathlib import Path
+import numpy as np
+import pandas as pd
 
-def procesar(ruta: str) -> list[str]:
-    return Path(ruta).read_text(encoding='utf-8').splitlines()
+data = np.array([[1, 2.5], [3, 4.5], [5, 6.5]])
+df = pd.DataFrame(data, columns=["id", "score"])
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+## De Pandas a NumPy
+
+```python
+df = pd.DataFrame({"a": [1, 2, 3], "b": [4.0, 5.0, 6.0]})
+df.to_numpy()
+df["a"].to_numpy()
+df["a"].values          # legacy; preferible to_numpy()
+```
+
+`to_numpy()` puede devolver una vista o copia segun dtypes homogeneos.
+
+## Operaciones hibridas
+
+```python
+df = pd.DataFrame({"x": np.arange(5), "y": np.linspace(0, 1, 5)})
+df["z"] = np.sqrt(df["x"].to_numpy())
+df["z2"] = np.where(df["x"] > 2, df["y"], 0.0)
+```
+
+Cuando la expresion es numerica pura, bajar a NumPy suele ser mas predecible.
+
+## Cuidado con NaN
+
+```python
+a = df["y"].to_numpy()
+np.nanmean(a)
+```
+
+Los enteros con nulos en Pandas modernos pueden ser `Int64` nullable; al pasar a NumPy a veces se upcastea a float.
+
+## Flujo recomendado
+
+```txt
+leer CSV/Parquet (Pandas o DuckDB)
+  -> limpiar tipos
+  -> calculo pesado numerico (NumPy)
+  -> volver a DataFrame para export/joins
+```
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de integracion con pandas.
-- No probar casos limite ni errores esperados.
+- Encadenar `.values` mutables y romper columnas del DataFrame.
+- Mezclar dtypes y obtener `dtype=object` silencioso.
+- Hacer `for idx, row in df.iterrows()` para calculo numerico.
 
 ## Buenas practicas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Datos reproducibles y pipelines idempotentes.
-- Versiona esquemas y contratos.
+- Usa Pandas para tabular/joins/IO; NumPy para algebra y kernels.
+- Fija dtypes al cargar (`dtype=`, `parse_dates`).
+- Si el dataset crece, evalua Polars o DuckDB antes de micro-optimizar NumPy.
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Integracion Con Pandas**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Crea un DataFrame a partir de un `ndarray` (100, 3).
+2. Normaliza una columna restando media y dividiendo std con NumPy.
+3. Reinyecta el resultado como nueva columna y exporta a Parquet.

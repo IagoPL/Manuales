@@ -1,70 +1,88 @@
-# Tipos Shapes Y Broadcasting
+# Tipos, shapes y broadcasting
 
-Este capitulo profundiza en **Tipos Shapes Y Broadcasting** dentro del manual de **NumPy**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+El rendimiento y la correccion en NumPy dependen del **dtype**, del **shape** y de las reglas de **broadcasting** que alinean arrays de distinto tamano sin copiar datos de mas.
 
-## Objetivo
-
-Al terminar este capitulo sabras explicar tipos shapes y broadcasting, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
-
-## Conceptos clave
-
-- **Tipos Shapes Y Broadcasting:** pieza central de NumPy en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Tipos:** aspecto a dominar dentro de Tipos Shapes Y Broadcasting.
-- **Shapes:** aspecto a dominar dentro de Tipos Shapes Y Broadcasting.
-- **Broadcasting:** aspecto a dominar dentro de Tipos Shapes Y Broadcasting.
-
-## Desarrollo del tema
-
-### Enfoque practico
-
-1. Define el problema que resuelve **Tipos Shapes Y Broadcasting**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
-```
-
-## Ejemplo
+## dtypes
 
 ```python
-# Ejemplo con NumPy
-from pathlib import Path
+import numpy as np
 
-def procesar(ruta: str) -> list[str]:
-    return Path(ruta).read_text(encoding='utf-8').splitlines()
+np.array([1, 2, 3]).dtype          # int64 (o int32 en algunos Windows)
+np.array([1.0, 2.0]).dtype         # float64
+np.array([1, 2, 3], dtype=np.float32)
+np.array([True, False]).dtype      # bool
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+Conversiones:
+
+```python
+a = np.array([1, 2, 3])
+a.astype(np.float64)
+```
+
+Cuidado: convertir float->int trunca; strings numericos requieren conversion explicita.
+
+## shape, reshape, ravel
+
+```python
+a = np.arange(12)
+b = a.reshape(3, 4)
+c = b.reshape(2, 6)
+flat = b.ravel()      # vista si es contiguo
+copy = b.flatten()    # siempre copia
+```
+
+`reshape(-1, 4)` infiere la primera dimension.
+
+## Broadcasting
+
+Dos arrays son compatibles si, de atras hacia adelante, las dimensiones son iguales o una es 1.
+
+```python
+a = np.array([[1, 2, 3],
+              [4, 5, 6]])      # (2, 3)
+b = np.array([10, 20, 30])     # (3,) -> se ve como (1, 3)
+print(a + b)
+# [[11 22 33]
+#  [14 25 36]]
+```
+
+Normalizar columnas:
+
+```python
+X = np.array([[1., 2.], [3., 4.], [5., 6.]])
+mu = X.mean(axis=0)            # (2,)
+X_centered = X - mu            # broadcast (3,2) - (2,)
+```
+
+## newaxis
+
+```python
+v = np.array([1, 2, 3])
+col = v[:, np.newaxis]   # (3, 1)
+row = v[np.newaxis, :]   # (1, 3)
+```
+
+Util para productos externos o alinear batches.
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de tipos shapes y broadcasting.
-- No probar casos limite ni errores esperados.
+- `ValueError: operands could not be broadcast together` -> revisa shapes con `.shape`.
+- Hacer `reshape` incompatible (`12` elementos a `(5, 3)`).
+- Usar `float32` sin darse cuenta y perder precision en sumas largas.
 
 ## Buenas practicas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Datos reproducibles y pipelines idempotentes.
-- Versiona esquemas y contratos.
+- Imprime shapes al depurar pipelines.
+- Normaliza con broadcasting en vez de bucles por fila.
+- Elige `float32` en deep learning / memoria justa; `float64` en analisis general.
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Tipos Shapes Y Broadcasting**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Resta la media por columna a una matriz `(5, 3)` usando broadcasting.
+2. Multipplica una columna `(5, 1)` por una fila `(1, 3)` y explica el shape resultado.
+3. Convierte un array int a float32 y verifica `dtype`.
 
 ## Siguiente paso
 
-Continua con [Indexado Y Slicing](03-indexado-y-slicing.md).
+Continua con [Indexado y slicing](03-indexado-y-slicing.md).

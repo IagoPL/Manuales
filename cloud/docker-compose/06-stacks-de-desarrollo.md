@@ -1,71 +1,94 @@
-# Stacks De Desarrollo
+# Stacks de desarrollo
 
-Este capitulo profundiza en **Stacks De Desarrollo** dentro del manual de **Docker Compose**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+Un stack de desarrollo tipico: API + base de datos + cache (+ UI de admin opcional). El objetivo es `docker compose up` y tener un entorno listo.
 
-## Objetivo
-
-Al terminar este capitulo sabras explicar stacks de desarrollo, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
-
-## Conceptos clave
-
-- **Stacks De Desarrollo:** pieza central de Docker Compose en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Stacks:** aspecto a dominar dentro de Stacks De Desarrollo.
-- **Desarrollo:** aspecto a dominar dentro de Stacks De Desarrollo.
-
-## Desarrollo del tema
-
-### Enfoque practico
-
-1. Define el problema que resuelve **Stacks De Desarrollo**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
-```
-
-## Ejemplo
+## Ejemplo: API + Postgres + Redis
 
 ```yaml
-# Ejemplo de configuracion (Docker Compose)
-version: "3.9"
 services:
-  app:
-    image: nginx:1.27
+  api:
+    build: .
     ports:
-      - "8080:80"
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgres://app:app@db:5432/app
+      REDIS_URL: redis://redis:6379/0
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    volumes:
+      - ./:/app
+    command: npm run dev
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+      POSTGRES_DB: app
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d app"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  adminer:
+    image: adminer:4
+    profiles: ["tools"]
+    ports:
+      - "8080:8080"
+
+volumes:
+  pgdata:
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+## Flujo diario
+
+```bash
+docker compose up -d db redis
+docker compose up api
+docker compose --profile tools up -d adminer
+docker compose logs -f api
+docker compose down          # para contenedores
+docker compose down -v       # + borra volumenes (destruye datos)
+```
+
+## Seed y migraciones
+
+```bash
+docker compose exec api npm run migrate
+docker compose exec api npm run seed
+```
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de stacks de desarrollo.
-- No probar casos limite ni errores esperados.
+- Publicar puertos de DB a `0.0.0.0` en un portatil en redes no confiables sin firewall.
+- Usar `latest` en imagenes de datos sin pin.
+- Olvidar volumen nombrado y perder datos en cada `down`.
 
 ## Buenas practicas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Infra como codigo y cambios revisados.
-- Principio de minimo privilegio.
+- Misma major version de Postgres que staging/prod.
+- Healthcheck en DB antes de migrar.
+- README con 5 comandos: up, logs, migrate, seed, down.
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Stacks De Desarrollo**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Levanta el stack minimo API+DB (aunque la API sea un `nginx` de prueba).
+2. Anade healthcheck y `depends_on` con condicion.
+3. Entra con `exec` y verifica conectividad DNS `db` / `redis`.
 
 ## Siguiente paso
 
-Continua con [Buenas Practicas](07-buenas-practicas.md).
+Continua con [Buenas practicas](07-buenas-practicas.md).

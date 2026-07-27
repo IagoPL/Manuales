@@ -1,70 +1,194 @@
-# Seleccion Filtrado Y Transformacion
+# Seleccion, filtrado y transformacion
 
-Este capitulo profundiza en **Seleccion Filtrado Y Transformacion** dentro del manual de **Pandas**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+Una vez cargado el DataFrame, el trabajo diario es proyectar columnas, filtrar filas y crear campos derivados. Hazlo con operaciones vectorizadas: son mas claras y mucho mas rapidas que bucles.
 
-## Objetivo
-
-Al terminar este capitulo sabras explicar seleccion filtrado y transformacion, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
-
-## Conceptos clave
-
-- **Seleccion Filtrado Y Transformacion:** pieza central de Pandas en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Seleccion:** aspecto a dominar dentro de Seleccion Filtrado Y Transformacion.
-- **Filtrado:** aspecto a dominar dentro de Seleccion Filtrado Y Transformacion.
-- **Transformacion:** aspecto a dominar dentro de Seleccion Filtrado Y Transformacion.
-
-## Desarrollo del tema
-
-### Enfoque practico
-
-1. Define el problema que resuelve **Seleccion Filtrado Y Transformacion**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
-```
-
-## Ejemplo
+## Seleccion de columnas
 
 ```python
-# Ejemplo con Pandas
-from pathlib import Path
+import pandas as pd
 
-def procesar(ruta: str) -> list[str]:
-    return Path(ruta).read_text(encoding='utf-8').splitlines()
+orders = pd.DataFrame({
+    "order_id": [101, 102, 103, 104, 105],
+    "country": ["ES", "PT", "ES", "FR", "ES"],
+    "channel": ["web", "app", "web", "store", "app"],
+    "amount": [120.5, 80.0, 310.0, 45.0, 15.0],
+    "status": ["paid", "paid", "refunded", "paid", "paid"],
+})
+
+# Una columna -> Series
+amounts = orders["amount"]
+
+# Varias columnas -> DataFrame
+view = orders[["order_id", "amount", "status"]]
+
+# Exclusion
+meta = orders.drop(columns=["channel"])
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+## loc e iloc
+
+- `loc` selecciona por **etiqueta** de indice y nombre de columna.
+- `iloc` selecciona por **posicion** entera.
+
+```python
+orders_idx = orders.set_index("order_id")
+
+orders_idx.loc[101]                         # una fila
+orders_idx.loc[[101, 103], ["amount", "status"]]
+orders_idx.loc[101:103]                     # rango de etiquetas (incluye ambos extremos)
+
+orders.iloc[0]                              # primera fila
+orders.iloc[0:3, 0:2]                        # filas 0..2, columnas 0..1
+```
+
+Para asignar, usa `loc` de forma explicita:
+
+```python
+orders = orders.copy()
+orders.loc[orders["amount"] < 20, "status"] = "review"
+```
+
+Evita el patron encadenado `df[df.a > 0]["b"] = ...` (SettingWithCopy).
+
+## Filtros booleanos
+
+```python
+mask = (orders["status"] == "paid") & (orders["amount"] >= 50)
+paid_big = orders.loc[mask]
+
+# isin / between
+iberia = orders[orders["country"].isin(["ES", "PT"])]
+mid = orders[orders["amount"].between(50, 200)]
+
+# Negacion
+not_refund = orders[orders["status"] != "refunded"]
+# o: orders[~orders["status"].eq("refunded")]
+```
+
+Operadores: usa `&`, `|`, `~` con parentesis. `and` / `or` de Python no funcionan sobre Series.
+
+### query (opcional)
+
+```python
+orders.query("status == 'paid' and amount >= 50")
+orders.query("country in ['ES', 'PT']")
+```
+
+Util en notebooks; en scripts largos muchos equipos prefieren mascaras explicitas.
+
+## Ordenar y rankear
+
+```python
+orders.sort_values(["country", "amount"], ascending=[True, False])
+orders.assign(rank_amount=orders["amount"].rank(ascending=False, method="dense"))
+```
+
+## Transformaciones de columnas
+
+### Asignacion vectorizada
+
+```python
+orders = orders.copy()
+orders["amount_vat"] = orders["amount"] * 1.21
+orders["is_es"] = orders["country"] == "ES"
+```
+
+### assign (encadenable, no muta in-place)
+
+```python
+clean = (
+    orders
+    .assign(
+        amount_vat=lambda d: d["amount"] * 1.21,
+        channel=lambda d: d["channel"].str.lower(),
+    )
+    .loc[lambda d: d["status"] == "paid"]
+)
+```
+
+### map, replace, where
+
+```python
+region = {"ES": "south", "PT": "south", "FR": "central"}
+orders["region"] = orders["country"].map(region)
+
+orders["status_norm"] = orders["status"].replace({"refunded": "refund"})
+
+# where: mantener valor si True, si no NaN u otro valor
+orders["amount_paid"] = orders["amount"].where(orders["status"] == "paid", 0.0)
+```
+
+### apply: usalo con criterio
+
+`apply` es flexible y lento. Reservealo para logica que no cabe en vectorizacion:
+
+```python
+# Preferible
+orders["label"] = pd.cut(orders["amount"], bins=[0, 50, 150, 10_000], labels=["L", "M", "H"])
+
+# Solo si hace falta
+def tag(row):
+    if row["status"] == "refunded":
+        return "bad"
+    if row["amount"] > 200:
+        return "vip"
+    return "ok"
+
+orders["tag"] = orders.apply(tag, axis=1)  # mas lento
+```
+
+## Strings
+
+```python
+orders["channel"] = orders["channel"].astype("string").str.strip().str.lower()
+orders["country"].str.len()
+orders["channel"].str.contains("web", case=False, na=False)
+orders["order_code"] = "ORD-" + orders["order_id"].astype("string")
+```
+
+Metodos `.str` requieren dtype string/object; valores nulos se propagan (controla con `na=`).
+
+## Renombrar y reordenar
+
+```python
+orders = orders.rename(columns={"amount": "amount_eur"})
+orders = orders[["order_id", "country", "amount_eur", "status", "channel"]]
+```
+
+## Explode y columnas listas
+
+```python
+baskets = pd.DataFrame({
+    "order_id": [1, 2],
+    "skus": [["A", "B"], ["A"]],
+})
+baskets.explode("skus", ignore_index=True)
+```
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de seleccion filtrado y transformacion.
-- No probar casos limite ni errores esperados.
+- Mezclar `and`/`or` con Series en lugar de `&`/`|`.
+- Asignacion encadenada y `SettingWithCopyWarning` ignorado.
+- Usar `apply(axis=1)` para sumas, ratios o maps simples.
+- Filtrar y olvidar que el indice queda "agujereado" (usar `reset_index(drop=True)` si molesta).
+- Comparar floats con `==` exacto cuando hay redondeo; usa rangos o `np.isclose` si aplica.
 
 ## Buenas practicas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Datos reproducibles y pipelines idempotentes.
-- Versiona esquemas y contratos.
+- Filtra con `loc[mask, columns]` cuando seleccionas y proyectas a la vez.
+- Encadena con `.assign` / `.loc` / `.pipe` para pipelines legibles.
+- Normaliza strings (`strip`, `lower`) antes de filtrar o agrupar.
+- Prefiere `isin`, `between`, `str.contains` a bucles.
+- Tras transformar, valida con `value_counts`, `describe` y conteo de filas.
 
 ## Ejercicios
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Seleccion Filtrado Y Transformacion**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Filtra pedidos `paid` de `ES` o `PT` con amount entre 50 y 300.
+2. Crea `amount_vat` y `region` con `assign` y un dict de mapeo.
+3. Sustituye status `refunded` por `refund` con `replace`.
+4. Ordena por `amount` descendente y anade un ranking denso.
+5. Reescribe un `apply` innecesario usando `np.where` o `pd.cut`.
 
 ## Siguiente paso
 
-Continua con [Limpieza De Datos](05-limpieza-de-datos.md).
+Con columnas derivadas y filtros claros, el [capitulo 5](05-limpieza-de-datos.md) se centra en nulos, duplicados, tipos sucios y validaciones.

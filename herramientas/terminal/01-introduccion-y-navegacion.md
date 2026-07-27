@@ -1,8 +1,8 @@
-# Terminal
+# Terminal: introduccion y navegacion
 
-La terminal es una interfaz de texto para ejecutar comandos, automatizar tareas y trabajar con sistemas locales o remotos. En Linux y macOS suele usarse Bash, Zsh u otro shell; en Windows puedes usar PowerShell, Git Bash o WSL.
+La terminal es la interfaz de texto con el sistema operativo. Dominala acelera Git, Docker, SSH, builds y diagnostico: casi todas las herramientas DevOps nacieron primero como CLI.
 
-Este manual cubre uso general de terminal. Bash como lenguaje de scripting tiene su propio manual en [DevOps](../../devops/bash/01-introduccion-y-terminal.md).
+Este manual usa sintaxis compatible con **Bash** (Linux/macOS y Git Bash en Windows). En PowerShell los equivalentes existen, pero los ejemplos priorizan Bash por ser el comun denominador en servidores.
 
 ## Capitulos
 
@@ -12,38 +12,88 @@ Este manual cubre uso general de terminal. Bash como lenguaje de scripting tiene
 4. [Scripts basicos](04-scripts-basicos.md)
 5. [Diagnostico y trabajo remoto](05-diagnostico-y-trabajo-remoto.md)
 
-## Comandos iniciales
+## Anatomia del prompt
 
 ```bash
+usuario@host:~/proyectos$
+```
+
+Escribes un comando + Enter. El shell busca el ejecutable en `$PATH`, lo lanza y muestra la salida.
+
+```bash
+whoami
 pwd
-ls
-cd /ruta
-cd ..
-cd ~
+echo "hola"
 ```
 
-## Rutas
+## Navegacion esencial
 
-- Ruta absoluta: `/home/iago/proyecto`.
-- Ruta relativa: `docs/manual.md`.
-- Directorio actual: `.`.
-- Directorio padre: `..`.
-- Home del usuario: `~`.
-
-## Ayuda
+| Comando | Que hace |
+|---------|----------|
+| `pwd` | Directorio actual |
+| `ls` | Lista entradas |
+| `ls -la` | Incluye ocultos y detalles |
+| `cd ruta` | Cambia de directorio |
+| `cd ..` | Sube un nivel |
+| `cd ~` o `cd` | Va al home |
+| `cd -` | Vuelve al directorio anterior |
 
 ```bash
-comando --help
-man ls
+cd ~/proyectos/manuales
+pwd
+ls -la
 ```
+
+Rutas:
+
+- **Absolutas**: empiezan por `/` (Linux/macOS) — `/var/log/nginx`
+- **Relativas**: desde donde estas — `./src` , `../README.md`
+
+## Atajos que ahorran horas
+
+| Atajo | Efecto |
+|-------|--------|
+| `Tab` | Autocompletar |
+| `Ctrl+C` | Cancelar proceso en primer plano |
+| `Ctrl+L` o `clear` | Limpiar pantalla |
+| `Ctrl+R` | Buscar en historial |
+| `↑` / `↓` | Recorrer historial |
+| `Ctrl+A` / `Ctrl+E` | Inicio / fin de linea |
+| `Ctrl+U` | Borrar desde el cursor al inicio |
+
+## Ayuda integrada
+
+```bash
+ls --help
+man ls          # Linux/macOS
+man -k copy     # buscar en paginas man
+```
+
+## Windows: que terminal usar
+
+- **Git Bash** o **WSL**: maxima compatibilidad con ejemplos Linux.
+- **PowerShell**: nativo Windows; comandos distintos (`Get-ChildItem` vs `ls`).
+- **cmd.exe**: legacy; evitalo para trabajo moderno.
+
+## Errores habituales
+
+- Confundir `\` de Windows con `/` de Bash.
+- Olvidar que `~` no se expande igual dentro de comillas simples.
+- Ejecutar `cd` en un subshell de un script y esperar que cambie tu shell padre.
 
 ## Buenas practicas
 
-- Comprueba donde estas con `pwd`.
-- Usa tabulacion para autocompletar.
-- Lee el comando antes de pulsar Enter.
-- Copia comandos destructivos con especial cuidado.
+- Trabaja siempre sabiendo el `pwd`.
+- Prefiere rutas relativas dentro de un repo.
+- Usa Tab; no teclees rutas largas a mano.
+- En equipo, documenta si los scripts asumen Bash o PowerShell.
 
 ## Ejercicio
 
-Crea una carpeta `terminal-lab`, entra en ella, crea un archivo y vuelve al directorio anterior.
+1. Abre la terminal y navega hasta un proyecto con solo `cd` y `ls`.
+2. Lista ocultos con `ls -la` y localiza `.git` si existe.
+3. Usa `cd -` para alternar entre dos carpetas.
+
+## Siguiente paso
+
+Continua con [Archivos busqueda y texto](02-archivos-busqueda-y-texto.md).

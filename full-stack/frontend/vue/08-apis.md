@@ -1,69 +1,186 @@
-# Apis
+# APIs
 
-Este capitulo profundiza en **Apis** dentro del manual de **Vue**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+Una SPA Vue consume APIs HTTP para leer y mutar datos. El patron limpio: capa de cliente HTTP + composables/stores + estados `loading`/`error`/`data` en la UI.
 
-## Objetivo
+## fetch basico
 
-Al terminar este capitulo sabras explicar apis, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+```typescript
+export type Producto = { id: number; nombre: string; precio: number }
 
-## Conceptos clave
-
-- **Apis:** pieza central de Vue en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Apis:** aspecto a dominar dentro de Apis.
-
-## Desarrollo del tema
-
-### Enfoque practico
-
-1. Define el problema que resuelve **Apis**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
-```
-
-## Ejemplo
-
-```javascript
-// Ejemplo en Vue
-const config = { debug: true, retries: 3 };
-
-export function setup() {
-  console.log('Inicializando', config);
+export async function getProductos(): Promise<Producto[]> {
+  const res = await fetch('/api/productos', {
+    headers: { Accept: 'application/json' },
+  })
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}`)
+  }
+  return res.json()
 }
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+En desarrollo, configura proxy en Vite para evitar CORS:
 
-## Errores habituales
+```typescript
+// vite.config.ts
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de apis.
-- No probar casos limite ni errores esperados.
+export default defineConfig({
+  plugins: [vue()],
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+      },
+    },
+  },
+})
+```
+
+## Composable useFetch
+
+```typescript
+// composables/useFetch.ts
+import { ref, watchEffect, type Ref } from 'vue'
+
+export function useFetch<T>(url: Ref<string> | string) {
+  const data = ref<T | null>(null)
+  const error = ref<string | null>(null)
+  const loading = ref(false)
+
+  async function load(u: string) {
+    loading.value = true
+    error.value = null
+    try {
+      const res = await fetch(u)
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      data.value = (await res.json()) as T
+    } catch (e) {
+      error.value = e instanceof Error ? e.message : 'Error de red'
+      data.value = null
+    } finally {
+      loading.value = false
+    }
+  }
+
+  watchEffect(() => {
+    const u = typeof url === 'string' ? url : url.value
+    if (u) void load(u)
+  })
+
+  return { data, error, loading, reload: () => load(typeof url === 'string' ? url : url.value) }
+}
+```
+
+```vue
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+import { useFetch } from '@/composables/useFetch'
+import type { Producto } from '@/api/productos'
+
+const route = useRoute()
+const url = computed(() => `/api/productos/${route.params.id}`)
+const { data, error, loading } = useFetch<Producto>(url)
+</script>
+
+<template>
+  <p v-if="loading">Cargando...</p>
+  <p v-else-if="error" role="alert">{{ error }}</p>
+  <article v-else-if="data">
+    <h1>{{ data.nombre }}</h1>
+    <p>{{ data.precio.toFixed(2) }} €</p>
+  </article>
+</template>
+```
+
+## POST/PUT/DELETE con JSON
+
+```typescript
+export async function crearProducto(input: Omit<Producto, 'id'>): Promise<Producto> {
+  const res = await fetch('/api/productos', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify(input),
+  })
+  if (!res.ok) {
+    const body = await res.text()
+    throw new Error(body || `HTTP ${res.status}`)
+  }
+  return res.json()
+}
+```
+
+## Headers de autenticacion
+
+```typescript
+export function apiFetch(input: RequestInfo, init: RequestInit = {}) {
+  const token = localStorage.getItem('token')
+  const headers = new Headers(init.headers)
+  if (token) headers.set('Authorization', `Bearer ${token}`)
+  if (!headers.has('Accept')) headers.set('Accept', 'application/json')
+
+  return fetch(input, { ...init, headers })
+}
+```
+
+Si el backend usa cookies de sesion, configura `credentials: 'include'` y CORS acorde.
+
+## Abort y race conditions
+
+```typescript
+import { onUnmounted, ref, watch } from 'vue'
+
+const query = ref('')
+const resultados = ref([])
+let controller: AbortController | null = null
+
+watch(query, async (q) => {
+  controller?.abort()
+  controller = new AbortController()
+  const res = await fetch(`/api/search?q=${encodeURIComponent(q)}`, {
+    signal: controller.signal,
+  })
+  if (!res.ok) return
+  resultados.value = await res.json()
+})
+
+onUnmounted(() => controller?.abort())
+```
+
+Cancela peticiones obsoletas al cambiar de ruta o de query.
+
+## Axios u ofetch
+
+`fetch` nativo basta en la mayoria de casos. Axios aporta interceptores maduros; `ofetch` (Nuxt) tipa errores HTTP con comodidad. Elige una capa y no mezcles tres clientes.
 
 ## Buenas practicas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Componentiza y evita estado global innecesario.
-- Prueba interacciones criticas.
+- Tipa respuestas DTO; no uses `any`.
+- Centraliza base URL y auth en un cliente.
+- Distingue error de red, 4xx y 5xx en la UI.
+- Usa proxy en dev; variables `import.meta.env.VITE_API_URL` en prod.
+- Nunca expongas secretos de servidor en `VITE_*` (van al bundle).
+
+## Errores habituales
+
+- Ignorar `res.ok` y parsear JSON de un 500 como datos validos.
+- CORS mal entendido: el navegador bloquea; el proxy o el backend deben alinearse.
+- Disparar fetch en el cuerpo de `setup` sin cancelacion al desmontar.
+- Guardar el token solo en memoria y perder sesion al refrescar (o lo contrario: persistir sin plan de XSS).
+- Hardcodear `http://localhost:3000` en componentes.
 
 ## Ejercicios
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Apis**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Implementa `getProductos` y una view con estados loading/error/lista.
+2. Configura proxy `/api` en Vite hacia tu backend local.
+3. Anade `apiFetch` con Bearer token desde el auth store.
+4. Cancela una busqueda anterior con `AbortController` al escribir en el input.
 
 ## Siguiente paso
 
-Continua con [Testing](09-testing.md).
+En el [capitulo 9](09-testing.md) veras Vitest y Vue Test Utils para componentes, composables y stores.

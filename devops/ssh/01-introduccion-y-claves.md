@@ -1,67 +1,114 @@
-# Introduccion Y Claves
+# SSH: introduccion y claves
 
-Este capitulo profundiza en **Introduccion Y Claves** dentro del manual de **SSH**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+SSH (Secure Shell) es el protocolo estandar para administrar servidores Linux de forma remota con cifrado. Sustituye a Telnet y rsh: autentica, cifra el trafico y permite reenviar puertos, copiar archivos y ejecutar comandos sin exponer contrasenas en claro.
 
-## Objetivo
+En la practica, casi todo el trabajo DevOps (despliegues, Ansible, Git sobre remoto, tunnels a bases de datos) pasa por SSH.
 
-Al terminar este capitulo sabras explicar introduccion y claves, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+## Capitulos
 
-## Conceptos clave
+1. [Introduccion y claves](01-introduccion-y-claves.md)
+2. [Conexion y configuracion](02-conexion-y-configuracion.md)
+3. [Agentes y forwarding](03-agentes-y-forwarding.md)
+4. [SCP SFTP y tunnels](04-scp-sftp-y-tunnels.md)
+5. [Hardening del servidor](05-hardening-del-servidor.md)
+6. [Troubleshooting](06-troubleshooting.md)
 
-- **Introduccion Y Claves:** pieza central de SSH en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Introduccion:** aspecto a dominar dentro de Introduccion Y Claves.
-- **Claves:** aspecto a dominar dentro de Introduccion Y Claves.
+## Que problema resuelve
 
-## Desarrollo del tema
+Sin SSH (o con solo contrasena):
 
-### Enfoque practico
+- Credenciales reutilizadas y faciles de forcear.
+- Sesiones sin cifrado en redes no confiables.
+- Automatizacion fragil (prompts interactivos).
 
-1. Define el problema que resuelve **Introduccion Y Claves**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
+Con claves SSH:
 
 ```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
+cliente (clave privada)  -->  servidor (clave publica en authorized_keys)
+         |                              |
+         +-------- canal cifrado -------+
 ```
 
-## Ejemplo
+## Tipos de clave
+
+| Tipo | Recomendacion | Notas |
+|------|---------------|-------|
+| **ed25519** | Preferida | Rapida, corta, segura |
+| **ecdsa** | Aceptable | Menos habitual que ed25519 |
+| **rsa 4096** | Legado | Solo si un sistema antiguo no acepta ed25519 |
+| **dsa** | Evitar | Obsoleta e insegura |
+
+## Generar un par de claves
+
+En tu maquina local (no en el servidor):
 
 ```bash
-#!/usr/bin/env bash
-set -euo pipefail
-echo "Tarea: Introduccion Y Claves"
+ssh-keygen -t ed25519 -C "tu-email@ejemplo.com" -f ~/.ssh/id_ed25519
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+- `-C` anade un comentario para identificar la clave.
+- Te pedira passphrase: usala. Protege la privada si el disco se filtra.
+- Resultado:
+  - `~/.ssh/id_ed25519` — **privada** (nunca la copies a un repo).
+  - `~/.ssh/id_ed25519.pub` — **publica** (va al servidor).
+
+Ver la publica:
+
+```bash
+cat ~/.ssh/id_ed25519.pub
+```
+
+## Instalar la clave en el servidor
+
+Opcion recomendada:
+
+```bash
+ssh-copy-id -i ~/.ssh/id_ed25519.pub usuario@servidor.ejemplo.com
+```
+
+Manual (si no tienes `ssh-copy-id`):
+
+```bash
+ssh usuario@servidor.ejemplo.com "mkdir -p ~/.ssh && chmod 700 ~/.ssh"
+cat ~/.ssh/id_ed25519.pub | ssh usuario@servidor.ejemplo.com "cat >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys"
+```
+
+Permisos tipicos que exige `sshd`:
+
+| Ruta | Modo |
+|------|------|
+| `~/.ssh` | `700` |
+| `~/.ssh/authorized_keys` | `600` |
+| clave privada | `600` |
+
+## Primera conexion
+
+```bash
+ssh usuario@servidor.ejemplo.com
+```
+
+La primera vez veras el fingerprint del host. Verificalo (out-of-band) antes de aceptar; queda guardado en `~/.ssh/known_hosts`.
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de introduccion y claves.
-- No probar casos limite ni errores esperados.
+- Subir la clave **privada** al servidor o a GitHub.
+- Usar RSA 1024 o DSA "porque siempre se uso".
+- Dejar `authorized_keys` con `777` (sshd ignora la clave).
+- Generar la clave en el servidor y bajarte solo la publica (flujo invertido e incomodo).
 
 ## Buenas practicas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Scripts idempotentes y logs claros.
-- Secrets fuera del repositorio.
+- Una clave por maquina o por proposito (trabajo, personal, CI).
+- Passphrase en la privada + agente SSH (capitulo 3).
+- Rotar claves si un portatil se pierde.
+- Preferir ed25519 salvo incompatibilidad real.
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Introduccion Y Claves**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Genera una clave ed25519 con comentario identificable.
+2. Copia la publica a un servidor de prueba (o a un contenedor con `sshd`).
+3. Conecta sin contrasena y comprueba `echo $USER` en remoto.
 
 ## Siguiente paso
 
-Continua con [Conexion Y Configuracion](02-conexion-y-configuracion.md).
+Continua con [Conexion y configuracion](02-conexion-y-configuracion.md).

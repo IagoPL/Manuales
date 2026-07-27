@@ -1,10 +1,10 @@
-# Manual de NumPy
+# NumPy: introduccion y arrays
 
-NumPy es la base del calculo numerico en Python. Su estructura principal, el `ndarray`, permite trabajar con vectores y matrices de forma eficiente usando operaciones vectorizadas implementadas en codigo optimizado.
+NumPy es la libreria base del stack cientifico en Python. Define el `ndarray`: un bloque contiguo de memoria con tipo homogeneo y operaciones vectorizadas en C. Pandas, scikit-learn, PyTorch (tensores) y muchas APIs de datos se apoyan en el.
 
-Aunque en data engineering se usa menos directamente que Pandas o Spark, entender NumPy ayuda a comprender rendimiento, broadcasting, tipos de datos, memoria y operaciones matematicas que aparecen en analisis, machine learning y procesamiento numerico.
+Si escribes bucles Python sobre millones de numeros, NumPy suele ser el primer salto de rendimiento.
 
-## Capitulos previstos
+## Capitulos
 
 1. [Introduccion y arrays](01-introduccion-y-arrays.md)
 2. [Tipos shapes y broadcasting](02-tipos-shapes-y-broadcasting.md)
@@ -18,83 +18,90 @@ Aunque en data engineering se usa menos directamente que Pandas o Spark, entende
 ## Instalacion
 
 ```bash
+python -m venv .venv
+# Windows:
+.venv\Scripts\activate
+# Linux/macOS:
+source .venv/bin/activate
 pip install numpy
 ```
 
-Import habitual:
+```python
+import numpy as np
+print(np.__version__)
+```
+
+## Primer array
 
 ```python
 import numpy as np
+
+a = np.array([1, 2, 3, 4])
+print(a)
+print(a.shape, a.dtype, a.ndim)
 ```
 
-## Crear arrays
+Arrays multidimensionales:
 
 ```python
-import numpy as np
-
-a = np.array([1, 2, 3])
-b = np.array([[1, 2, 3], [4, 5, 6]])
-
-print(a.shape)  # (3,)
-print(b.shape)  # (2, 3)
-print(b.dtype)
+m = np.array([[1, 2, 3], [4, 5, 6]])
+print(m.shape)  # (2, 3)
 ```
 
-Arrays utiles:
+## Constructores habituales
 
 ```python
 np.zeros((2, 3))
-np.ones((2, 3))
+np.ones((3,))
+np.full((2, 2), 7)
 np.arange(0, 10, 2)
 np.linspace(0, 1, 5)
+np.eye(3)
+np.empty((2, 2))  # sin inicializar; solo si vas a rellenar ya
 ```
 
-## Operaciones vectorizadas
+## Por que no usar listas para calculo
 
 ```python
-values = np.array([10, 20, 30])
+# Lento e inconveniente
+xs = [1, 2, 3]
+ys = [x * 2 for x in xs]
 
-print(values * 2)
-print(values + 5)
-print(values.mean())
+# Vectorizado
+a = np.array([1, 2, 3])
+b = a * 2
 ```
 
-Esto evita bucles explicitos y suele ser mas rapido:
+NumPy aplica la operacion a todo el buffer sin el overhead del interpretador por elemento.
+
+## Axis mental model
+
+En 2D: eje 0 = filas, eje 1 = columnas.
 
 ```python
-temperatures_c = np.array([18.5, 20.0, 21.5])
-temperatures_f = temperatures_c * 9 / 5 + 32
+m = np.array([[1, 2, 3], [4, 5, 6]])
+m.sum(axis=0)  # por columna -> [5, 7, 9]
+m.sum(axis=1)  # por fila    -> [6, 15]
 ```
 
-## Dimensiones y reshape
+## Errores habituales
 
-```python
-x = np.arange(12)
-matrix = x.reshape(3, 4)
-
-print(matrix)
-print(matrix[0, 2])
-print(matrix[:, 1])
-```
+- Mezclar listas Python y arrays sin convertir (`np.array`).
+- Asumir que `dtype` es siempre `float64` (enteros truncan divisiones segun version/reglas).
+- Mutar vistas pensando que son copias (capitulo 3).
 
 ## Buenas practicas
 
-- Comprueba `shape` y `dtype` antes de operar.
-- Usa operaciones vectorizadas.
-- Evita mezclar tipos si no es necesario.
-- Controla copias y vistas cuando modifiques arrays.
-- Usa nombres que indiquen dimensiones: `features_matrix`, `weights_vector`.
-
-## Errores comunes
-
-- Confundir listas de Python con arrays NumPy.
-- Asumir que `reshape` cambia el orden conceptual de los datos.
-- Crear arrays con tipos `object` accidentalmente.
-- No entender broadcasting y obtener resultados con dimensiones inesperadas.
+- Import convencional: `import numpy as np`.
+- Fija `dtype` cuando leas datos externos.
+- Prefiere constructores (`zeros`, `arange`) a bucles de append.
 
 ## Ejercicio
 
-1. Crea un array con numeros del 1 al 12.
-2. Convierte el array en una matriz de 3 filas y 4 columnas.
-3. Calcula la media por columna.
-4. Normaliza cada columna restando su media.
+1. Crea un array 3x3 de ceros y otro con `arange(9).reshape(3, 3)`.
+2. Suma ambos.
+3. Imprime `shape`, `dtype` y `ndim`.
+
+## Siguiente paso
+
+Continua con [Tipos shapes y broadcasting](02-tipos-shapes-y-broadcasting.md).

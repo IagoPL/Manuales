@@ -1,68 +1,142 @@
-# Scp Sftp Y Tunnels
+# SCP, SFTP y tunnels
 
-Este capitulo profundiza en **Scp Sftp Y Tunnels** dentro del manual de **SSH**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+SSH no solo abre shell: copia archivos y reenvia puertos TCP. Eso permite editar remotos, sincronizar artefactos y alcanzar servicios privados (Postgres, Redis, paneles admin) como si estuvieran en localhost.
 
-## Objetivo
+## SCP
 
-Al terminar este capitulo sabras explicar scp sftp y tunnels, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
-
-## Conceptos clave
-
-- **Scp Sftp Y Tunnels:** pieza central de SSH en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Scp:** aspecto a dominar dentro de Scp Sftp Y Tunnels.
-- **Sftp:** aspecto a dominar dentro de Scp Sftp Y Tunnels.
-- **Tunnels:** aspecto a dominar dentro de Scp Sftp Y Tunnels.
-
-## Desarrollo del tema
-
-### Enfoque practico
-
-1. Define el problema que resuelve **Scp Sftp Y Tunnels**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
-```
-
-## Ejemplo
+Copia puntual archivo a archivo:
 
 ```bash
-#!/usr/bin/env bash
-set -euo pipefail
-echo "Tarea: Scp Sftp Y Tunnels"
+# Local -> remoto
+scp ./app.tar.gz deploy@servidor:/var/www/
+
+# Remoto -> local
+scp deploy@servidor:/var/log/nginx/error.log ./error.log
+
+# Directorio recursivo
+scp -r ./dist/ deploy@servidor:/var/www/app/
+
+# Con alias de config y puerto ya definidos
+scp ./backup.sql prod-api:/tmp/
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+`scp` usa el mismo `~/.ssh/config` que `ssh`.
+
+Limitacion: no reanuda bien transferencias grandes interrumpidas. Para eso, `rsync` sobre SSH:
+
+```bash
+rsync -avz --progress ./dist/ deploy@servidor:/var/www/app/
+```
+
+## SFTP
+
+Sesion interactiva estilo FTP cifrado:
+
+```bash
+sftp deploy@servidor
+```
+
+Comandos habituales dentro de sftp:
+
+```txt
+ls
+lcd ./local-dir
+cd /var/www
+put archivo.txt
+get remoto.log
+mkdir uploads
+bye
+```
+
+En scripts, preferible `scp`/`rsync` o el cliente SFTP no interactivo.
+
+## Tunnel local (`-L`)
+
+Expone un puerto remoto en tu maquina:
+
+```bash
+ssh -N -L 5432:127.0.0.1:5432 deploy@bastion
+```
+
+| Flag | Significado |
+|------|-------------|
+| `-L local:destino:puerto` | Escucha local y reenvia al destino visto desde el remoto |
+| `-N` | No abras shell; solo tunnel |
+
+Ahora tu cliente Postgres apunta a `localhost:5432` y el trafico viaja cifrado hasta el bastion, que habla con Postgres en su `127.0.0.1`.
+
+Via config:
+
+```sshconfig
+Host db-tunnel
+  HostName bastion.ejemplo.com
+  User deploy
+  LocalForward 5432 127.0.0.1:5432
+```
+
+```bash
+ssh -N db-tunnel
+```
+
+## Tunnel remoto (`-R`)
+
+El servidor escucha y reenvia hacia tu laptop (menos frecuente; util para demos o webhooks temporales):
+
+```bash
+ssh -N -R 8080:127.0.0.1:3000 usuario@servidor
+```
+
+Quien conecte a `servidor:8080` llega a tu app local en `:3000` (si `GatewayPorts` lo permite en el servidor).
+
+## Tunnel dinamico (`-D`) SOCKS
+
+```bash
+ssh -N -D 1080 deploy@bastion
+```
+
+Configura el navegador o `ALL_PROXY=socks5://127.0.0.1:1080` para salir a internet **desde** la red del bastion.
+
+## Casos practicos
+
+1. **Adminer / Grafana internos** sin abrir el puerto al mundo:
+
+```bash
+ssh -N -L 3000:10.0.1.50:3000 bastion
+# Abrir http://127.0.0.1:3000
+```
+
+2. **Copiar logs de incidente**:
+
+```bash
+scp prod-api:/var/log/app/error.log ./incident-$(date +%F).log
+```
+
+3. **Despliegue simple de estaticos**:
+
+```bash
+rsync -avz --delete ./dist/ deploy@prod-api:/var/www/app/
+```
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de scp sftp y tunnels.
-- No probar casos limite ni errores esperados.
+- Confundir `-L 5432:localhost:5432` pensando que `localhost` es tu PC: en `-L`, el host del medio se resuelve **desde el servidor SSH**.
+- Dejar tunnels abiertos con servicios sensibles en `0.0.0.0` local.
+- Usar `scp` recursivo sobre node_modules o .git enormes.
+- Olvidar `-N` y cerrar el tunnel al hacer `exit` del shell (a veces deseable; a veces no).
 
 ## Buenas practicas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Scripts idempotentes y logs claros.
-- Secrets fuera del repositorio.
+- Tunnels con `-N` en una terminal dedicada o servicio de usuario.
+- No publiques `-R` en produccion sin autenticacion adicional.
+- Prefiere VPN o mesh (WireGuard, Tailscale) si el acceso interno es diario y amplio.
+- Audita quien tiene capacidad de abrir tunnels a datos productivos.
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Scp Sftp Y Tunnels**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Monta un tunnel local a un servicio (Postgres, Redis o un HTTP interno).
+2. Conecta con el cliente contra `127.0.0.1`.
+3. Copia un archivo con `scp` y sincroniza un directorio con `rsync -avz`.
 
 ## Siguiente paso
 
-Continua con [Hardening Del Servidor](05-hardening-del-servidor.md).
+Continua con [Hardening del servidor](05-hardening-del-servidor.md).

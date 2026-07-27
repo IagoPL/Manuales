@@ -1,67 +1,106 @@
-# Archivos busqueda y texto
+# Archivos, busqueda y texto
 
-La terminal permite crear, mover, copiar, leer y buscar archivos rapidamente.
+Crear, copiar, mover, buscar y leer archivos desde la terminal es el dia a dia. Estos comandos existen en casi cualquier Linux y en Git Bash.
 
-## Crear y manipular
+## Crear y eliminar
 
 ```bash
-mkdir docs
-touch docs/notas.txt
-cp docs/notas.txt docs/copia.txt
-mv docs/copia.txt docs/notas-backup.txt
-rm docs/notas-backup.txt
+mkdir -p proyectos/app/src
+touch proyectos/app/README.md
+rm archivo.txt
+rm -r carpeta_vacia_o_con_contenido
+rm -rf carpeta    # peligroso: sin confirmacion
 ```
 
-## Leer archivos
+`-p` crea padres intermedios. Piensa dos veces antes de `rm -rf`.
+
+## Copiar y mover
 
 ```bash
-cat archivo.txt
-less archivo.txt
-head archivo.txt
-tail archivo.txt
-tail -f app.log
+cp archivo.txt backup.txt
+cp -r src/ src_backup/
+mv viejo.txt nuevo.txt
+mv archivo.txt ../otra-carpeta/
+```
+
+`mv` tambien renombra.
+
+## Ver contenido
+
+```bash
+cat archivo.txt           # todo
+less archivo.txt          # paginado (q para salir)
+head -n 20 archivo.txt
+tail -n 20 archivo.txt
+tail -f /var/log/syslog   # seguir en vivo
 ```
 
 ## Buscar archivos
 
 ```bash
 find . -name "*.md"
-find . -type f -name "*.log"
+find . -type f -name "docker-compose*.yml"
+find /var/log -name "*.log" -mtime -1
 ```
 
-## Buscar texto
+`fd` (si esta instalado) es mas rapido y amigable; `find` es el universal.
+
+## Buscar dentro de archivos
 
 ```bash
-grep "ERROR" app.log
 grep -R "TODO" .
+grep -Rn "function setup" src/
+grep -i "error" app.log
 ```
 
-Si tienes `rg` instalado, suele ser mas rapido:
+Opciones utiles: `-i` (case insensitive), `-n` (numero de linea), `-R` (recursivo), `-v` (invertir).
+
+Con ripgrep (si existe):
 
 ```bash
-rg "TODO"
+rg "Pendiente de completar" -g "*.md"
 ```
 
-## Contar
+## Espacio en disco
 
 ```bash
-wc archivo.txt
-wc -l archivo.txt
+du -sh .
+du -h --max-depth=1 . | sort -h
+df -h
 ```
+
+## Permisos basicos (Linux)
+
+```bash
+ls -l script.sh
+chmod u+x script.sh
+chmod 600 secreto.env
+```
+
+| Modo | Significado tipico |
+|------|--------------------|
+| `755` | Ejecutable / carpeta usable |
+| `644` | Archivo de texto normal |
+| `600` | Solo el dueno lee/escribe (secretos) |
+
+## Errores habituales
+
+- `rm -rf` con ruta mal expandida (`$VAR` vacia -> borra demasiado).
+- Usar `cat` en ficheros enormes (mejor `less` / `tail`).
+- Buscar con `grep -R` en `node_modules/` sin excluir (lento y ruidoso).
 
 ## Buenas practicas
 
-- Usa comillas si hay espacios en rutas.
-- Prefiere `less` para archivos largos.
-- Usa `tail -f` para seguir logs.
-- Revisa resultados antes de borrar en masa.
-
-## Errores comunes
-
-- Usar `rm` con una ruta equivocada.
-- Confundir mayusculas y minusculas en nombres.
-- Buscar en todo el sistema cuando basta con el proyecto.
+- Excluye dependencias: `grep -R --exclude-dir=node_modules`.
+- Nombra backups con fecha: `cp db.sqlite "db-$(date +%F).sqlite"`.
+- No copies secretos a directorios compartidos con permisos abiertos.
 
 ## Ejercicio
 
-Crea tres archivos `.txt`, busca uno por nombre y luego busca una palabra dentro de todos.
+1. Crea una jerarquia `lab/terminal/{a,b}` con `mkdir -p`.
+2. Genera tres `.txt`, busca la palabra `hola` con `grep`.
+3. Copia la carpeta con `cp -r` y mide tamano con `du -sh`.
+
+## Siguiente paso
+
+Continua con [Redirecciones pipes y variables](03-redirecciones-pipes-y-variables.md).

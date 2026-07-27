@@ -1,71 +1,281 @@
-# Introduccion E Inventarios
+# Ansible: introduccion e inventarios
 
-Este capitulo profundiza en **Introduccion E Inventarios** dentro del manual de **Ansible**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+Ansible automatiza **configuracion de sistemas** y despliegues por SSH (o WinRM) sin agente permanente en el nodo. Describes el estado deseado en YAML; el control node empuja cambios a los hosts del inventario.
 
-## Objetivo
+## Capitulos
 
-Al terminar este capitulo sabras explicar introduccion e inventarios, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+1. [Introduccion e inventarios](01-introduccion-e-inventarios.md)
+2. [Playbooks tasks y handlers](02-playbooks-tasks-y-handlers.md)
+3. [Variables facts y templates](03-variables-facts-y-templates.md)
+4. [Roles](04-roles.md)
+5. [Vault y secretos](05-vault-y-secretos.md)
+6. [Idempotencia](06-idempotencia.md)
+7. [Testing y buenas practicas](07-testing-y-buenas-practicas.md)
+
+## Que problema resuelve
+
+Sin automatizacion:
+
+- SSH manual a cada servidor, checklist en Notion.
+- "En staging esta bien" porque alguien aplico un fix a mano.
+- Drift entre nodos del mismo rol (nginx distinto, paquetes distintos).
+
+Con Ansible:
+
+```txt
+inventario + playbook -> ansible-playbook -> hosts en el estado declarado
+```
+
+No necesitas demonio en el target: solo Python (Linux) o PowerShell (Windows) y acceso remoto.
 
 ## Conceptos clave
 
-- **Introduccion E Inventarios:** pieza central de Ansible en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Introduccion:** aspecto a dominar dentro de Introduccion E Inventarios.
-- **Inventarios:** aspecto a dominar dentro de Introduccion E Inventarios.
+| Concepto | Descripcion |
+|----------|-------------|
+| **Control node** | Maquina donde ejecutas `ansible` / `ansible-playbook` |
+| **Managed node** | Host destino (SSH, puerto 22 por defecto) |
+| **Inventario** | Lista de hosts y grupos (`hosts.ini` o YAML) |
+| **Modulo** | Unidad de trabajo (`ping`, `apt`, `copy`, `template`) |
+| **Playbook** | YAML con plays: hosts + tasks |
+| **Ad-hoc** | Un modulo suelto sin playbook (`ansible all -m ping`) |
 
-## Desarrollo del tema
+## Instalacion
 
-### Enfoque practico
+### Linux (pipx / pip)
 
-1. Define el problema que resuelve **Introduccion E Inventarios**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
+```bash
+# Recomendado: entorno aislado
+python3 -m pip install --user pipx
+pipx install ansible
 
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
+# O en venv de proyecto
+python3 -m venv .venv
+source .venv/bin/activate
+pip install "ansible-core>=2.16,<2.18"
 ```
 
-## Ejemplo
+`ansible` (paquete meta) incluye colecciones; `ansible-core` es el motor minimo.
+
+### Windows (WSL2)
+
+Usa WSL2 con Ubuntu; el control node oficial en Windows nativo es limitado. Dentro de WSL:
+
+```bash
+sudo apt update
+sudo apt install -y python3-pip python3-venv
+python3 -m venv ~/.venvs/ansible
+source ~/.venvs/ansible/bin/activate
+pip install ansible-core
+```
+
+### macOS
+
+```bash
+brew install ansible
+# o pipx install ansible
+```
+
+Verifica:
+
+```bash
+ansible --version
+ansible-playbook --version
+```
+
+Fija version en CI (`requirements.txt` o image con tag concreto).
+
+## Inventario INI
+
+`inventory/hosts.ini`:
+
+```ini
+[web]
+web1.example.com
+web2.example.com ansible_host=10.0.1.12
+
+[db]
+db1.example.com ansible_port=2222
+
+[app:children]
+web
+db
+
+[web:vars]
+ansible_user=deploy
+app_env=staging
+```
+
+- `ansible_host` — IP si el nombre DNS no resuelve desde el control node.
+- `ansible_port` — SSH no estandar.
+- `:children` — grupo padre (agrupa otros grupos).
+- `:vars` — variables a nivel de grupo.
+
+## Inventario YAML
+
+`inventory/hosts.yml`:
 
 ```yaml
-# Ejemplo de configuracion (Ansible)
-version: "3.9"
-services:
-  app:
-    image: nginx:1.27
-    ports:
-      - "8080:80"
+all:
+  children:
+    web:
+      hosts:
+        web1.example.com:
+        web2.example.com:
+          ansible_host: 10.0.1.12
+      vars:
+        ansible_user: deploy
+        app_env: staging
+    db:
+      hosts:
+        db1.example.com:
+          ansible_port: 2222
+    app:
+      children:
+        web:
+        db:
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+YAML escala mejor con muchos hosts y variables anidadas.
 
-## Errores habituales
+## ansible.cfg minimo
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de introduccion e inventarios.
-- No probar casos limite ni errores esperados.
+En la raiz del proyecto:
 
-## Buenas practicas
+```ini
+[defaults]
+inventory = inventory/hosts.ini
+remote_user = deploy
+host_key_checking = True
+retry_files_enabled = False
+interpreter_python = auto_silent
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Scripts idempotentes y logs claros.
-- Secrets fuera del repositorio.
+[privilege_escalation]
+become = True
+become_method = sudo
+become_user = root
+```
+
+Prioridad de config: `ANSIBLE_CONFIG` > `./ansible.cfg` > `~/.ansible.cfg` > `/etc/ansible/ansible.cfg`.
+
+## Primer contacto: modulo ping
+
+`ping` no es ICMP: comprueba que Ansible puede conectar, autenticar y ejecutar Python en el remoto.
+
+```bash
+# Clave SSH cargada (ssh-agent) o IdentityFile en inventory
+ansible all -i inventory/hosts.ini -m ping
+```
+
+Salida esperada:
+
+```txt
+web1.example.com | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+```
+
+Ad-hoc utiles:
+
+```bash
+ansible web -m setup -a "filter=ansible_distribution*"
+ansible web -m command -a "uptime" --become
+ansible db -m shell -a "systemctl is-active postgresql" --become
+```
+
+Prefiere modulos dedicados (`apt`, `systemd`, `copy`) frente a `shell`/`command` cuando existan.
+
+## Inventario dinamico (idea)
+
+En cloud, genera hosts desde la API:
+
+```bash
+# Ejemplo conceptual: plugin aws_ec2 (coleccion amazon.aws)
+# inventory/aws_ec2.yml
+plugin: amazon.aws.aws_ec2
+regions:
+  - eu-west-1
+filters:
+  tag:Role: web
+keyed_groups:
+  - key: tags.Env
+    prefix: env
+```
+
+```bash
+ansible-inventory -i inventory/aws_ec2.yml --graph
+```
+
+El inventario estatico basta para lab y muchos on-prem; dinamico evita listas obsoletas.
+
+## Estructura de proyecto tipica
+
+```txt
+ansible-demo/
+  ansible.cfg
+  inventory/
+    hosts.ini
+    group_vars/
+      web.yml
+    host_vars/
+      web1.example.com.yml
+  playbooks/
+    site.yml
+  roles/
+    nginx/
+  requirements.yml
+```
+
+## Flujo de trabajo
+
+```txt
+editar inventario/playbook -> ansible-playbook --check -> apply -> commit
+```
+
+Comandos base:
+
+```bash
+ansible-inventory -i inventory/hosts.ini --list
+ansible-playbook -i inventory/hosts.ini playbooks/site.yml --check --diff
+ansible-playbook -i inventory/hosts.ini playbooks/site.yml
+```
+
+`--check` simula (limitado por modulos); `--diff` muestra cambios en ficheros.
+
+## Ansible vs alternativas
+
+| Herramienta | Enfoque |
+|-------------|---------|
+| **Ansible** | Push por SSH, YAML, sin agente |
+| **Terraform** | Provisionar infra (APIs cloud); complementa Ansible |
+| **Puppet / Chef** | Agente + pull, mas ops tradicionales |
+| **Salt** | Agente o SSH; mas orientado a eventos |
+
+Patron habitual: Terraform crea VMs; Ansible instala paquetes, configs y apps.
+
+## Buenas practicas iniciales
+
+- Un repo por producto o plataforma; inventario versionado (sin secretos).
+- Grupos por **rol** (`web`, `db`) y por **entorno** (`staging`, `prod`) si hace falta.
+- SSH por clave; usuario dedicado (`deploy`) con sudo acotado.
+- No desactives `host_key_checking` en produccion salvo bootstrap controlado.
+- Documenta en README como obtener acceso al inventario (VPN, bastion).
+
+## Errores comunes
+
+- Inventario con hostname que no resuelve y sin `ansible_host`.
+- `ansible all -m ping` falla por Python ausente en el target (instala `python3`).
+- Mezclar `become` global sin necesidad (rompe hosts sin sudo).
+- Commitear `ansible.cfg` con `host_key_checking = False` como default de equipo.
+- Usar `localhost` en inventario pensando que es remoto (es el control node).
 
 ## Ejercicios
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Introduccion E Inventarios**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Instala `ansible-core`, crea `inventory/hosts.ini` con un host real o un contenedor SSH, y obten `pong` con `-m ping`.
+2. Anade grupos `web` y `db`, un grupo hijo `app`, y lista el grafo con `ansible-inventory --graph`.
+3. Ejecuta `ansible web -m setup` y localiza `ansible_os_family` y `ansible_memtotal_mb`.
+4. Escribe un `ansible.cfg` de proyecto que apunte a tu inventario y usuario SSH.
 
 ## Siguiente paso
 
-Continua con [Playbooks Tasks Y Handlers](02-playbooks-tasks-y-handlers.md).
+El [capitulo 2](02-playbooks-tasks-y-handlers.md) introduce plays, tasks y handlers (reinicios solo cuando hace falta).

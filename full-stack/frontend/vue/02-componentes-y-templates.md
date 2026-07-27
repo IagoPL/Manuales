@@ -1,70 +1,166 @@
-# Componentes Y Templates
+# Componentes y templates
 
-Este capitulo profundiza en **Componentes Y Templates** dentro del manual de **Vue**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+Un componente Vue es una pieza reutilizable de UI: plantilla + logica + estilos. Las plantillas declaran que se renderiza; las directivas (`v-if`, `v-for`, `v-bind`, `v-on`) conectan el DOM con el estado reactivo.
 
-## Objetivo
+## Anatomia de un SFC
 
-Al terminar este capitulo sabras explicar componentes y templates, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import StatusBadge from './StatusBadge.vue'
 
-## Conceptos clave
+const titulo = ref('Pedidos')
+</script>
 
-- **Componentes Y Templates:** pieza central de Vue en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Componentes:** aspecto a dominar dentro de Componentes Y Templates.
-- **Templates:** aspecto a dominar dentro de Componentes Y Templates.
+<template>
+  <section>
+    <h2>{{ titulo }}</h2>
+    <StatusBadge label="activo" />
+  </section>
+</template>
 
-## Desarrollo del tema
+<style scoped>
+section {
+  padding: 1rem;
+}
+</style>
+```
 
-### Enfoque practico
+`scoped` limita el CSS a ese componente y evita fugas de estilos.
 
-1. Define el problema que resuelve **Componentes Y Templates**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
+## Interpolacion y atributos
 
-### Flujo recomendado
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const producto = ref({ id: 12, nombre: 'Teclado', stock: 3 })
+const imagen = '/img/teclado.png'
+</script>
+
+<template>
+  <article>
+    <h3>{{ producto.nombre }}</h3>
+    <img :src="imagen" :alt="producto.nombre" />
+    <p v-text="`Stock: ${producto.stock}`"></p>
+  </article>
+</template>
+```
+
+`:src` es atajo de `v-bind:src`. Usa `{{ }}` para texto; evita `v-html` con datos no confiables (XSS).
+
+## Condicionales y listas
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const cargando = ref(false)
+const items = ref([
+  { id: 1, nombre: 'Vue' },
+  { id: 2, nombre: 'Pinia' },
+])
+</script>
+
+<template>
+  <p v-if="cargando">Cargando...</p>
+  <ul v-else>
+    <li v-for="item in items" :key="item.id">
+      {{ item.nombre }}
+    </li>
+  </ul>
+  <p v-show="items.length === 0">Sin resultados</p>
+</template>
+```
+
+- `v-if` monta/desmonta el nodo; `v-show` solo cambia `display`.
+- `:key` estable (id) es obligatorio en listas para un diff correcto.
+
+## Eventos y modificadores
+
+```vue
+<script setup lang="ts">
+const onSubmit = (event: Event) => {
+  event.preventDefault()
+  console.log('enviar')
+}
+</script>
+
+<template>
+  <form @submit.prevent="onSubmit">
+    <button type="submit">Guardar</button>
+  </form>
+  <input @keyup.enter="onSubmit" />
+</template>
+```
+
+Modificadores utiles: `.prevent`, `.stop`, `.once`, `.enter`.
+
+## Componentes hijos y slots
+
+```vue
+<!-- CardBox.vue -->
+<script setup lang="ts">
+defineProps<{ titulo: string }>()
+</script>
+
+<template>
+  <div class="card">
+    <header>{{ titulo }}</header>
+    <slot />
+    <footer>
+      <slot name="footer" />
+    </footer>
+  </div>
+</template>
+```
+
+Uso:
+
+```vue
+<CardBox titulo="Detalle">
+  <p>Contenido principal</p>
+  <template #footer>
+    <button type="button">Cerrar</button>
+  </template>
+</CardBox>
+```
+
+Los slots permiten inyectar markup sin acoplar el hijo al padre.
+
+## Jerarquia recomendada
 
 ```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
+views/      -> paginas (rutas)
+components/ -> piezas reutilizables (botones, cards, formularios)
+composables/ -> logica compartida (cap. 4)
 ```
 
-## Ejemplo
-
-```javascript
-// Ejemplo en Vue
-const config = { debug: true, retries: 3 };
-
-export function setup() {
-  console.log('Inicializando', config);
-}
-```
-
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
-
-## Errores habituales
-
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de componentes y templates.
-- No probar casos limite ni errores esperados.
+Una view orquesta; un component presenta.
 
 ## Buenas practicas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Componentiza y evita estado global innecesario.
-- Prueba interacciones criticas.
+- Un solo proposito por componente; si el template supera ~150 lineas, divide.
+- Prefiere props + emits a mutar estado del padre desde el hijo.
+- Usa `scoped` o CSS modules; evita selectores globales salvo tokens de diseno.
+- Nombra eventos en kebab-case en el template (`@update:model-value`).
+- No uses `v-if` y `v-for` en el mismo elemento (envuelve con `<template>`).
+
+## Errores habituales
+
+- Olvidar `:key` en `v-for` o usar el indice cuando la lista se reordena.
+- Confiar en `v-html` con HTML del usuario.
+- Componentes "dios" que mezclan fetch, formulario y tabla.
+- Importar componentes sin registrarlos (en `script setup` el import ya registra).
+- Estilos globales que pisan clases de librerias UI.
 
 ## Ejercicios
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Componentes Y Templates**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Crea `ProductList.vue` con `v-for` sobre un array de productos y `:key` por id.
+2. Anade `v-if` para estado vacio y `v-show` para un aviso de stock bajo.
+3. Extrae un `ProductItem.vue` y usa un slot para acciones (editar/borrar).
+4. Sustituye un `@click` + `preventDefault` manual por `@submit.prevent`.
 
 ## Siguiente paso
 
-Continua con [Reactividad](03-reactividad.md).
+En el [capitulo 3](03-reactividad.md) veras `ref`, `reactive`, `computed`, `watch` y como Vue detecta cambios.

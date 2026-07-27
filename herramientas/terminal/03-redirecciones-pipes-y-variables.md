@@ -1,68 +1,107 @@
-# Redirecciones pipes y variables
+# Redirecciones, pipes y variables
 
-Las redirecciones conectan comandos con archivos. Los pipes conectan comandos entre si.
+La potencia del shell esta en **combinar** programas pequenos. Las redirecciones mueven stdin/stdout/stderr; los pipes conectan la salida de un comando con la entrada del siguiente.
 
-## Redirigir salida
-
-Sobrescribir:
+## stdout y stderr
 
 ```bash
-ls > archivos.txt
+comando > salida.txt    # sobrescribe stdout
+comando >> salida.txt   # append stdout
+comando 2> errores.txt  # solo stderr
+comando > todo.txt 2>&1 # stdout+stderr al mismo archivo
 ```
 
-Anadir:
+Ejemplo:
 
 ```bash
-ls >> archivos.txt
-```
-
-## Redirigir errores
-
-```bash
-comando 2> errores.log
-```
-
-Salida y errores:
-
-```bash
-comando > salida.log 2> errores.log
+ls /existe /no-existe >out.txt 2>err.txt
 ```
 
 ## Pipes
 
 ```bash
-ps aux | grep nginx
-cat app.log | grep ERROR | wc -l
+cat access.log | grep " 500 " | wc -l
+ps aux | grep node | grep -v grep
+docker ps | awk '{print $1,$2}'
+```
+
+Patron mental:
+
+```txt
+datos -> filtro -> filtro -> resumen
 ```
 
 ## Variables de entorno
 
 ```bash
-echo $HOME
-echo $PATH
-export API_URL="https://api.example.com"
-echo $API_URL
+export NODE_ENV=production
+echo "$NODE_ENV"
+echo "Home es $HOME"
 ```
 
-Usar variable en comando:
+Listar:
 
 ```bash
-curl "$API_URL/health"
+env | sort
+printenv PATH
 ```
+
+Variables utiles: `PATH`, `HOME`, `USER`, `PWD`.
+
+En un solo comando:
+
+```bash
+NODE_ENV=test npm test
+```
+
+## Sustitucion de comandos
+
+```bash
+echo "Hoy es $(date +%F)"
+files=$(ls | wc -l)
+echo "Entradas: $files"
+```
+
+## Comillas
+
+```bash
+echo "$HOME"      # expande
+echo '$HOME'      # literal
+echo "Hola $USER"
+```
+
+Usa comillas dobles cuando haya espacios:
+
+```bash
+cp "$archivo" "$destino"
+```
+
+## Historial y expansion
+
+```bash
+history | tail
+!!          # repite ultimo comando
+sudo !!     # tipico: olvidaste sudo
+```
+
+## Errores habituales
+
+- `comando > file 2>&1` vs `comando 2>&1 > file` (el orden importa).
+- Olvidar comillas con rutas con espacios.
+- Hacer `export SECRET=...` y luego pegar el historial en un ticket.
 
 ## Buenas practicas
 
-- Usa `>>` si no quieres sobrescribir.
-- Pon comillas alrededor de variables con rutas o URLs.
-- Divide pipelines complejas en pasos al depurar.
-- Guarda logs de comandos largos.
-
-## Errores comunes
-
-- Usar `>` y perder contenido anterior.
-- No redirigir errores y creer que no hubo salida.
-- Olvidar que variables exportadas viven solo en la sesion actual.
+- En scripts, `set -euo pipefail` (capitulo siguiente).
+- No imprimas secretos; redirige logs con cuidado.
+- Prefiere pipes cortos y legibles a monstruos de una linea sin comentarios.
 
 ## Ejercicio
 
-Lista archivos en un directorio, guarda la salida, busca una extension concreta y cuenta resultados con `wc -l`.
+1. Guarda `ls -la` en un archivo y los errores de un path inventado en otro.
+2. Cuenta lineas de un log (o de un `.md`) que contengan `error` (case insensitive).
+3. Exporta una variable y usala en un `echo`.
+
+## Siguiente paso
+
+Continua con [Scripts basicos](04-scripts-basicos.md).

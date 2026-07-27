@@ -1,67 +1,137 @@
-# Api De Ollama
+# API de Ollama
 
-Este capitulo profundiza en **Api De Ollama** dentro del manual de **Ollama**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+El daemon escucha en `http://127.0.0.1:11434` y expone endpoints REST. La CLI (`ollama run`) y las apps de terceros consumen la misma API.
 
-## Objetivo
+## Endpoints principales
 
-Al terminar este capitulo sabras explicar api de ollama, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+| Metodo | Ruta | Uso |
+|--------|------|-----|
+| POST | `/api/generate` | Complecion a partir de un prompt |
+| POST | `/api/chat` | Conversacion con roles (`system`/`user`/`assistant`) |
+| POST | `/api/embeddings` | Vector de un texto |
+| GET | `/api/tags` | Modelos instalados |
+| POST | `/api/pull` | Descargar modelo |
+| POST | `/api/show` | Metadatos del modelo |
+| DELETE | `/api/delete` | Borrar modelo |
 
-## Conceptos clave
+Base URL por defecto: `http://localhost:11434`.
 
-- **Api De Ollama:** pieza central de Ollama en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Api:** aspecto a dominar dentro de Api De Ollama.
-- **Ollama:** aspecto a dominar dentro de Api De Ollama.
-
-## Desarrollo del tema
-
-### Enfoque practico
-
-1. Define el problema que resuelve **Api De Ollama**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
-```
-
-## Ejemplo
+## /api/generate
 
 ```bash
-#!/usr/bin/env bash
-set -euo pipefail
-echo "Tarea: Api De Ollama"
+curl http://localhost:11434/api/generate -d "{
+  \"model\": \"llama3.2:1b\",
+  \"prompt\": \"Escribe un haiku sobre redes\",
+  \"stream\": false
+}"
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+Respuesta resumida:
+
+```json
+{
+  "model": "llama3.2:1b",
+  "response": "...",
+  "done": true,
+  "total_duration": 1234567890,
+  "eval_count": 42
+}
+```
+
+Con `"stream": true` (default) recibes lineas NDJSON; una por token/chunk hasta `"done": true`.
+
+## /api/chat
+
+Preferible para asistentes y historial:
+
+```bash
+curl http://localhost:11434/api/chat -d "{
+  \"model\": \"llama3.2:1b\",
+  \"messages\": [
+    {\"role\": \"system\", \"content\": \"Responde en espanol, breve.\"},
+    {\"role\": \"user\", \"content\": \"Que es un contenedor Docker?\"}
+  ],
+  \"stream\": false
+}"
+```
+
+Campos utiles en el body:
+
+| Campo | Efecto |
+|-------|--------|
+| `messages` | Historial de la conversacion |
+| `options.temperature` | Creatividad (0 = mas determinista) |
+| `options.num_ctx` | Ventana de contexto en tokens |
+| `options.num_predict` | Maximo de tokens generados |
+| `format` | `"json"` para forzar salida JSON |
+| `keep_alive` | Tiempo que el modelo queda en memoria |
+
+Ejemplo con opciones:
+
+```json
+{
+  "model": "llama3.2:1b",
+  "messages": [{"role": "user", "content": "Devuelve {\"ok\": true}"}],
+  "format": "json",
+  "stream": false,
+  "options": {
+    "temperature": 0,
+    "num_ctx": 4096
+  },
+  "keep_alive": "5m"
+}
+```
+
+## Compatibilidad OpenAI
+
+Ollama ofrece rutas compatibles en `/v1`:
+
+```bash
+curl http://localhost:11434/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d "{
+    \"model\": \"llama3.2:1b\",
+    \"messages\": [{\"role\": \"user\", \"content\": \"Hola\"}]
+  }"
+```
+
+Muchas librerias OpenAI funcionan cambiando `base_url` a `http://localhost:11434/v1` y cualquier `api_key` (p. ej. `ollama`).
+
+## Streaming en bash
+
+```bash
+curl -N http://localhost:11434/api/chat -d "{
+  \"model\": \"llama3.2:1b\",
+  \"messages\": [{\"role\": \"user\", \"content\": \"Cuenta hasta 5\"}],
+  \"stream\": true
+}"
+```
+
+Cada linea es un JSON parcial; concatena `message.content` en el cliente.
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de api de ollama.
-- No probar casos limite ni errores esperados.
+- Olvidar `"stream": false` y parsear mal la respuesta como un unico JSON.
+- Enviar historial enorme sin recortar: satura `num_ctx` y degrada calidad.
+- Usar `/api/generate` cuando necesitas roles y system prompt claros.
+- Confundir puerto o host tras cambiar `OLLAMA_HOST`.
+- Esperar el mismo schema exacto que OpenAI en todas las rutas (usa `/v1` si hace falta).
 
 ## Buenas practicas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Fija version de modelo y dataset.
-- Evalua antes de desplegar.
+- En servidores y scripts, desactiva stream o implementa parser NDJSON robusto.
+- Limita `num_predict` en APIs publicas internas para evitar respuestas interminables.
+- Usa `temperature` baja para extraccion y JSON; mas alta para brainstorming.
+- Controla `keep_alive` segun carga (libera VRAM cuando no hay trafico).
+- Registra `eval_count` y duraciones para medir coste local (tiempo/GPU).
 
 ## Ejercicios
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Api De Ollama**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Llama a `/api/generate` y `/api/chat` con el mismo enunciado; compara el body.
+2. Activa `"format": "json"` y valida que la salida sea JSON parseable.
+3. Prueba `temperature` 0 y 1.2 con el mismo prompt creativo.
+4. Consume `/v1/chat/completions` con `curl` como si fuera OpenAI.
 
 ## Siguiente paso
 
-Continua con [Modelfiles](04-modelfiles.md).
+El [capitulo 4](04-modelfiles.md) ensena a crear modelos propios con system prompt, parametros y adaptadores.

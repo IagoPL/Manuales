@@ -1,65 +1,86 @@
-# Despliegue
+# Despliegue de Vue
 
-Este capitulo profundiza en **Despliegue** dentro del manual de **Vue**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+Una app Vue con Vite se compila a estaticos (HTML/JS/CSS). El despliegue es servir esa carpeta `dist/` tras `vite build`, con routing correcto si usas Vue Router en modo history.
 
-## Objetivo
+## Build
 
-Al terminar este capitulo sabras explicar despliegue, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
-
-## Conceptos clave
-
-- **Despliegue:** pieza central de Vue en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Despliegue:** aspecto a dominar dentro de Despliegue.
-
-## Desarrollo del tema
-
-### Enfoque practico
-
-1. Define el problema que resuelve **Despliegue**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
+```bash
+npm run build
+# genera dist/
+npm run preview   # sirve dist localmente
 ```
 
-## Ejemplo
+Variables de entorno: solo las prefijadas con `VITE_` se exponen al cliente.
 
-```javascript
-// Ejemplo en Vue
-const config = { debug: true, retries: 3 };
+```bash
+# .env.production
+VITE_API_URL=https://api.ejemplo.com
+```
 
-export function setup() {
-  console.log('Inicializando', config);
+```typescript
+const api = import.meta.env.VITE_API_URL
+```
+
+## SPA y el server
+
+Con `createWebHistory`, el servidor debe reescribir rutas a `index.html`:
+
+Nginx:
+
+```nginx
+location / {
+  try_files $uri $uri/ /index.html;
 }
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+Si no, un refresh en `/users/1` devuelve 404.
+
+## Opciones de hosting
+
+| Destino | Notas |
+|---------|-------|
+| Netlify / Cloudflare Pages / Vercel | Simple para SPA |
+| S3 + CloudFront | Estaticos a escala |
+| Nginx / Caddy en VPS | Control total |
+| Contenedor Nginx | Mismo artefacto en k8s |
+
+Dockerfile minimo:
+
+```dockerfile
+FROM node:22-alpine AS build
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+FROM nginx:1.27-alpine
+COPY --from=build /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+```
+
+## Checklist pre-prod
+
+1. `vite build` sin warnings criticos.
+2. API URL de produccion correcta.
+3. HTTPS y cabeceras basicas.
+4. Sourcemaps solo si los necesitas (y privados).
+5. Cache de assets hasheados (`max-age` largo).
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de despliegue.
-- No probar casos limite ni errores esperados.
+- Llamar APIs relativas sin proxy/CORS en prod.
+- Olvidar `try_files` para history mode.
+- Meter secretos en `VITE_*` (todo es publico en el bundle).
 
 ## Buenas practicas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Componentiza y evita estado global innecesario.
-- Prueba interacciones criticas.
+- Un artefacto `dist` por commit/SHA.
+- Healthcheck del hosting + monitorizacion de errores front (Sentry, etc.).
+- Prefiere `createWebHistory` + server config; `hash` mode solo si no controlas el server.
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Despliegue**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Build de tu app y sirvela con `vite preview`.
+2. Configura Nginx (o Netlify redirects) para history mode.
+3. Parametriza `VITE_API_URL` entre staging y prod.
