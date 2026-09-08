@@ -1,71 +1,85 @@
-# Introduccion A Php Y Entorno
+# Introducción a PHP y entorno
 
-Este capitulo profundiza en **Introduccion A Php Y Entorno** dentro del manual de **PHP**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+PHP es un lenguaje pensado para ejecutarse **en el servidor**: el intérprete genera HTML, JSON o texto y el cliente solo ve el resultado. No corre en el navegador (salvo que lo uses como CLI en tu máquina).
 
-## Objetivo
+Documentación oficial: [manual PHP](https://www.php.net/manual/es/), [servidor web integrado](https://www.php.net/manual/es/features.commandline.webserver.php), [uso de la CLI](https://www.php.net/manual/es/features.commandline.php).
 
-Al terminar este capitulo sabras explicar introduccion a php y entorno, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+## CLI frente a servidor web
 
-## Conceptos clave
+| Modo | Qué hace | Para qué |
+| --- | --- | --- |
+| **CLI** (`php script.php`) | Ejecuta un fichero y escribe en stdout. | Scripts, cron, comprobar la instalación. |
+| **Módulo / php-fpm + Apache/Nginx** | PHP responde peticiones HTTP reales. | Producción. |
+| **Servidor integrado** (`php -S`) | Un proceso de desarrollo que sirve el directorio actual. | Probar formularios en local. **No es un servidor de producción.** |
 
-- **Introduccion A Php Y Entorno:** pieza central de PHP en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Introduccion:** aspecto a dominar dentro de Introduccion A Php Y Entorno.
-- **Php:** aspecto a dominar dentro de Introduccion A Php Y Entorno.
-- **Entorno:** aspecto a dominar dentro de Introduccion A Php Y Entorno.
+El manual oficial lo deja claro: el built-in server es para desarrollo y demos controladas; es un solo proceso (en versiones recientes puede forkar workers, pero sigue sin ser un servidor de internet). En público usas php-fpm (o equivalente) detrás de Nginx/Apache.
 
-## Desarrollo del tema
+## Comprobar la instalación
 
-### Enfoque practico
-
-1. Define el problema que resuelve **Introduccion A Php Y Entorno**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
+```bash
+php -v
 ```
 
-## Ejemplo
+Debes ver una línea `PHP 8.x...`. Si el comando no existe, instala el paquete de tu distro o el binario de [php.net/downloads](https://www.php.net/downloads.php). Este manual asume **PHP 8**.
+
+Ejecutar un script:
+
+```bash
+php hola.php
+```
+
+## Fichero mínimo
+
+Un fichero PHP empieza por la etiqueta de apertura. Lo que va **fuera** de `<?php ... ?>` se envía tal cual (HTML). En CLI suele bastar un fichero solo con PHP:
 
 ```php
 <?php
-// Ejemplo relacionado con Introduccion A Php Y Entorno
-$data = ['id' => 1, 'name' => 'Ejemplo'];
-foreach ($data as $key => $value) {
-    echo "$key: $value\n";
-}
+
+$name = 'Iago';
+
+echo "Hola, $name\n";
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+Guárdalo como `hola.php` y lánzalo con `php hola.php`. `echo` escribe a la salida; `"Hola, $name\n"` interpola la variable (el capítulo 2 cubre tipos y comillas).
+
+Servidor de desarrollo (desde el directorio del proyecto):
+
+```bash
+php -S localhost:8080
+```
+
+Abre `http://127.0.0.1:8080/hola.php`. Eso **no** sustituye a Nginx ni a un hosting. No lo expongas a una red pública.
+
+## Cuándo encaja PHP
+
+- Páginas o APIs donde el servidor arma la respuesta.
+- Código existente (CMS, paneles, scripts de mantenimiento).
+- Un lenguaje con un runtime único: no hay un “bundle” de frontend.
+
+No es el único camino: Node, Python o Go cubren el mismo hueco. PHP brilla cuando quieres HTML generado en servidor con poco andamiaje. Los frameworks (Laravel, Symfony) **abstraen** enrutado, plantillas y ORM; este manual enseña el lenguaje, no un framework.
+
+El resto del recorrido: tipos → control y funciones → arrays → HTTP/formularios → sesiones → ficheros → PDO → OOP.
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de introduccion a php y entorno.
-- No probar casos limite ni errores esperados.
+- Tratar `php -S` como despliegue.
+- Subir un `.php` y esperar que el navegador lo interprete sin un SAPI (Apache/php-fpm/Caddy, etc.).
+- Mezclar HTML y lógica sin un plan: más adelante (capítulos 11–12) se separa; aquí basta con scripts claros.
+- Copiar recetas de PHP 5 (`mysql_query`, `each()`, `create_function`).
 
-## Buenas practicas
+## Buenas prácticas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Valida entradas y maneja errores con codigos claros.
-- Separa capas (controlador, servicio, datos).
+- Comprueba `php -v` en cada máquina (local, CI, servidor).
+- Un fichero = un propósito al empezar.
+- En web, el DocumentRoot no debe ser “todo el disco”: solo lo público.
+- Producción: PHP-FPM + proxy, no el servidor integrado.
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Introduccion A Php Y Entorno**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Crea `hola.php` con el snippet de arriba y ejecútalo en CLI.
+2. Cambia `$name` y vuelve a lanzarlo.
+3. Arranca `php -S localhost:8080` y ábrelo en el navegador. Luego **apágalo**. No lo dejes escuchando en `0.0.0.0` en una red compartida.
 
 ## Siguiente paso
 
-Continua con [Sintaxis Basica Y Tipos De Datos](02-sintaxis-basica-y-tipos-de-datos.md).
+Continúa con [Sintaxis básica y tipos de datos](02-sintaxis-basica-y-tipos-de-datos.md).
