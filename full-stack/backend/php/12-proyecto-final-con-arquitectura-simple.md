@@ -1,67 +1,135 @@
-# Proyecto Final Con Arquitectura Simple
+# Proyecto final con arquitectura simple
 
-Este capitulo profundiza en **Proyecto Final Con Arquitectura Simple** dentro del manual de **PHP**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+Cierra el manual: una app **pequeña** de notas que no vive en un único `contacto.php`. No es Laravel, ni un contenedor de DI, ni hexagonal. El objetivo es **separar** HTTP, dominio, SQL y HTML.
 
-## Objetivo
+Documentación: reutiliza [PDO](https://www.php.net/manual/es/book.pdo.php), [sesiones](https://www.php.net/manual/es/book.session.php) y lo ya citado en 05–11.
 
-Al terminar este capitulo sabras explicar proyecto final con arquitectura simple, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+## Qué integra
 
-## Conceptos clave
+| Pieza | Dónde |
+| --- | --- |
+| HTTP GET/POST, validación, PRG | Front controller + formularios |
+| Sesión y login básico | Igual que el cap. 6, con CSRF del 11 |
+| PDO + prepared | `NotaRepositorioPdo` |
+| OOP | `Nota`, interfaz, `Database` |
+| Errores | 404 de negocio vs 500 + `error_log` |
+| Ficheros | SQLite y logs **fuera** de `public/` |
 
-- **Proyecto Final Con Arquitectura Simple:** pieza central de PHP en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Proyecto:** aspecto a dominar dentro de Proyecto Final Con Arquitectura Simple.
-- **Final:** aspecto a dominar dentro de Proyecto Final Con Arquitectura Simple.
-- **Con:** aspecto a dominar dentro de Proyecto Final Con Arquitectura Simple.
+Un usuario autenticado lista, crea y ve notas. Sin router de 15 clases: `match` sobre `$_SERVER['REQUEST_URI']` (path) o un `?r=`.
 
-## Desarrollo del tema
+## Estructura
 
-### Enfoque practico
-
-1. Define el problema que resuelve **Proyecto Final Con Arquitectura Simple**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
+```text
+notas/
+├── public/                 ← DocumentRoot (php -S localhost:8080 -t public)
+│   └── index.php
+├── src/
+│   ├── Database.php
+│   ├── Nota.php
+│   └── NotaRepositorioPdo.php
+├── templates/
+│   ├── layout.php
+│   ├── lista.php
+│   └── form.php
+├── data/                   ← no servido
+│   └── notas.sqlite
+└── config/
+    └── app.php             ← lee getenv; no commitees secretos
 ```
 
-## Ejemplo
+`php -S` del capítulo 1, con `-t public`, para que nadie pida `/src/Database.php` por HTTP.
+
+## Responsabilidades
+
+**`config/app.php`** — DSN y opciones de sesión. Placeholder local:
 
 ```php
 <?php
-// Ejemplo relacionado con Proyecto Final Con Arquitectura Simple
-$data = ['id' => 1, 'name' => 'Ejemplo'];
-foreach ($data as $key => $value) {
-    echo "$key: $value\n";
+
+declare(strict_types=1);
+
+return [
+    'dsn' => getenv('NOTAS_DSN') ?: ('sqlite:' . dirname(__DIR__) . '/data/notas.sqlite'),
+    'db_user' => getenv('NOTAS_DB_USER') ?: null,
+    'db_pass' => getenv('NOTAS_DB_PASS') ?: null,
+];
+```
+
+En un servidor real, `NOTAS_DB_PASS` sale del entorno, no de un string en git.
+
+**`src/Database.php`** — un `PDO` con `ERRMODE_EXCEPTION` (capítulo 8). Nada de HTML.
+
+**`src/Nota.php` + repositorio** — capítulo 9.
+
+**`templates/*.php`** — solo presentación; cada variable pasa por `h()` (capítulo 11).
+
+**`public/index.php`** — arranque:
+
+```php
+<?php
+
+declare(strict_types=1);
+
+session_start([
+    'cookie_httponly' => true,
+    'cookie_samesite' => 'Lax',
+    'cookie_secure' => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+    'use_strict_mode' => true,
+]);
+
+$config = require dirname(__DIR__) . '/config/app.php';
+$pdo = Database::conectar($config);
+$repo = new NotaRepositorioPdo($pdo);
+
+$ruta = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+
+try {
+    match (true) {
+        $ruta === '/' && ($_SERVER['REQUEST_METHOD'] ?? '') === 'GET'
+            => require dirname(__DIR__) . '/templates/lista.php',
+        $ruta === '/nueva' && ($_SERVER['REQUEST_METHOD'] ?? '') === 'POST'
+            => altaNota($repo), // valida, csrfOk, PRG a /
+        default => http_response_code(404),
+    };
+} catch (PDOException $e) {
+    error_log('notas: ' . $e->getMessage());
+    http_response_code(500);
+    echo 'Error interno';
 }
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+`altaNota` (en un fichero `src/` o en el mismo index si aún es corto): CSRF + `trim` + longitudes + `$repo->guardar` + `header(..., 303)` + `exit`. Autoload: `require` explícitos o un `spl_autoload_register` de tres líneas; **no** hace falta Composer en este ejercicio (Composer es otro tema).
+
+No construyas: event bus, ORM, router con middleware stack, contenedor. Si la `match` crece, extrae funciones; no anticipes un framework.
+
+## Arranque local
+
+```bash
+mkdir -p notas/{public,src,templates,data,config}
+# crea tablas SQLite una vez (script CLI, no desde el navegador)
+php -S localhost:8080 -t notas/public
+```
+
+Sigue **sin** ser producción (capítulo 1).
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de proyecto final con arquitectura simple.
-- No probar casos limite ni errores esperados.
+- DocumentRoot = raíz del repo (`src/` descargable).
+- Password de MySQL en `Database.php` commiteado.
+- Plantilla que imprime `$_POST` o el mensaje PDO.
+- Un `index.php` de 800 líneas “porque aún no es un framework”.
 
-## Buenas practicas
+## Buenas prácticas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Valida entradas y maneja errores con codigos claros.
-- Separa capas (controlador, servicio, datos).
+- Un sitio de entrada (`public/`).
+- Dependencias hacia adentro: plantilla → objetos; repositorio → PDO; nadie al revés.
+- Secretos en el entorno; `data/` y logs ignorados por git.
+- Cuando esto se quede corto, *entonces* un framework (Laravel, Symfony) reutiliza las mismas ideas.
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Proyecto Final Con Arquitectura Simple**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Monta la carpeta `notas/` y sirve solo `public/`.
+2. Implementa lista + alta con CSRF y `h()`.
+3. Fuerza un DSN malo y comprueba que el usuario ve “Error interno”, no el stack.
+
+Fin del manual PHP.

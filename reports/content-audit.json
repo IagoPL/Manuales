@@ -7,21 +7,21 @@
     "priorities": {
       "P0": 0,
       "P1": 0,
-      "P2": 111,
-      "P3": 631
+      "P2": 105,
+      "P3": 637
     },
     "flags": {
       "known_outdated_pattern": 0,
-      "generic_template": 103,
-      "generic_example": 86,
-      "duplicated_code": 111,
+      "generic_template": 97,
+      "generic_example": 80,
+      "duplicated_code": 105,
       "very_short": 196,
       "high_freshness_risk": 141
     },
     "trackedTemplatePhrase": {
       "pattern": "Este capitulo profundiza",
-      "chapters": 103,
-      "manuals": 20,
+      "chapters": 97,
+      "manuals": 19,
       "areas": [
         "data-engineering",
         "full-stack",
@@ -30,11 +30,11 @@
     },
     "lengthBands": {
       "very_short": 196,
-      "short": 411,
-      "normal": 132,
+      "short": 407,
+      "normal": 136,
       "long": 3
     },
-    "duplicateGroups": 11
+    "duplicateGroups": 10
   },
   "manuals": [
     {
@@ -312,29 +312,6 @@
       "trackedPhrase": 6,
       "reviewFlags": 6,
       "genericRatio": 1
-    },
-    {
-      "path": "full-stack/backend/php",
-      "slug": "php",
-      "area": "full-stack",
-      "chapters": 12,
-      "priorities": {
-        "P0": 0,
-        "P1": 0,
-        "P2": 6,
-        "P3": 6
-      },
-      "flags": {
-        "known_outdated_pattern": 0,
-        "generic_template": 6,
-        "generic_example": 6,
-        "duplicated_code": 6,
-        "very_short": 0,
-        "high_freshness_risk": 0
-      },
-      "trackedPhrase": 6,
-      "reviewFlags": 6,
-      "genericRatio": 0.5
     },
     {
       "path": "bases-de-datos/mysql",
@@ -1280,6 +1257,29 @@
       "genericRatio": 0
     },
     {
+      "path": "full-stack/backend/php",
+      "slug": "php",
+      "area": "full-stack",
+      "chapters": 12,
+      "priorities": {
+        "P0": 0,
+        "P1": 0,
+        "P2": 0,
+        "P3": 12
+      },
+      "flags": {
+        "known_outdated_pattern": 0,
+        "generic_template": 0,
+        "generic_example": 0,
+        "duplicated_code": 0,
+        "very_short": 0,
+        "high_freshness_risk": 0
+      },
+      "trackedPhrase": 0,
+      "reviewFlags": 0,
+      "genericRatio": 0
+    },
+    {
       "path": "full-stack/frontend/angular",
       "slug": "angular",
       "area": "full-stack",
@@ -1805,7 +1805,6 @@
         "full-stack/backend/fastapi",
         "full-stack/backend/laravel",
         "full-stack/backend/nestjs",
-        "full-stack/backend/php",
         "full-stack/backend/spring-boot",
         "full-stack/frontend/redux",
         "full-stack/frontend/tailwind",
@@ -1869,12 +1868,6 @@
         "full-stack/backend/fastapi/01-introduccion-y-entorno.md",
         "full-stack/backend/laravel/01-introduccion-y-entorno.md",
         "full-stack/backend/nestjs/01-introduccion-y-entorno.md",
-        "full-stack/backend/php/07-trabajo-con-archivos.md",
-        "full-stack/backend/php/08-pdo-y-acceso-a-bases-de-datos.md",
-        "full-stack/backend/php/09-programacion-orientada-a-objetos-en-php.md",
-        "full-stack/backend/php/10-errores-excepciones-y-logging.md",
-        "full-stack/backend/php/11-seguridad-en-php-puro.md",
-        "full-stack/backend/php/12-proyecto-final-con-arquitectura-simple.md",
         "full-stack/backend/spring-boot/01-introduccion-y-entorno.md",
         "full-stack/frontend/redux/01-introduccion-y-casos-de-uso.md",
         "full-stack/frontend/redux/02-store-actions-reducers-y-dispatch.md",
@@ -1918,7 +1911,7 @@
         "ia/vector-databases/06-patrones-para-rag.md",
         "ia/vector-databases/07-buenas-practicas.md"
       ],
-      "count": 103
+      "count": 97
     },
     {
       "hash": "5a9d824dcf18e14a",
@@ -2039,25 +2032,6 @@
         "full-stack/frontend/zustand/08-testing.md"
       ],
       "count": 18
-    },
-    {
-      "hash": "496f0a56711e035c",
-      "lang": "php",
-      "chars": 108,
-      "manuals": [
-        "full-stack/backend/laravel",
-        "full-stack/backend/php"
-      ],
-      "chapters": [
-        "full-stack/backend/laravel/01-introduccion-y-entorno.md",
-        "full-stack/backend/php/07-trabajo-con-archivos.md",
-        "full-stack/backend/php/08-pdo-y-acceso-a-bases-de-datos.md",
-        "full-stack/backend/php/09-programacion-orientada-a-objetos-en-php.md",
-        "full-stack/backend/php/10-errores-excepciones-y-logging.md",
-        "full-stack/backend/php/11-seguridad-en-php-puro.md",
-        "full-stack/backend/php/12-proyecto-final-con-arquitectura-simple.md"
-      ],
-      "count": 7
     },
     {
       "hash": "3320248a647ec61e",
@@ -10152,120 +10126,96 @@
       "area": "full-stack",
       "manual": "php",
       "manualPath": "full-stack/backend/php",
-      "title": "Trabajo Con Archivos",
-      "wordCount": 301,
-      "usefulLines": 46,
-      "headings": 11,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 24,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "title": "Trabajo con archivos",
+      "wordCount": 354,
+      "usefulLines": 67,
+      "headings": 8,
+      "codeBlocks": 3,
+      "links": 5,
+      "lists": 11,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "full-stack/backend/php/08-pdo-y-acceso-a-bases-de-datos.md",
       "area": "full-stack",
       "manual": "php",
       "manualPath": "full-stack/backend/php",
-      "title": "Pdo Y Acceso A Bases De Datos",
-      "wordCount": 340,
-      "usefulLines": 46,
-      "headings": 11,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 24,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "title": "PDO y acceso a bases de datos",
+      "wordCount": 377,
+      "usefulLines": 71,
+      "headings": 8,
+      "codeBlocks": 5,
+      "links": 5,
+      "lists": 11,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "full-stack/backend/php/09-programacion-orientada-a-objetos-en-php.md",
       "area": "full-stack",
       "manual": "php",
       "manualPath": "full-stack/backend/php",
-      "title": "Programacion Orientada A Objetos En Php",
-      "wordCount": 328,
-      "usefulLines": 46,
-      "headings": 11,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 24,
+      "title": "Programación orientada a objetos en PHP",
+      "wordCount": 312,
+      "usefulLines": 92,
+      "headings": 8,
+      "codeBlocks": 3,
+      "links": 7,
+      "lists": 11,
       "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "full-stack/backend/php/10-errores-excepciones-y-logging.md",
       "area": "full-stack",
       "manual": "php",
       "manualPath": "full-stack/backend/php",
-      "title": "Errores Excepciones Y Logging",
-      "wordCount": 308,
-      "usefulLines": 46,
-      "headings": 11,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 24,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "title": "Errores, excepciones y logging",
+      "wordCount": 430,
+      "usefulLines": 75,
+      "headings": 9,
+      "codeBlocks": 3,
+      "links": 5,
+      "lists": 12,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "full-stack/backend/php/11-seguridad-en-php-puro.md",
       "area": "full-stack",
       "manual": "php",
       "manualPath": "full-stack/backend/php",
-      "title": "Seguridad En Php Puro",
-      "wordCount": 309,
-      "usefulLines": 46,
+      "title": "Seguridad en PHP puro",
+      "wordCount": 469,
+      "usefulLines": 72,
       "headings": 11,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 24,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "codeBlocks": 3,
+      "links": 9,
+      "lists": 14,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "full-stack/backend/php/12-proyecto-final-con-arquitectura-simple.md",
       "area": "full-stack",
       "manual": "php",
       "manualPath": "full-stack/backend/php",
-      "title": "Proyecto Final Con Arquitectura Simple",
-      "wordCount": 310,
-      "usefulLines": 44,
-      "headings": 10,
-      "codeBlocks": 2,
-      "links": 0,
-      "lists": 24,
+      "title": "Proyecto final con arquitectura simple",
+      "wordCount": 345,
+      "usefulLines": 91,
+      "headings": 9,
+      "codeBlocks": 4,
+      "links": 2,
+      "lists": 11,
       "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "full-stack/backend/spring-boot/01-introduccion-y-entorno.md",

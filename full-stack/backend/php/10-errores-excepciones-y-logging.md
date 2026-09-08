@@ -1,71 +1,114 @@
-# Errores Excepciones Y Logging
+# Errores, excepciones y logging
 
-Este capitulo profundiza en **Errores Excepciones Y Logging** dentro del manual de **PHP**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+PHP distingue avisos del motor, excepciones que *tú* lanzas, y fallos de negocio (“esa nota no existe”). Tratarlos igual —o tragárselos— deja la app muda o el usuario viendo un stack trace.
 
-## Objetivo
+Documentación oficial: [errores](https://www.php.net/manual/es/errorfunc.constants.php), [excepciones](https://www.php.net/manual/es/language.exceptions.php), [error_log](https://www.php.net/manual/es/function.error-log.php), [PDOException](https://www.php.net/manual/es/class.pdoexception.php).
 
-Al terminar este capitulo sabras explicar errores excepciones y logging, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+## Error, warning, excepción, negocio
 
-## Conceptos clave
+| Qué | Ejemplo | Qué hacer |
+| --- | --- | --- |
+| **Notice / Warning** | `file_get_contents` de un path que no existe (según config) | No ignores el `false`; en PHP 8 muchos casos ya son `Error`/`ValueError`. |
+| **Error / TypeError** | Pasar `null` a `int` con `strict_types` | Fallo de programación: no lo “gestiones” con un `catch` genérico en cada función. |
+| **Excepción** | `PDOException`, `RuntimeException` al escribir disco | Recupera *si puedes*; si no, registra y falla hacia arriba. |
+| **Negocio** | `NotaNoEncontrada` | Respuesta 404 o mensaje de formulario; no es un bug del servidor. |
 
-- **Errores Excepciones Y Logging:** pieza central de PHP en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Errores:** aspecto a dominar dentro de Errores Excepciones Y Logging.
-- **Excepciones:** aspecto a dominar dentro de Errores Excepciones Y Logging.
-- **Logging:** aspecto a dominar dentro de Errores Excepciones Y Logging.
+Un `throw` interrumpe. Un `return null` en `porId` (capítulo 9) es un “no hay fila”, no una excepción, salvo que el contrato diga lo contrario.
 
-## Desarrollo del tema
-
-### Enfoque practico
-
-1. Define el problema que resuelve **Errores Excepciones Y Logging**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
-```
-
-## Ejemplo
+## try / catch / finally / throw
 
 ```php
 <?php
-// Ejemplo relacionado con Errores Excepciones Y Logging
-$data = ['id' => 1, 'name' => 'Ejemplo'];
-foreach ($data as $key => $value) {
-    echo "$key: $value\n";
+
+declare(strict_types=1);
+
+final class NotaNoEncontrada extends RuntimeException
+{
+}
+
+function notaOFallo(NotaRepositorio $repo, int $id): Nota
+{
+    $nota = $repo->porId($id);
+    if ($nota === null) {
+        throw new NotaNoEncontrada('id ' . $id);
+    }
+
+    return $nota;
+}
+
+// Fragmento: $repo es un NotaRepositorio (cap. 9); $id viene validado (int).
+try {
+    $nota = notaOFallo($repo, $id);
+} catch (NotaNoEncontrada $e) {
+    http_response_code(404);
+    echo 'No existe';
+} catch (PDOException $e) {
+    error_log('pdo notas: ' . $e->getMessage());
+    http_response_code(500);
+    echo 'No se pudo cargar';
+} finally {
+    // Cerrar un handle si lo abriste a mano. El PDO suele vivir toda la petición.
 }
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+`finally` corre tanto si hubo `return` como si hubo excepción.
+
+**No** hagas esto:
+
+```php
+try {
+    $repo->guardar($titulo, $cuerpo);
+} catch (Throwable $e) {
+    // ignorar
+}
+```
+
+El usuario cree que guardó; tú no tienes pista. Si capturas `Throwable`, registra y relanza, o convierte a una respuesta HTTP consciente. Atrapar para “que no pete la página” sin log es borrar evidencia.
+
+## Logging
+
+`error_log()` escribe donde diga `error_log` en php.ini (syslog, fichero). Es el mínimo del lenguaje. En un proyecto real acabarás con Monolog u otro canal (stdout del contenedor, servicio): el **criterio** no cambia.
+
+- Contexto útil: id de nota, ruta *sanitizada*, código SQL **sin** bind de contraseñas.
+- Nunca loguees `$_POST['password']`, cookies de sesión, tokens CSRF, DSN con password.
+- En producción: `display_errors=0`. El HTML muestra un mensaje corto; el detalle va al log.
+
+```php
+<?php
+
+error_log(sprintf('nota.create failed user=%s', $_SESSION['user'] ?? 'anon'));
+```
+
+No concatenes el cuerpo de la nota si puede tener PII; un id basta.
+
+## Producción frente a desarrollo
+
+| | Desarrollo | Producción |
+| --- | --- | --- |
+| `display_errors` | On (tú eres el único usuario) | Off |
+| Stack trace | En pantalla o Xdebug | Solo log |
+| Mensaje al usuario | Puede ser técnico | Genérico (“inténtalo más tarde”) |
+
+`ini_set('display_errors', '1')` en un fichero público de producción es un incidente. El capítulo 12 pondrá el front controller detrás de `public/`; los logs, fuera.
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de errores excepciones y logging.
-- No probar casos limite ni errores esperados.
+- `catch (Exception $e) { echo $e; }` en la web.
+- Un único `catch (Throwable)` en `index.php` que oculta `NotaNoEncontrada` y `TypeError` por igual.
+- Log del SQL interpolado (además de ser inyectable, filtra datos).
 
-## Buenas practicas
+## Buenas prácticas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Valida entradas y maneja errores con codigos claros.
-- Separa capas (controlador, servicio, datos).
+- Excepciones de dominio para lo esperado; `PDOException` hacia un handler.
+- Relanzar (`throw $e`) si no puedes resolver.
+- Un canal de log por entorno (env `LOG_PATH`), no `chmod 777` a `php.log` en `public/`.
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Errores Excepciones Y Logging**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Lanza `NotaNoEncontrada` y captura solo esa clase; deja que un `TypeError` suba.
+2. Añade `error_log` en el `catch` de PDO **sin** imprimir el mensaje al HTML.
+3. Activa y desactiva `display_errors` y compara qué ve el navegador.
 
 ## Siguiente paso
 
-Continua con [Seguridad En Php Puro](11-seguridad-en-php-puro.md).
+Continúa con [Seguridad en PHP puro](11-seguridad-en-php-puro.md).

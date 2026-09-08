@@ -1,71 +1,135 @@
-# Programacion Orientada A Objetos En Php
+# Programación orientada a objetos en PHP
 
-Este capitulo profundiza en **Programacion Orientada A Objetos En Php** dentro del manual de **PHP**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+Hasta aquí funciones y arrays. Una **clase** agrupa datos y operaciones con un contrato (tipos, visibilidad). No hace falta un árbol de herencia para un CRUD de notas: **composición** (un repositorio *tiene* un `PDO`) suele bastar.
 
-## Objetivo
+Documentación oficial: [clases y objetos](https://www.php.net/manual/es/language.oop5.php), [visibilidad](https://www.php.net/manual/es/language.oop5.visibility.php), [constructores](https://www.php.net/manual/es/language.oop5.decon.php), [interfaces](https://www.php.net/manual/es/language.oop5.interfaces.php), [readonly](https://www.php.net/manual/es/language.oop5.properties.php#language.oop5.properties.readonly-properties) (PHP 8.1).
 
-Al terminar este capitulo sabras explicar programacion orientada a objetos en php, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
-
-## Conceptos clave
-
-- **Programacion Orientada A Objetos En Php:** pieza central de PHP en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Programacion:** aspecto a dominar dentro de Programacion Orientada A Objetos En Php.
-- **Orientada:** aspecto a dominar dentro de Programacion Orientada A Objetos En Php.
-- **Objetos:** aspecto a dominar dentro de Programacion Orientada A Objetos En Php.
-
-## Desarrollo del tema
-
-### Enfoque practico
-
-1. Define el problema que resuelve **Programacion Orientada A Objetos En Php**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
-```
-
-## Ejemplo
+## Clase, instancia, constructor
 
 ```php
 <?php
-// Ejemplo relacionado con Programacion Orientada A Objetos En Php
-$data = ['id' => 1, 'name' => 'Ejemplo'];
-foreach ($data as $key => $value) {
-    echo "$key: $value\n";
+
+declare(strict_types=1);
+
+final class Nota
+{
+    public function __construct(
+        public readonly int $id,
+        public readonly string $titulo,
+        public readonly string $cuerpo,
+    ) {
+    }
+}
+
+$nota = new Nota(1, 'Lista', 'Leche y pan');
+echo $nota->titulo, "\n";
+```
+
+`new` crea la **instancia**. Las propiedades `public readonly` (8.1) se asignan en el constructor y no se reasignan: un objeto-valor. `final` impide `class NotaHija extends Nota` — útil cuando no hay un motivo real para heredar.
+
+Visibilidad: `public` (fuera), `protected` (clase + hijas), `private` (solo esta clase). Por defecto, sin palabra, un método es público; en propiedades modernas **declara** `private` o `public`.
+
+## Tipos y métodos
+
+```php
+<?php
+
+declare(strict_types=1);
+
+final class Nota
+{
+    public function __construct(
+        public readonly int $id,
+        public readonly string $titulo,
+        public readonly string $cuerpo,
+    ) {
+    }
+
+    public function resumen(int $max = 40): string
+    {
+        if (mb_strlen($this->cuerpo) <= $max) {
+            return $this->cuerpo;
+        }
+
+        return mb_substr($this->cuerpo, 0, $max) . '…';
+    }
 }
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+El tipo del parámetro y del retorno es el mismo contrato que en funciones (capítulo 2–3). `$this` es la instancia.
+
+## Interfaz y composición
+
+El HTML no debe saber si las notas viven en SQLite o en un fichero (capítulo 7). Una **interfaz** nombra el contrato; la implementación **usa** PDO, no *es* un PDO.
+
+```php
+<?php
+
+declare(strict_types=1);
+
+interface NotaRepositorio
+{
+    public function porId(int $id): ?Nota;
+
+    public function guardar(string $titulo, string $cuerpo): int;
+}
+
+final class NotaRepositorioPdo implements NotaRepositorio
+{
+    public function __construct(private PDO $pdo)
+    {
+    }
+
+    public function porId(int $id): ?Nota
+    {
+        $stmt = $this->pdo->prepare(
+            'SELECT id, titulo, cuerpo FROM notas WHERE id = :id',
+        );
+        $stmt->execute(['id' => $id]);
+        $fila = $stmt->fetch();
+        if ($fila === false) {
+            return null;
+        }
+
+        return new Nota((int) $fila['id'], $fila['titulo'], $fila['cuerpo']);
+    }
+
+    public function guardar(string $titulo, string $cuerpo): int
+    {
+        $stmt = $this->pdo->prepare(
+            'INSERT INTO notas (titulo, cuerpo) VALUES (:titulo, :cuerpo)',
+        );
+        $stmt->execute(['titulo' => $titulo, 'cuerpo' => $cuerpo]);
+
+        return (int) $this->pdo->lastInsertId();
+    }
+}
+```
+
+Herencia (`extends`) tiene sentido para *es-un* real (p. ej. una excepción concreta). Una `class MysqlNota extends PDO` mezcla infraestructura y dominio: evítalo. Si mañana hay `NotaRepositorioArchivo`, el controlador sigue pidiendo `NotaRepositorio`.
+
+Esto no es DDD: es separar “cómo se guarda” de “qué es una nota”. El ensamblaje (quién hace `new PDO` y `new NotaRepositorioPdo`) está en el [capítulo 12](12-proyecto-final-con-arquitectura-simple.md).
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de programacion orientada a objetos en php.
-- No probar casos limite ni errores esperados.
+- Getters/setters vacíos para cada campo “porque OOP”.
+- Jerarquías `BaseManager` → `NotaManager` → `NotaManagerEspecial` sin comportamiento extra.
+- Propiedades `public` mutables que cualquier script pisa.
+- Meter `echo` HTML dentro del repositorio.
 
-## Buenas practicas
+## Buenas prácticas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Valida entradas y maneja errores con codigos claros.
-- Separa capas (controlador, servicio, datos).
+- Una clase, una razón de cambio.
+- Tipado en constructor y métodos; `declare(strict_types=1)`.
+- Interfaces estrechas (`porId`, `guardar`), no un “God repository”.
+- Hereda excepciones o DTOs si aporta; no copies un framework de capas.
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Programacion Orientada A Objetos En Php**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Instancia una `Nota` y llama a `resumen(10)`.
+2. Escribe un `NotaRepositorio` falso en un array (sin PDO) que cumpla la interfaz.
+3. Marca una clase `final` e intenta extenderla: lee el error.
 
 ## Siguiente paso
 
-Continua con [Errores Excepciones Y Logging](10-errores-excepciones-y-logging.md).
+Continúa con [Errores, excepciones y logging](10-errores-excepciones-y-logging.md).
