@@ -5,23 +5,23 @@
     "manuals": 76,
     "areas": 8,
     "priorities": {
-      "P0": 2,
-      "P1": 17,
+      "P0": 0,
+      "P1": 14,
       "P2": 117,
-      "P3": 606
+      "P3": 611
     },
     "flags": {
-      "known_outdated_pattern": 2,
-      "generic_template": 126,
-      "generic_example": 109,
-      "duplicated_code": 134,
+      "known_outdated_pattern": 0,
+      "generic_template": 123,
+      "generic_example": 106,
+      "duplicated_code": 131,
       "very_short": 196,
       "high_freshness_risk": 141
     },
     "trackedTemplatePhrase": {
       "pattern": "Este capitulo profundiza",
-      "chapters": 126,
-      "manuals": 25,
+      "chapters": 123,
+      "manuals": 23,
       "areas": [
         "cloud",
         "data-engineering",
@@ -31,36 +31,13 @@
     },
     "lengthBands": {
       "very_short": 196,
-      "short": 431,
-      "normal": 111,
-      "long": 4
+      "short": 428,
+      "normal": 115,
+      "long": 3
     },
-    "duplicateGroups": 12
+    "duplicateGroups": 11
   },
   "manuals": [
-    {
-      "path": "full-stack/frontend/react",
-      "slug": "react",
-      "area": "full-stack",
-      "chapters": 22,
-      "priorities": {
-        "P0": 2,
-        "P1": 0,
-        "P2": 0,
-        "P3": 20
-      },
-      "flags": {
-        "known_outdated_pattern": 2,
-        "generic_template": 0,
-        "generic_example": 0,
-        "duplicated_code": 0,
-        "very_short": 0,
-        "high_freshness_risk": 22
-      },
-      "trackedPhrase": 0,
-      "reviewFlags": 2,
-      "genericRatio": 0
-    },
     {
       "path": "ia/huggingface",
       "slug": "huggingface",
@@ -91,21 +68,21 @@
       "chapters": 7,
       "priorities": {
         "P0": 0,
-        "P1": 7,
+        "P1": 6,
         "P2": 0,
-        "P3": 0
+        "P3": 1
       },
       "flags": {
         "known_outdated_pattern": 0,
-        "generic_template": 7,
-        "generic_example": 7,
-        "duplicated_code": 7,
+        "generic_template": 6,
+        "generic_example": 6,
+        "duplicated_code": 6,
         "very_short": 0,
         "high_freshness_risk": 7
       },
-      "trackedPhrase": 7,
-      "reviewFlags": 7,
-      "genericRatio": 1
+      "trackedPhrase": 6,
+      "reviewFlags": 6,
+      "genericRatio": 0.857
     },
     {
       "path": "full-stack/backend/php",
@@ -428,52 +405,6 @@
       "trackedPhrase": 1,
       "reviewFlags": 1,
       "genericRatio": 0.125
-    },
-    {
-      "path": "cloud/kubernetes",
-      "slug": "kubernetes",
-      "area": "cloud",
-      "chapters": 14,
-      "priorities": {
-        "P0": 0,
-        "P1": 1,
-        "P2": 0,
-        "P3": 13
-      },
-      "flags": {
-        "known_outdated_pattern": 0,
-        "generic_template": 1,
-        "generic_example": 1,
-        "duplicated_code": 1,
-        "very_short": 13,
-        "high_freshness_risk": 14
-      },
-      "trackedPhrase": 1,
-      "reviewFlags": 14,
-      "genericRatio": 0.071
-    },
-    {
-      "path": "full-stack/frontend/nextjs",
-      "slug": "nextjs",
-      "area": "full-stack",
-      "chapters": 16,
-      "priorities": {
-        "P0": 0,
-        "P1": 1,
-        "P2": 0,
-        "P3": 15
-      },
-      "flags": {
-        "known_outdated_pattern": 0,
-        "generic_template": 1,
-        "generic_example": 1,
-        "duplicated_code": 1,
-        "very_short": 15,
-        "high_freshness_risk": 16
-      },
-      "trackedPhrase": 1,
-      "reviewFlags": 16,
-      "genericRatio": 0.063
     },
     {
       "path": "bases-de-datos/mysql",
@@ -887,6 +818,29 @@
       },
       "trackedPhrase": 0,
       "reviewFlags": 0,
+      "genericRatio": 0
+    },
+    {
+      "path": "cloud/kubernetes",
+      "slug": "kubernetes",
+      "area": "cloud",
+      "chapters": 14,
+      "priorities": {
+        "P0": 0,
+        "P1": 0,
+        "P2": 0,
+        "P3": 14
+      },
+      "flags": {
+        "known_outdated_pattern": 0,
+        "generic_template": 0,
+        "generic_example": 0,
+        "duplicated_code": 0,
+        "very_short": 13,
+        "high_freshness_risk": 14
+      },
+      "trackedPhrase": 0,
+      "reviewFlags": 13,
       "genericRatio": 0
     },
     {
@@ -1419,6 +1373,52 @@
       "genericRatio": 0
     },
     {
+      "path": "full-stack/frontend/nextjs",
+      "slug": "nextjs",
+      "area": "full-stack",
+      "chapters": 16,
+      "priorities": {
+        "P0": 0,
+        "P1": 0,
+        "P2": 0,
+        "P3": 16
+      },
+      "flags": {
+        "known_outdated_pattern": 0,
+        "generic_template": 0,
+        "generic_example": 0,
+        "duplicated_code": 0,
+        "very_short": 15,
+        "high_freshness_risk": 16
+      },
+      "trackedPhrase": 0,
+      "reviewFlags": 15,
+      "genericRatio": 0
+    },
+    {
+      "path": "full-stack/frontend/react",
+      "slug": "react",
+      "area": "full-stack",
+      "chapters": 22,
+      "priorities": {
+        "P0": 0,
+        "P1": 0,
+        "P2": 0,
+        "P3": 22
+      },
+      "flags": {
+        "known_outdated_pattern": 0,
+        "generic_template": 0,
+        "generic_example": 0,
+        "duplicated_code": 0,
+        "very_short": 0,
+        "high_freshness_risk": 22
+      },
+      "trackedPhrase": 0,
+      "reviewFlags": 0,
+      "genericRatio": 0
+    },
+    {
       "path": "full-stack/frontend/ux",
       "slug": "ux",
       "area": "full-stack",
@@ -1794,7 +1794,6 @@
       "chars": 75,
       "manuals": [
         "cloud/github-actions",
-        "cloud/kubernetes",
         "data-engineering/dbt",
         "data-engineering/delta-lake",
         "data-engineering/iceberg",
@@ -1810,7 +1809,6 @@
         "full-stack/backend/nestjs",
         "full-stack/backend/php",
         "full-stack/backend/spring-boot",
-        "full-stack/frontend/nextjs",
         "full-stack/frontend/redux",
         "full-stack/frontend/tailwind",
         "full-stack/frontend/zustand",
@@ -1821,7 +1819,6 @@
       ],
       "chapters": [
         "cloud/github-actions/01-introduccion-a-workflows.md",
-        "cloud/kubernetes/01-introduccion-y-arquitectura.md",
         "data-engineering/dbt/02-sources-models-y-refs.md",
         "data-engineering/dbt/03-tests-documentacion-y-lineage.md",
         "data-engineering/dbt/04-snapshots-y-seeds.md",
@@ -1890,7 +1887,6 @@
         "full-stack/backend/php/11-seguridad-en-php-puro.md",
         "full-stack/backend/php/12-proyecto-final-con-arquitectura-simple.md",
         "full-stack/backend/spring-boot/01-introduccion-y-entorno.md",
-        "full-stack/frontend/nextjs/01-introduccion-y-entorno.md",
         "full-stack/frontend/redux/01-introduccion-y-casos-de-uso.md",
         "full-stack/frontend/redux/02-store-actions-reducers-y-dispatch.md",
         "full-stack/frontend/redux/03-redux-toolkit.md",
@@ -1943,11 +1939,10 @@
         "ia/vllm/02-servidor-openai-compatible.md",
         "ia/vllm/03-carga-de-modelos.md",
         "ia/vllm/04-batching-y-rendimiento.md",
-        "ia/vllm/05-despliegue.md",
         "ia/vllm/06-observabilidad.md",
         "ia/vllm/07-buenas-practicas.md"
       ],
-      "count": 126
+      "count": 123
     },
     {
       "hash": "5a9d824dcf18e14a",
@@ -2016,44 +2011,10 @@
         "ia/vllm/02-servidor-openai-compatible.md",
         "ia/vllm/03-carga-de-modelos.md",
         "ia/vllm/04-batching-y-rendimiento.md",
-        "ia/vllm/05-despliegue.md",
         "ia/vllm/06-observabilidad.md",
         "ia/vllm/07-buenas-practicas.md"
       ],
-      "count": 54
-    },
-    {
-      "hash": "6a2c2f980ddd3635",
-      "lang": "javascript",
-      "chars": 109,
-      "manuals": [
-        "full-stack/backend/express",
-        "full-stack/frontend/nextjs",
-        "full-stack/frontend/redux",
-        "full-stack/frontend/zustand"
-      ],
-      "chapters": [
-        "full-stack/backend/express/01-introduccion-y-entorno.md",
-        "full-stack/frontend/nextjs/01-introduccion-y-entorno.md",
-        "full-stack/frontend/redux/01-introduccion-y-casos-de-uso.md",
-        "full-stack/frontend/redux/02-store-actions-reducers-y-dispatch.md",
-        "full-stack/frontend/redux/03-redux-toolkit.md",
-        "full-stack/frontend/redux/04-slices-y-async-thunks.md",
-        "full-stack/frontend/redux/05-normalizacion-de-estado.md",
-        "full-stack/frontend/redux/06-rtk-query.md",
-        "full-stack/frontend/redux/07-middleware.md",
-        "full-stack/frontend/redux/08-testing.md",
-        "full-stack/frontend/redux/09-patrones-y-buenas-practicas.md",
-        "full-stack/frontend/zustand/01-introduccion-y-casos-de-uso.md",
-        "full-stack/frontend/zustand/02-stores-basicos.md",
-        "full-stack/frontend/zustand/03-selectores-y-rendimiento.md",
-        "full-stack/frontend/zustand/04-persistencia.md",
-        "full-stack/frontend/zustand/05-middleware.md",
-        "full-stack/frontend/zustand/06-integracion-con-react.md",
-        "full-stack/frontend/zustand/07-patrones-de-arquitectura.md",
-        "full-stack/frontend/zustand/08-testing.md"
-      ],
-      "count": 19
+      "count": 53
     },
     {
       "hash": "fb1882696289f802",
@@ -2086,6 +2047,37 @@
         "full-stack/arquitectura/microservicios/07-trade-offs.md"
       ],
       "count": 19
+    },
+    {
+      "hash": "6a2c2f980ddd3635",
+      "lang": "javascript",
+      "chars": 109,
+      "manuals": [
+        "full-stack/backend/express",
+        "full-stack/frontend/redux",
+        "full-stack/frontend/zustand"
+      ],
+      "chapters": [
+        "full-stack/backend/express/01-introduccion-y-entorno.md",
+        "full-stack/frontend/redux/01-introduccion-y-casos-de-uso.md",
+        "full-stack/frontend/redux/02-store-actions-reducers-y-dispatch.md",
+        "full-stack/frontend/redux/03-redux-toolkit.md",
+        "full-stack/frontend/redux/04-slices-y-async-thunks.md",
+        "full-stack/frontend/redux/05-normalizacion-de-estado.md",
+        "full-stack/frontend/redux/06-rtk-query.md",
+        "full-stack/frontend/redux/07-middleware.md",
+        "full-stack/frontend/redux/08-testing.md",
+        "full-stack/frontend/redux/09-patrones-y-buenas-practicas.md",
+        "full-stack/frontend/zustand/01-introduccion-y-casos-de-uso.md",
+        "full-stack/frontend/zustand/02-stores-basicos.md",
+        "full-stack/frontend/zustand/03-selectores-y-rendimiento.md",
+        "full-stack/frontend/zustand/04-persistencia.md",
+        "full-stack/frontend/zustand/05-middleware.md",
+        "full-stack/frontend/zustand/06-integracion-con-react.md",
+        "full-stack/frontend/zustand/07-patrones-de-arquitectura.md",
+        "full-stack/frontend/zustand/08-testing.md"
+      ],
+      "count": 18
     },
     {
       "hash": "496f0a56711e035c",
@@ -2155,20 +2147,6 @@
       "chapters": [
         "bases-de-datos/mysql/03-consultas-joins-y-agregaciones.md",
         "bases-de-datos/postgresql/04-consultas-joins-y-agregaciones.md"
-      ],
-      "count": 2
-    },
-    {
-      "hash": "7487ad0f8cc70525",
-      "lang": "yaml",
-      "chars": 66,
-      "manuals": [
-        "cloud/github-actions",
-        "cloud/kubernetes"
-      ],
-      "chapters": [
-        "cloud/github-actions/01-introduccion-a-workflows.md",
-        "cloud/kubernetes/01-introduccion-y-arquitectura.md"
       ],
       "count": 2
     },
@@ -3999,21 +3977,18 @@
       "area": "cloud",
       "manual": "kubernetes",
       "manualPath": "cloud/kubernetes",
-      "title": "Introduccion Y Arquitectura",
-      "wordCount": 286,
-      "usefulLines": 46,
-      "headings": 12,
+      "title": "Introducción y arquitectura",
+      "wordCount": 620,
+      "usefulLines": 63,
+      "headings": 9,
       "codeBlocks": 2,
-      "links": 1,
-      "lists": 24,
-      "lengthBand": "short",
+      "links": 5,
+      "lists": 21,
+      "lengthBand": "normal",
       "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code",
         "high_freshness_risk"
       ],
-      "priority": "P1"
+      "priority": "P3"
     },
     {
       "path": "cloud/kubernetes/02-pods-deployments-y-replicasets.md",
@@ -10971,21 +10946,18 @@
       "area": "full-stack",
       "manual": "nextjs",
       "manualPath": "full-stack/frontend/nextjs",
-      "title": "Introduccion Y Entorno",
-      "wordCount": 285,
-      "usefulLines": 44,
-      "headings": 11,
+      "title": "Introducción y entorno",
+      "wordCount": 437,
+      "usefulLines": 53,
+      "headings": 8,
       "codeBlocks": 2,
-      "links": 1,
-      "lists": 23,
-      "lengthBand": "short",
+      "links": 3,
+      "lists": 20,
+      "lengthBand": "normal",
       "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code",
         "high_freshness_risk"
       ],
-      "priority": "P1"
+      "priority": "P3"
     },
     {
       "path": "full-stack/frontend/nextjs/02-app-router-y-estructura.md",
@@ -11278,18 +11250,17 @@
       "manual": "react",
       "manualPath": "full-stack/frontend/react",
       "title": "Introducción a React",
-      "wordCount": 1855,
-      "usefulLines": 251,
-      "headings": 35,
-      "codeBlocks": 20,
-      "links": 2,
-      "lists": 57,
-      "lengthBand": "long",
+      "wordCount": 670,
+      "usefulLines": 83,
+      "headings": 12,
+      "codeBlocks": 6,
+      "links": 10,
+      "lists": 25,
+      "lengthBand": "normal",
       "flags": [
-        "known_outdated_pattern",
         "high_freshness_risk"
       ],
-      "priority": "P0"
+      "priority": "P3"
     },
     {
       "path": "full-stack/frontend/react/02-jsx.md",
@@ -11297,18 +11268,17 @@
       "manual": "react",
       "manualPath": "full-stack/frontend/react",
       "title": "JSX (JavaScript XML)",
-      "wordCount": 391,
-      "usefulLines": 117,
+      "wordCount": 420,
+      "usefulLines": 114,
       "headings": 18,
       "codeBlocks": 12,
       "links": 0,
-      "lists": 8,
+      "lists": 6,
       "lengthBand": "normal",
       "flags": [
-        "known_outdated_pattern",
         "high_freshness_risk"
       ],
-      "priority": "P0"
+      "priority": "P3"
     },
     {
       "path": "full-stack/frontend/react/03-componentes.md",
@@ -14165,20 +14135,17 @@
       "manual": "vllm",
       "manualPath": "ia/vllm",
       "title": "Despliegue",
-      "wordCount": 258,
-      "usefulLines": 42,
-      "headings": 12,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 22,
-      "lengthBand": "short",
+      "wordCount": 704,
+      "usefulLines": 65,
+      "headings": 9,
+      "codeBlocks": 5,
+      "links": 5,
+      "lists": 17,
+      "lengthBand": "normal",
       "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code",
         "high_freshness_risk"
       ],
-      "priority": "P1"
+      "priority": "P3"
     },
     {
       "path": "ia/vllm/06-observabilidad.md",
