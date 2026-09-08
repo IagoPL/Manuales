@@ -1,6 +1,6 @@
 :root {
-  --vp-c-brand-1: #6d8fdd;
-  --vp-c-brand-2: #88a7e8;
+  --vp-c-brand-1: #4a6fc9;
+  --vp-c-brand-2: #6d8fdd;
   --vp-c-brand-3: #dfe8ff;
   --vp-c-bg: #fffdf8;
   --vp-c-bg-alt: #f8f3ea;
@@ -361,7 +361,7 @@ body {
 
 .manual-card--herramientas {
   --accent: var(--manual-sage);
-  --accent-text: #64864b;
+  --accent-text: #557540;
 }
 
 .dark .manual-card--full-stack {
@@ -562,5 +562,77 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: var(--vp-c-text-2);
+}
+
+.library-button:focus-visible,
+.manual-card:focus-visible,
+.manual-list a:focus-visible,
+.manual-breadcrumbs a:focus-visible {
+  outline: 2px solid var(--vp-c-brand-1);
+  outline-offset: 2px;
+}
+
+.manual-breadcrumbs {
+  max-width: 1120px;
+  margin: 0 auto 8px;
+  padding: 8px 0 0;
+  color: var(--vp-c-text-2);
+  font-size: 13px;
+}
+
+.manual-breadcrumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.manual-breadcrumbs li {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+}
+
+.manual-breadcrumbs li:not(:last-child)::after {
+  content: '/';
+  margin: 0 8px;
+  color: var(--vp-c-text-2);
+  opacity: 0.7;
+}
+
+.manual-breadcrumbs a {
+  color: var(--vp-c-brand-1);
+  text-decoration: none;
+}
+
+.manual-breadcrumbs a:hover {
+  text-decoration: underline;
+}
+
+.manual-breadcrumbs [aria-current='page'] {
+  color: var(--vp-c-text-1);
+  font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .manual-card:hover,
+  .manual-list a:hover {
+    transform: none;
+  }
 }
 
