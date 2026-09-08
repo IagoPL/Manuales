@@ -1,70 +1,124 @@
-# Merge Updates Y Deletes
+# MERGE, UPDATE y DELETE
 
-Este capitulo profundiza en **Merge Updates Y Deletes** dentro del manual de **Delta Lake**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+Parquet suelto no tiene DML de tabla. Delta reescribe los data files que contienen las filas afectadas y commitea un snapshot nuevo. `UPDATE`, `DELETE` y `MERGE` son operaciones **caras si el predicado toca muchos ficheros**; no son un `UPDATE` de fila en un B-tree.
 
-## Objetivo
+Documentación: [deletes, updates y merges](https://docs.delta.io/latest/delta-update.html), [Change Data Feed](https://docs.delta.io/latest/delta-change-data-feed.html).
 
-Al terminar este capitulo sabras explicar merge updates y deletes, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+## DELETE y UPDATE
 
-## Conceptos clave
+Clientes actuales en `/data/customers`:
 
-- **Merge Updates Y Deletes:** pieza central de Delta Lake en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Merge:** aspecto a dominar dentro de Merge Updates Y Deletes.
-- **Updates:** aspecto a dominar dentro de Merge Updates Y Deletes.
-- **Deletes:** aspecto a dominar dentro de Merge Updates Y Deletes.
+```sql
+DELETE FROM delta.`/data/customers`
+WHERE status = 'closed' AND country = 'ES';
 
-## Desarrollo del tema
-
-### Enfoque practico
-
-1. Define el problema que resuelve **Merge Updates Y Deletes**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
+UPDATE delta.`/data/customers`
+SET plan = 'pro'
+WHERE customer_id = 9001;
 ```
-
-## Ejemplo
 
 ```python
-# Ejemplo con Delta Lake
-from pathlib import Path
+from delta.tables import DeltaTable
+from pyspark.sql.functions import col, lit
 
-def procesar(ruta: str) -> list[str]:
-    return Path(ruta).read_text(encoding='utf-8').splitlines()
+clientes = DeltaTable.forPath(spark, "/data/customers")
+clientes.delete("status = 'closed' AND country = 'ES'")
+clientes.update(
+    condition=col("customer_id") == 9001,
+    set={"plan": lit("pro")},
+)
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+Sin predicado, `DELETE` vacía la tabla (nuevo snapshot vacío; el historial sigue). Un `WHERE` que no acota particiones obliga a escanear —y potencialmente reescribir— muchos ficheros.
 
-## Errores habituales
+## MERGE: target, source, matching
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de merge updates y deletes.
-- No probar casos limite ni errores esperados.
+`MERGE` compara un **target** (tabla Delta) con un **source** (tabla, vista o DataFrame) mediante una condición. Luego:
 
-## Buenas practicas
+- `WHEN MATCHED` — la fila existe en ambos: `UPDATE` o `DELETE`;
+- `WHEN NOT MATCHED` — solo en el source: `INSERT`;
+- `WHEN NOT MATCHED BY SOURCE` — solo en el target: `UPDATE` o `DELETE` (cláusula extendida; úsala con predicado extra o reescribes el target entero).
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Datos reproducibles y pipelines idempotentes.
-- Versiona esquemas y contratos.
+Upsert de cambios de clientes:
 
-## Ejercicios
+```sql
+MERGE INTO delta.`/data/customers` AS target
+USING customer_changes AS source
+ON target.customer_id = source.customer_id
+WHEN MATCHED AND source.op = 'delete' THEN DELETE
+WHEN MATCHED THEN UPDATE SET
+  email = source.email,
+  plan = source.plan,
+  status = source.status,
+  updated_at = source.updated_at
+WHEN NOT MATCHED AND source.op <> 'delete' THEN INSERT (
+  customer_id, email, plan, status, updated_at
+) VALUES (
+  source.customer_id, source.email, source.plan, source.status, source.updated_at
+);
+```
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Merge Updates Y Deletes**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+```python
+from delta.tables import DeltaTable
 
-## Siguiente paso
+cambios = spark.table("customer_changes")
+dest = DeltaTable.forPath(spark, "/data/customers")
+dest.alias("target").merge(
+    cambios.alias("source"),
+    "target.customer_id = source.customer_id",
+).whenMatchedDelete(
+    condition="source.op = 'delete'"
+).whenMatchedUpdate(
+    set={
+        "email": "source.email",
+        "plan": "source.plan",
+        "status": "source.status",
+        "updated_at": "source.updated_at",
+    }
+).whenNotMatchedInsert(
+    condition="source.op <> 'delete'",
+    values={
+        "customer_id": "source.customer_id",
+        "email": "source.email",
+        "plan": "source.plan",
+        "status": "source.status",
+        "updated_at": "source.updated_at",
+    },
+).execute()
+```
 
-Continua con [Time Travel](05-time-travel.md).
+`updateAll()` / `insertAll()` / `UPDATE SET *` exigen que el source tenga las columnas del target. Las columnas extra del source se ignoran salvo que actives evolución de esquema en ese merge.
+
+## MERGE no es magia
+
+- **Coste.** Delta localiza ficheros candidatos, reescribe los que contienen matches y commitea Add+Remove. Un merge diario sobre toda la dimensión es un full rewrite encubierto.
+- **La condición importa.** Si el target está particionado por `country`, incluye `target.country = source.country` **y**, si el job es por país, `target.country = 'ES'`. Así reduces el espacio de búsqueda y los conflictos con otros writers (capítulo 3).
+- **Clave.** `customer_id` (o la clave de negocio) debe identificar **una** fila target. Si el source trae **dos** filas para el mismo `customer_id`, el merge falla o el resultado es ambiguo: deduplica el source antes.
+- **No es “siempre rápido”.** Ni sustituye un índice OLTP. Mídelo; acota particiones; no merges contra la tabla de eventos crudos si puedes aplicar el cambio en una tabla estrecha.
+
+Sirve para upserts, CDC aplicado a una tabla actual, SCD tipo 1 (pisar atributos) o pasos de deduplicación. No convierte este capítulo en un manual de modelado dimensional.
+
+## Change Data Feed no es MERGE
+
+`MERGE` **aplica** un source sobre un target. **Change Data Feed (CDF)** **registra** cambios de fila entre versiones (`insert`, `update_preimage`, `update_postimage`, `delete`) para que otro job los lea.
+
+No está activo en todas las tablas. Hay que habilitarlo:
+
+```sql
+ALTER TABLE events SET TBLPROPERTIES (delta.enableChangeDataFeed = true);
+```
+
+En tablas nuevas, `TBLPROPERTIES` en el `CREATE`. Los registros viven (cuando hacen falta ficheros extra) bajo `_change_data` y **siguen la retención de la tabla**: un `VACUUM` también se los lleva. CDF no es un sistema de auditoría permanente salvo que **copies** el feed a otra tabla o a un log externo.
+
+Lectura batch:
+
+```sql
+SELECT *
+FROM table_changes_by_path('/data/customers', 18, 22);
+```
+
+Streaming: `.option("readChangeFeed", "true")` (capítulo 7). Columnas extra: `_change_type`, `_commit_version`, `_commit_timestamp`.
+
+Si lees CDF desde antes de habilitarlo, falla: no hay eventos de cambio que inventar.
+
+Siguiente: [Time travel](05-time-travel.md).

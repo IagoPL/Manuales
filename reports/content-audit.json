@@ -7,21 +7,21 @@
     "priorities": {
       "P0": 0,
       "P1": 0,
-      "P2": 79,
-      "P3": 663
+      "P2": 71,
+      "P3": 671
     },
     "flags": {
       "known_outdated_pattern": 0,
-      "generic_template": 71,
-      "generic_example": 63,
-      "duplicated_code": 79,
+      "generic_template": 63,
+      "generic_example": 55,
+      "duplicated_code": 71,
       "very_short": 196,
       "high_freshness_risk": 141
     },
     "trackedTemplatePhrase": {
       "pattern": "Este capitulo profundiza",
-      "chapters": 71,
-      "manuals": 16,
+      "chapters": 63,
+      "manuals": 15,
       "areas": [
         "data-engineering",
         "full-stack",
@@ -30,36 +30,13 @@
     },
     "lengthBands": {
       "very_short": 196,
-      "short": 399,
-      "normal": 144,
+      "short": 391,
+      "normal": 152,
       "long": 3
     },
     "duplicateGroups": 9
   },
   "manuals": [
-    {
-      "path": "data-engineering/delta-lake",
-      "slug": "delta-lake",
-      "area": "data-engineering",
-      "chapters": 8,
-      "priorities": {
-        "P0": 0,
-        "P1": 0,
-        "P2": 8,
-        "P3": 0
-      },
-      "flags": {
-        "known_outdated_pattern": 0,
-        "generic_template": 8,
-        "generic_example": 8,
-        "duplicated_code": 8,
-        "very_short": 0,
-        "high_freshness_risk": 0
-      },
-      "trackedPhrase": 8,
-      "reviewFlags": 8,
-      "genericRatio": 1
-    },
     {
       "path": "data-engineering/iceberg",
       "slug": "iceberg",
@@ -760,6 +737,29 @@
         "P1": 0,
         "P2": 0,
         "P3": 5
+      },
+      "flags": {
+        "known_outdated_pattern": 0,
+        "generic_template": 0,
+        "generic_example": 0,
+        "duplicated_code": 0,
+        "very_short": 0,
+        "high_freshness_risk": 0
+      },
+      "trackedPhrase": 0,
+      "reviewFlags": 0,
+      "genericRatio": 0
+    },
+    {
+      "path": "data-engineering/delta-lake",
+      "slug": "delta-lake",
+      "area": "data-engineering",
+      "chapters": 8,
+      "priorities": {
+        "P0": 0,
+        "P1": 0,
+        "P2": 0,
+        "P3": 8
       },
       "flags": {
         "known_outdated_pattern": 0,
@@ -1793,7 +1793,6 @@
       "chars": 75,
       "manuals": [
         "data-engineering/dbt",
-        "data-engineering/delta-lake",
         "data-engineering/iceberg",
         "data-engineering/parquet",
         "full-stack/arquitectura/cqrs",
@@ -1817,14 +1816,6 @@
         "data-engineering/dbt/06-materializaciones.md",
         "data-engineering/dbt/07-ci-cd.md",
         "data-engineering/dbt/08-buenas-practicas.md",
-        "data-engineering/delta-lake/01-introduccion-y-arquitectura.md",
-        "data-engineering/delta-lake/02-tablas-delta.md",
-        "data-engineering/delta-lake/03-acid-y-transaction-log.md",
-        "data-engineering/delta-lake/04-merge-updates-y-deletes.md",
-        "data-engineering/delta-lake/05-time-travel.md",
-        "data-engineering/delta-lake/06-particionado-y-optimizacion.md",
-        "data-engineering/delta-lake/07-streaming.md",
-        "data-engineering/delta-lake/08-buenas-practicas.md",
         "data-engineering/iceberg/01-introduccion-y-arquitectura.md",
         "data-engineering/iceberg/02-tablas-snapshots-y-manifests.md",
         "data-engineering/iceberg/03-particionado-oculto.md",
@@ -1882,14 +1873,13 @@
         "ia/vector-databases/06-patrones-para-rag.md",
         "ia/vector-databases/07-buenas-practicas.md"
       ],
-      "count": 71
+      "count": 63
     },
     {
       "hash": "5a9d824dcf18e14a",
       "lang": "python",
       "chars": 121,
       "manuals": [
-        "data-engineering/delta-lake",
         "data-engineering/iceberg",
         "data-engineering/parquet",
         "full-stack/backend/django",
@@ -1898,14 +1888,6 @@
         "ia/vector-databases"
       ],
       "chapters": [
-        "data-engineering/delta-lake/01-introduccion-y-arquitectura.md",
-        "data-engineering/delta-lake/02-tablas-delta.md",
-        "data-engineering/delta-lake/03-acid-y-transaction-log.md",
-        "data-engineering/delta-lake/04-merge-updates-y-deletes.md",
-        "data-engineering/delta-lake/05-time-travel.md",
-        "data-engineering/delta-lake/06-particionado-y-optimizacion.md",
-        "data-engineering/delta-lake/07-streaming.md",
-        "data-engineering/delta-lake/08-buenas-practicas.md",
         "data-engineering/iceberg/01-introduccion-y-arquitectura.md",
         "data-engineering/iceberg/02-tablas-snapshots-y-manifests.md",
         "data-engineering/iceberg/03-particionado-oculto.md",
@@ -1939,7 +1921,7 @@
         "ia/vector-databases/06-patrones-para-rag.md",
         "ia/vector-databases/07-buenas-practicas.md"
       ],
-      "count": 40
+      "count": 32
     },
     {
       "hash": "fb1882696289f802",
@@ -4795,20 +4777,16 @@
       "area": "data-engineering",
       "manual": "delta-lake",
       "manualPath": "data-engineering/delta-lake",
-      "title": "Introduccion Y Arquitectura",
-      "wordCount": 285,
-      "usefulLines": 43,
-      "headings": 12,
+      "title": "Introducción y arquitectura",
+      "wordCount": 749,
+      "usefulLines": 59,
+      "headings": 8,
       "codeBlocks": 2,
-      "links": 1,
-      "lists": 23,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "links": 7,
+      "lists": 15,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "data-engineering/delta-lake/02-tablas-delta.md",
@@ -4816,99 +4794,79 @@
       "manual": "delta-lake",
       "manualPath": "data-engineering/delta-lake",
       "title": "Tablas Delta",
-      "wordCount": 278,
-      "usefulLines": 43,
-      "headings": 12,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 23,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "wordCount": 517,
+      "usefulLines": 93,
+      "headings": 8,
+      "codeBlocks": 11,
+      "links": 5,
+      "lists": 7,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "data-engineering/delta-lake/03-acid-y-transaction-log.md",
       "area": "data-engineering",
       "manual": "delta-lake",
       "manualPath": "data-engineering/delta-lake",
-      "title": "Acid Y Transaction Log",
-      "wordCount": 306,
+      "title": "ACID y transaction log",
+      "wordCount": 845,
       "usefulLines": 44,
-      "headings": 12,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 24,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "headings": 8,
+      "codeBlocks": 0,
+      "links": 5,
+      "lists": 10,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "data-engineering/delta-lake/04-merge-updates-y-deletes.md",
       "area": "data-engineering",
       "manual": "delta-lake",
       "manualPath": "data-engineering/delta-lake",
-      "title": "Merge Updates Y Deletes",
-      "wordCount": 304,
-      "usefulLines": 44,
-      "headings": 12,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 24,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "title": "MERGE, UPDATE y DELETE",
+      "wordCount": 441,
+      "usefulLines": 82,
+      "headings": 5,
+      "codeBlocks": 6,
+      "links": 3,
+      "lists": 7,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "data-engineering/delta-lake/05-time-travel.md",
       "area": "data-engineering",
       "manual": "delta-lake",
       "manualPath": "data-engineering/delta-lake",
-      "title": "Time Travel",
-      "wordCount": 277,
-      "usefulLines": 43,
-      "headings": 12,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 23,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "title": "Time travel",
+      "wordCount": 497,
+      "usefulLines": 52,
+      "headings": 5,
+      "codeBlocks": 8,
+      "links": 3,
+      "lists": 3,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "data-engineering/delta-lake/06-particionado-y-optimizacion.md",
       "area": "data-engineering",
       "manual": "delta-lake",
       "manualPath": "data-engineering/delta-lake",
-      "title": "Particionado Y Optimizacion",
-      "wordCount": 284,
-      "usefulLines": 43,
-      "headings": 12,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 23,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "title": "Particionado y optimización",
+      "wordCount": 589,
+      "usefulLines": 45,
+      "headings": 7,
+      "codeBlocks": 4,
+      "links": 3,
+      "lists": 3,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "data-engineering/delta-lake/07-streaming.md",
@@ -4916,39 +4874,31 @@
       "manual": "delta-lake",
       "manualPath": "data-engineering/delta-lake",
       "title": "Streaming",
-      "wordCount": 260,
-      "usefulLines": 42,
-      "headings": 12,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 22,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "wordCount": 507,
+      "usefulLines": 90,
+      "headings": 7,
+      "codeBlocks": 5,
+      "links": 3,
+      "lists": 9,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "data-engineering/delta-lake/08-buenas-practicas.md",
       "area": "data-engineering",
       "manual": "delta-lake",
       "manualPath": "data-engineering/delta-lake",
-      "title": "Buenas Practicas",
-      "wordCount": 270,
+      "title": "Buenas prácticas",
+      "wordCount": 455,
       "usefulLines": 41,
-      "headings": 11,
-      "codeBlocks": 2,
-      "links": 0,
-      "lists": 23,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "headings": 8,
+      "codeBlocks": 1,
+      "links": 4,
+      "lists": 22,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "data-engineering/duckdb/01-introduccion-y-casos-de-uso.md",

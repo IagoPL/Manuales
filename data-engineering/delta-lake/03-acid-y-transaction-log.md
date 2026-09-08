@@ -1,70 +1,76 @@
-# Acid Y Transaction Log
+# ACID y transaction log
 
-Este capitulo profundiza en **Acid Y Transaction Log** dentro del manual de **Delta Lake**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+El transaction log es el núcleo de Delta Lake: cada commit produce una **versión** y un **snapshot** serializable. Los lectores no listan el directorio a ciegas; reconstruyen el estado a partir de `_delta_log`.
 
-## Objetivo
+Documentación: [control de concurrencia](https://docs.delta.io/latest/concurrency-control.html), [compatibilidad / table features](https://docs.delta.io/latest/versioning.html), [protocolo](https://github.com/delta-io/delta/blob/master/PROTOCOL.md).
 
-Al terminar este capitulo sabras explicar acid y transaction log, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+## Escritor A, escritor B, lector
 
-## Conceptos clave
+Imagina `/data/events`:
 
-- **Acid Y Transaction Log:** pieza central de Delta Lake en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Acid:** aspecto a dominar dentro de Acid Y Transaction Log.
-- **Transaction:** aspecto a dominar dentro de Acid Y Transaction Log.
-- **Log:** aspecto a dominar dentro de Acid Y Transaction Log.
+1. El **lector** abre la tabla y fija el snapshot 12. Durante su job, A y B commitean 13 y 14. El lector **sigue viendo 12**: aislamiento de snapshot. No ve un mezclado de ficheros de 13 y 14.
+2. El **escritor A** lee el snapshot 12, escribe data files nuevos (aún no visibles) y, al commitear, comprueba que nadie ha invalidado su supuesto. Si no hay conflicto, el log pasa a 13.
+3. El **escritor B** hizo lo mismo sobre 12. Al validar, el log ya está en 13. Si B solo **añade** ficheros (append ciego) suele poder commitear 14. Si B **reescribe** ficheros que A ya tocó (`UPDATE`/`DELETE`/`MERGE` sobre el mismo conjunto), el commit **falla** con una excepción de modificación concurrente: la tabla no queda a medias.
 
-## Desarrollo del tema
+Eso es **optimistic concurrency control**: se trabaja contra un snapshot, se preparan ficheros y se valida al final. No hay un lock de fila estilo OLTP.
 
-### Enfoque practico
+## Las cuatro letras, en esta tabla
 
-1. Define el problema que resuelve **Acid Y Transaction Log**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
+**Atomicidad.** Un commit entra entero o no entra. El lector nunca ve “la mitad del MERGE”. Los data files huérfanos de un job que murió antes del commit no forman parte de ningún snapshot.
 
-### Flujo recomendado
+**Consistencia.** El protocolo rechaza writes que rompen el esquema (capítulo 2), y el snapshot es un conjunto coherente de Add/Remove. Constraints (`CHECK`) son una table feature aparte: solo aplican si están activas y el writer las entiende.
 
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
-```
+**Aislamiento.** Lecturas ven un snapshot fijo. Escrituras concurrentes se serializan en el log. El aislamiento efectivo es el que documenta Delta para Spark (serializable entre esas operaciones), no “cualquier motor, cualquier storage”.
 
-## Ejemplo
+**Durabilidad.** El commit es durable cuando el storage ha persistido el JSON del log (y los data files que referencia). Si el object store o el log store no cumplen los requisitos de atomicidad/listado que pide la guía de almacenamiento vigente, esas garantías se degradan. No inventes consistencia de S3/ADLS: sigue la [documentación de storage](https://docs.delta.io/latest/delta-storage.html) de tu versión.
 
-```python
-# Ejemplo con Delta Lake
-from pathlib import Path
+## Commits, versiones, snapshots
 
-def procesar(ruta: str) -> list[str]:
-    return Path(ruta).read_text(encoding='utf-8').splitlines()
-```
+Cada fichero `0000000000000000000N.json` es el commit *N*. Describe acciones: añadir ficheros, quitar ficheros del snapshot, cambiar metadata, protocol, etc. El snapshot *N* se obtiene rejugando el log (o partiendo de un checkpoint) hasta *N*.
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+Los **checkpoints** (Parquet en `_delta_log`) compactan prefijos del log para que un lector no abra diez mil JSON. Son un detalle de implementación del protocolo, no un backup.
 
-## Errores habituales
+`DESCRIBE HISTORY` lista commits (capítulo 5). Leer `VERSION AS OF` materializa el snapshot. No son lo mismo.
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de acid y transaction log.
-- No probar casos limite ni errores esperados.
+## No edites `_delta_log`
 
-## Buenas practicas
+`_delta_log` es parte interna del protocolo.
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Datos reproducibles y pipelines idempotentes.
-- Versiona esquemas y contratos.
+No hagas:
 
-## Ejercicios
+- editar o reescribir JSON de commits;
+- borrar un `0000….json` “porque falló un job”;
+- mezclar a mano Parquet de otra tabla en el directorio;
+- copiar solo los data files sin el log (o al revés) y tratarlo como la misma tabla.
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Acid Y Transaction Log**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+Para inspección pedagógica: `list` del directorio y `DESCRIBE HISTORY`. La reparación de una tabla corrupta es un incidente: restaura desde backup o desde un snapshot que **aún** exista, no parchees el log.
 
-## Siguiente paso
+## Conflictos (qué choca con qué)
 
-Continua con [Merge Updates Y Deletes](04-merge-updates-y-deletes.md).
+|  | INSERT/append | UPDATE / DELETE / MERGE | Compactación (`dataChange = false`) |
+| --- | --- | --- | --- |
+| INSERT/append | no chocan | pueden chocar | no chocan |
+| UPDATE / DELETE / MERGE | pueden chocar | pueden chocar | pueden chocar |
+| Compactación | no chocan | pueden chocar | pueden chocar |
+
+“Pueden” depende de si operan sobre **los mismos ficheros**. Particionar por la columna del `WHERE` y **poner esa columna en la condición** reduce solapes. Particionar por cardinalidad altísima para “evitar conflictos” crea otro problema (capítulo 6).
+
+Si dos streams usan el **mismo** `checkpointLocation` a la vez, puedes ver `ConcurrentTransactionException`. Un checkpoint de streaming no se comparte.
+
+## Protocolo: reader, writer, table features
+
+Cada tabla declara un **read protocol** y un **write protocol**. Desde Delta Lake 2.3 las **table features** afinan qué capacidades hay (CDF, deletion vectors, column mapping, clustering, …) en lugar de un número opaco solo.
+
+- Un **reader** que no entiende una feature de lectura **no puede** leer la tabla.
+- Un **writer** que no entiende una feature de escritura **no puede** escribirla.
+- Activar una feature puede **subir** esos requisitos. Los clientes viejos (otro motor, otro job, un Trino desactualizado) dejan de ser compatibles.
+
+No actives deletion vectors, column mapping, clustering u otras features “porque sí”. Elige la mínima que necesitas. `ALTER TABLE … SET TBLPROPERTIES ('delta.minReaderVersion' = …)` existe; usarlo a ciegas es una forma fácil de romper lectores.
+
+Delta es **compatible hacia atrás** en el sentido habitual: un cliente nuevo lee tablas viejas. **No** es gratis hacia adelante: la tabla nueva puede exigir un cliente nuevo.
+
+## Storage y commits
+
+Delta se usa sobre S3, ADLS, GCS, HDFS y filesystems locales. El commit necesita que el motor pueda publicar el siguiente JSON del log de forma segura cuando hay varios writers. En algunos despliegues históricos eso implicaba un **LogStore** coordinado; la guía vigente de tu release es la fuente, no recetas de blogs de 2019. Este manual no configura un cloud concreto.
+
+Siguiente: [MERGE, updates y deletes](04-merge-updates-y-deletes.md).

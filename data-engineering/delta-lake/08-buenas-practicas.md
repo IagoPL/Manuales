@@ -1,65 +1,60 @@
-# Buenas Practicas
+# Buenas prácticas
 
-Este capitulo profundiza en **Buenas Practicas** dentro del manual de **Delta Lake**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+Cierra el recorrido: `/data/events` como lago versionado, `/data/customers` actualizado con MERGE, streams con checkpoint propio. Las decisiones de abajo son operativas; no son un checklist de producto Databricks.
 
-## Objetivo
+Documentación: [docs.delta.io](https://docs.delta.io/), [optimizaciones](https://docs.delta.io/latest/optimizations-oss.html), [utilidades](https://docs.delta.io/latest/delta-utility.html), [Delta Kernel](https://docs.delta.io/latest/delta-kernel.html).
 
-Al terminar este capitulo sabras explicar buenas practicas, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+## Diseño
 
-## Conceptos clave
+- Esquema **explícito** en ingestión (sobre todo streaming). Enforcement por defecto; evolución con `ALTER TABLE` o `WITH SCHEMA EVOLUTION` / `withSchemaEvolution()` **cuando** el contrato lo permite. No dejes `mergeSchema=true` en todos los writes.
+- Particiona solo si el predicado estable y el volumen por partición lo justifican. Evita high-cardinality (`user_id`, ids de evento).
+- Delta Lake **no** es Medallion. Si usas bronze/silver/gold, es un patrón de *pipelines*, no una obligación del formato.
+- Spark es el motor de este manual. Flink, Trino, Presto, Hive, Athena o un conector **Kernel** pueden leer/escribir Delta; el soporte de OPTIMIZE, CDF, deletion vectors o clustering **no** es idéntico. Comprueba el conector.
 
-- **Buenas Practicas:** pieza central de Delta Lake en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Buenas:** aspecto a dominar dentro de Buenas Practicas.
-- **Practicas:** aspecto a dominar dentro de Buenas Practicas.
+## Escrituras
 
-## Desarrollo del tema
+- Evita tiny files: no hagas un append de 40 filas cada segundo sin compactar después. Agrupa micro-batches o programa `OPTIMIZE` en particiones calientes.
+- `overwrite` es un snapshot nuevo, no un update. El historial queda; el actual no.
+- `MERGE` con predicados que acoten ficheros (y particiones). Deduplica el source. No prometas que el merge es barato.
+- Varios writers: entiende conflictos (capítulo 3). No lances dos streams con el mismo checkpoint.
 
-### Enfoque practico
+## Operación
 
-1. Define el problema que resuelve **Buenas Practicas**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
+- Compaction OSS: `OPTIMIZE` / `executeCompaction()`. Z-Order solo en columnas de filtro real, con stats.
+- `VACUUM` con retención **segura** (default 7 días de data files). `DRY RUN` antes en tablas grandes. No uses `RETAIN 0 HOURS` fuera de un lab marcado como destructivo.
+- Observa `DESCRIBE DETAIL` (ficheros, tamaño, protocol) e `HISTORY` (qué operaciones hinchan el log).
+- Storage: S3, ADLS, GCS, HDFS. Configura el filesystem/Hadoop según la guía **actual** de Delta; no copies LogStore de 2019 sin verificar si tu release aún lo necesita.
 
-### Flujo recomendado
+## Evolución
 
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
+- Añadir columnas es barato y explícito. Renombrar/quitar/cambiar tipo suele exigir `overwriteSchema` o table features (column mapping) que **suben** el protocolo.
+- CDF, deletion vectors, clustering, identity columns: actívalos porque un lector/writer los necesita, no por moda. Un reader antiguo dejará de abrir la tabla.
+- Distingue **Delta Lake OSS** de Databricks Runtime, Unity Catalog (producto), Predictive Optimization y Auto Optimize gestionado.
+
+## Streaming
+
+- `checkpointLocation` persistente, no un `/tmp` del driver. Distinto de `_delta_log`.
+- Exactly-once del **sink Delta** ≠ exactly-once de todo el sistema.
+- Source append-only: `skipChangeCommits` si la fuente recibe DML y no te importan esos commits; CDF si sí te importan los cambios de fila.
+- `foreachBatch` + MERGE: idempotencia (`txnAppId`/`txnVersion` o merge por clave estable). Sin side effects sueltos.
+
+## Recovery
+
+- Time travel y `RESTORE` ayudan a **inspeccionar y revertir** dentro de la retención. No sustituyen backups (otro bucket, replicación, export).
+- Si el log o los Parquet desaparecen del prefix, no hay snapshot que consultar.
+- No edites `_delta_log` para “recuperar”. Restaura una copia o un `RESTORE` a una versión que aún tenga ficheros.
+
+## Recorrido del manual
+
+```text
+Parquet + _delta_log
+  → tabla events
+  → commits / snapshots
+  → MERGE customers
+  → VERSION AS OF / VACUUM
+  → OPTIMIZE / particiones
+  → readStream / writeStream
+  → operación
 ```
 
-## Ejemplo
-
-```python
-# Ejemplo con Delta Lake
-from pathlib import Path
-
-def procesar(ruta: str) -> list[str]:
-    return Path(ruta).read_text(encoding='utf-8').splitlines()
-```
-
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
-
-## Errores habituales
-
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de buenas practicas.
-- No probar casos limite ni errores esperados.
-
-## Buenas practicas
-
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Datos reproducibles y pipelines idempotentes.
-- Versiona esquemas y contratos.
-
-## Ejercicios
-
-1. Reproduce el ejemplo minimo del capitulo sobre **Buenas Practicas**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+Iceberg se documenta aparte: mismo tipo de problema (tabla lakehouse), otro protocolo. No mezcles recetas.
