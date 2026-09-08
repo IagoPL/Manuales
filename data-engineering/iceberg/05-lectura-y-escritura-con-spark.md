@@ -1,70 +1,123 @@
-# Lectura Y Escritura Con Spark
+# Lectura y escritura con Spark
 
-Este capitulo profundiza en **Lectura Y Escritura Con Spark** dentro del manual de **Apache Iceberg**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+Spark es el motor más cubierto en la documentación oficial de Iceberg; no es un requisito del formato. Necesitas un **runtime Iceberg compatible con tu Spark/Scala**, un **catálogo** configurado y, para varias operaciones SQL, las **Iceberg Spark extensions**.
 
-## Objetivo
+Documentación: [getting started](https://iceberg.apache.org/docs/latest/spark-getting-started/), [configuración](https://iceberg.apache.org/docs/latest/spark-configuration/), [writes](https://iceberg.apache.org/docs/latest/spark-writes/), [queries](https://iceberg.apache.org/docs/latest/spark-queries/), [releases](https://iceberg.apache.org/releases/).
 
-Al terminar este capitulo sabras explicar lectura y escritura con spark, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+## Runtime (elige el de tu Spark)
 
-## Conceptos clave
+La línea estable comprobada al escribir esto es Iceberg **1.11.0** (mayo 2026). La página de releases publica runtimes distintos, no un JAR único:
 
-- **Lectura Y Escritura Con Spark:** pieza central de Apache Iceberg en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Lectura:** aspecto a dominar dentro de Lectura Y Escritura Con Spark.
-- **Escritura:** aspecto a dominar dentro de Lectura Y Escritura Con Spark.
-- **Con:** aspecto a dominar dentro de Lectura Y Escritura Con Spark.
+- Spark 4.1 + Scala 2.13
+- Spark 4.0 + Scala 2.13
+- Spark 3.5 + Scala 2.12 o 2.13
 
-## Desarrollo del tema
+Spark 3.4 está **deprecado** en 1.11.0. No copies una coordenada de un tutorial viejo (3.2/3.3) como receta actual. El artefacto tiene la forma `org.apache.iceberg:iceberg-spark-runtime-<spark>_<scala>:<iceberg>`.
 
-### Enfoque practico
+## Catálogo mínimo
 
-1. Define el problema que resuelve **Lectura Y Escritura Con Spark**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
+`spark.sql.catalog.<nombre>` registra un catálogo Spark. Iceberg aporta `SparkCatalog` (Hive/Hadoop/REST/JDBC/…) y `SparkSessionCatalog` (envuelve el catálogo de sesión para mezclar tablas Iceberg y no Iceberg).
 
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
+```text
+spark.sql.extensions = org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions
+spark.sql.catalog.local = org.apache.iceberg.spark.SparkCatalog
+spark.sql.catalog.local.type = hadoop
+spark.sql.catalog.local.warehouse = /warehouse
 ```
 
-## Ejemplo
+`local` es solo el nombre. `type=hadoop` es un warehouse de directorios (útil en laboratorio). Producción multi-motor suele ir a **REST** u otro catálogo coordinado (capítulo 6). Las extensions habilitan `CALL`, `MERGE`/`UPDATE`/`DELETE` en Spark 3.x y DDL extra. En Spark 4.0 los procedures `CALL` pueden ir nativos (son *case-sensitive*).
+
+## Crear y leer
+
+```sql
+CREATE TABLE local.analytics.events (
+  id BIGINT,
+  event_time TIMESTAMP,
+  type STRING
+)
+USING iceberg
+PARTITIONED BY (days(event_time));
+
+INSERT INTO local.analytics.events VALUES
+  (1, TIMESTAMP '2026-09-08 10:15:00', 'signup'),
+  (2, TIMESTAMP '2026-09-08 10:16:00', 'purchase');
+
+SELECT type, count(*) FROM local.analytics.events GROUP BY type;
+```
 
 ```python
-# Ejemplo con Apache Iceberg
-from pathlib import Path
-
-def procesar(ruta: str) -> list[str]:
-    return Path(ruta).read_text(encoding='utf-8').splitlines()
+eventos = spark.table("local.analytics.events")
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+## DataFrameWriterV2
 
-## Errores habituales
+Para tablas de **catálogo**, la API recomendada es `writeTo`, no `df.write.format("iceberg")` (eso abre una referencia aislada que no refresca con el catálogo).
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de lectura y escritura con spark.
-- No probar casos limite ni errores esperados.
+```python
+lote = spark.createDataFrame(
+    [(3, "2026-09-08 11:00:00", "page_view")],
+    "id LONG, event_time STRING, type STRING",
+).selectExpr("id", "CAST(event_time AS TIMESTAMP) AS event_time", "type")
 
-## Buenas practicas
+lote.writeTo("local.analytics.events").append()
+```
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Datos reproducibles y pipelines idempotentes.
-- Versiona esquemas y contratos.
+Equivalencias: `append()` → `INSERT INTO`; `overwritePartitions()` → overwrite **dinámico**; `create()` / `replace()` → CTAS / RTAS.
 
-## Ejercicios
+## INSERT e INSERT OVERWRITE
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Lectura Y Escritura Con Spark**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+`INSERT INTO` añade un snapshot `append`. `INSERT OVERWRITE` es atómico pero el **alcance** depende del modo de Spark:
 
-## Siguiente paso
+- **static** (default de Spark): sin `PARTITION`, reemplaza **toda** la tabla;
+- **dynamic** (`spark.sql.sources.partitionOverwriteMode=dynamic`): reemplaza solo las particiones que el `SELECT` produce.
 
-Continua con [Catalogos](06-catalogos.md).
+Iceberg recomienda overwrite dinámico o, mejor, `MERGE` cuando quieres tocar ficheros concretos. No uses overwrite como “update”.
+
+## MERGE / UPDATE / DELETE
+
+Soporte oficial (DSv2):
+
+| Operación | Notas |
+| --- | --- |
+| SQL `INSERT INTO` / `INSERT OVERWRITE` | ANSI store assignment |
+| SQL `MERGE` / `UPDATE` / `DELETE` | Requieren **Iceberg Spark extensions** (Spark 3.x). Row-level delete no es “Spark vanilla”. |
+| DataFrame `append` / overwrite | Sí |
+| DataFrame `mergeInto` | **Spark 4.0+** (DSv2). No lo enseñes como universal. |
+
+SQL es el camino pedagógico más portable *dentro* de Spark 3.5–4.x cuando las extensions están puestas.
+
+```sql
+MERGE INTO local.analytics.events t
+USING local.analytics.event_fixes s
+ON t.id = s.id
+WHEN MATCHED AND s.op = 'delete' THEN DELETE
+WHEN MATCHED THEN UPDATE SET t.type = s.type
+WHEN NOT MATCHED AND s.op <> 'delete' THEN INSERT (id, event_time, type)
+  VALUES (s.id, s.event_time, s.type);
+```
+
+Iceberg implementa `MERGE` **reescribiendo los data files afectados** en un commit `overwrite`. No es coste constante. Un source con dos filas para el mismo `id` errorrea. No copies la semántica de otro formato de tabla.
+
+`DELETE`/`UPDATE` con filtro de partición completa pueden ser metadata-only; si tocan filas, reescriben o escriben delete files (capítulo 2).
+
+## Time travel
+
+```sql
+SELECT *
+FROM local.analytics.events
+VERSION AS OF 10963874102873;
+
+SELECT *
+FROM local.analytics.events
+TIMESTAMP AS OF '2026-09-08 12:00:00';
+
+SELECT *
+FROM local.analytics.events
+VERSION AS OF 'audit';
+```
+
+`VERSION AS OF` acepta snapshot ID, branch o tag. También existen `FOR SYSTEM_VERSION AS OF` / `FOR SYSTEM_TIME AS OF`. En DataFrames: `.option("snapshot-id", …)` / `"as-of-timestamp"`.
+
+Time travel **no** es backup. `expire_snapshots` se lleva versiones (capítulo 7).
+
+Siguiente: [Catálogos](06-catalogos.md).

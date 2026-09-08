@@ -1,68 +1,75 @@
-# Catalogos
+# Catálogos
 
-Este capitulo profundiza en **Catalogos** dentro del manual de **Apache Iceberg**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+La pregunta que responde un catálogo Iceberg:
 
-## Objetivo
-
-Al terminar este capitulo sabras explicar catalogos, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
-
-## Conceptos clave
-
-- **Catalogos:** pieza central de Apache Iceberg en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Catalogos:** aspecto a dominar dentro de Catalogos.
-
-## Desarrollo del tema
-
-### Enfoque practico
-
-1. Define el problema que resuelve **Catalogos**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
+```text
+¿qué metadata.json es la versión actual de local.analytics.events?
 ```
 
-## Ejemplo
+Sin esa respuesta no hay tabla, solo un montón de ficheros.
 
-```python
-# Ejemplo con Apache Iceberg
-from pathlib import Path
+Documentación: [Spark catalogs](https://iceberg.apache.org/docs/latest/spark-configuration/), [REST Catalog](https://iceberg.apache.org/rest-catalog-spec/), [docs](https://iceberg.apache.org/docs/latest/).
 
-def procesar(ruta: str) -> list[str]:
-    return Path(ruta).read_text(encoding='utf-8').splitlines()
+## Catálogo ≠ warehouse
+
+| | Catálogo | Object storage / warehouse |
+| --- | --- | --- |
+| Qué guarda | Nombres, namespaces, **puntero** al metadata actual | Data files, delete files, metadata JSON, manifests |
+| Quién coordina commits | El catálogo (CAS / transacción / API) | El FileIO lee y escribe bytes |
+| Ejemplo | REST, Hive metastore, JDBC | S3, ADLS, GCS, HDFS, local |
+
+`DROP TABLE` *managed* puede borrar el warehouse; una tabla con `location` explícita suele ser *unmanaged*. El catálogo no es Glue, Snowflake, Databricks ni BigQuery: esos pueden **implementar** o integrar un catálogo compatible. Iceberg OSS no los exige.
+
+## Opciones OSS vigentes
+
+En `spark.sql.catalog.<name>.type`:
+
+| `type` | Papel |
+| --- | --- |
+| `hadoop` | Warehouse de directorios. Simple; débil para muchos writers / varios clusters. |
+| `hive` | Hive Metastore guarda la entrada y el metadata location. |
+| `rest` | Cliente habla **REST Catalog API**; detrás hay una implementación. |
+| `jdbc` | Metastore en una base SQL. |
+
+También aparecen `glue` y `nessie` como implementaciones. No son el núcleo pedagógico.
+
+`SparkCatalog` carga solo Iceberg. `SparkSessionCatalog` delega lo no-Iceberg al catálogo built-in de Spark (mismo metastore Hive, por ejemplo).
+
+## REST Catalog
+
+```text
+motor (Spark, Trino, Flink, …)
+        ↓  HTTP JSON (REST Catalog API)
+servidor de catálogo
+        ↓
+implementación (JDBC, Hive, custom, cloud…)
+        ↓
+puntero al metadata.json
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+REST **no** sirve los Parquet por HTTP. Estandariza *cómo* un motor crea tablas, lista namespaces y commitea el puntero. Varios motores contra el mismo REST es el patrón multi-engine actual.
 
-## Errores habituales
+```text
+spark.sql.catalog.lake = org.apache.iceberg.spark.SparkCatalog
+spark.sql.catalog.lake.type = rest
+spark.sql.catalog.lake.uri = http://catalog:8181
+```
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de catalogos.
-- No probar casos limite ni errores esperados.
+## Commits atómicos
 
-## Buenas practicas
+El writer:
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Datos reproducibles y pipelines idempotentes.
-- Versiona esquemas y contratos.
+1. escribe data/delete files y el **nuevo** metadata JSON;
+2. pide al catálogo sustituir el puntero `v12 → v13`.
 
-## Ejercicios
+Ese paso 2 es atómico **en el catálogo**. No afirmes que Iceberg “siempre commitea con rename de archivos” en S3/HDFS: Hadoop catalog, Hive, JDBC y REST implementan la atomicidad de formas distintas. Si el catálogo no puede hacer el swap de forma segura, dos writers se pisan.
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Catalogos**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+## Optimistic concurrency
 
-## Siguiente paso
+Dos jobs pueden producir ficheros a la vez. Solo uno gana el puntero. El perdedor **refresca**, comprueba si su cambio sigue siendo válido (¿alguien tocó los mismos ficheros / el mismo snapshot base?) y **reintenta** si el motor lo contempla.
 
-Continua con [Optimizacion](07-optimizacion.md).
+Un conflicto **no** se reintenta siempre en silencio. Un `MERGE` que leyó un snapshot ya inválido puede fallar: hay que relanzar la transacción. Dos streams o dos notebooks escribiendo la misma tabla sin coordinación van a chocar.
+
+Elige el catálogo según **cuántos motores y procesos** commitean, no según el tutorial de `type=hadoop`.
+
+Siguiente: [Optimización](07-optimizacion.md).
