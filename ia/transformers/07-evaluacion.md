@@ -1,68 +1,88 @@
-# Evaluacion
+# Evaluación
 
-Este capitulo profundiza en **Evaluacion** dentro del manual de **Transformers**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+No existe **una métrica universal para Transformers**. Un F1 de clasificación, una perplejidad de language model y un ROUGE de resumen contestan preguntas distintas. Si no puedes decir qué error de producto baja cuando sube el número, estás midiendo por inercia.
 
-## Objetivo
+Las herramientas del ecosistema (`evaluate`, LightEval, `Trainer.compute_metrics`) se documentan en [Evaluación (Hugging Face)](../huggingface/06-evaluacion.md). Aquí: alinear métrica con tarea, entender perplejidad, y no contaminar el test.
 
-Al terminar este capitulo sabras explicar evaluacion, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+## Train, validation, test
 
-## Conceptos clave
+| Split | Uso |
+| --- | --- |
+| **train** | Actualizar pesos. |
+| **validation** (dev) | Early stopping, learning rate, comparación de runs. |
+| **test** | Cifra que publicas o entregas. Pocas veces; no cada experimento. |
 
-- **Evaluacion:** pieza central de Transformers en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Evaluacion:** aspecto a dominar dentro de Evaluacion.
+Mirar el test para elegir umbrales, prompts o hiperparámetros es **data leakage**: el test deja de ser test. Otras fugas: filas duplicadas entre splits, filtrar el corpus con reglas vistas en test, ajustar el vocabulario o el umbral con el conjunto de reporte.
 
-## Desarrollo del tema
+**Benchmark contamination:** si el preentrenamiento o un corpus público ya contenía el test (o una paráfrasis), la métrica inflada no mide generalización. En LLM esto es habitual y difícil de certificar del todo; al menos no *añadas* el test al train y documenta la fecha y la revisión del dataset.
 
-### Enfoque practico
+En logs o series temporales, un `train_test_split` aleatorio mezcla futuro y pasado. El corte debe ser temporal.
 
-1. Define el problema que resuelve **Evaluacion**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
+## Clasificación
 
-### Flujo recomendado
+Accuracy es el porcentaje de aciertos. Con clases **desbalanceadas** puede ser engañosa: un modelo que siempre predice la clase mayoritaria obtiene accuracy alta y no sirve.
 
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
-```
+Según el problema:
 
-## Ejemplo
+- **precision**: de lo que marcaste positivo, cuánto lo era;
+- **recall**: de los positivos reales, cuántos cazaste;
+- **F1**: media armónica; útil cuando importan ambos y hay imbalance.
+
+Macro-F1 trata clases por igual; el F1 ponderado sigue la prevalencia. En NER, el F1 de **entidad** importa más que la accuracy de tokens `O`. Una matriz de confusión explica el número único.
 
 ```python
-# Ejemplo con Transformers
-from pathlib import Path
+import numpy as np
 
-def procesar(ruta: str) -> list[str]:
-    return Path(ruta).read_text(encoding='utf-8').splitlines()
+def f1_binario(y_true, y_pred):
+    yt = np.asarray(y_true)
+    yp = np.asarray(y_pred)
+    tp = int(((yp == 1) & (yt == 1)).sum())
+    fp = int(((yp == 1) & (yt == 0)).sum())
+    fn = int(((yp == 0) & (yt == 1)).sum())
+    prec = tp / (tp + fp) if (tp + fp) else 0.0
+    rec = tp / (tp + fn) if (tp + fn) else 0.0
+    return 0.0 if (prec + rec) == 0 else 2 * prec * rec / (prec + rec)
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+`evaluate.load("f1")` o sklearn hacen lo mismo. Ninguna librería es obligatoria.
 
-## Errores habituales
+## Generación
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de evaluacion.
-- No probar casos limite ni errores esperados.
+BLEU y ROUGE miden **solapamiento de n-gramas** con una referencia. No son “calidad”. Un resumen útil que usa otras palabras puntúa bajo; una paráfrasis torpe con n-gramas compartidos puntúa alto.
 
-## Buenas practicas
+Señales que suelen combinarse:
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Fija version de modelo y dataset.
-- Evalua antes de desplegar.
+- métricas automáticas de solapamiento (BLEU, ROUGE, METEOR, …) cuando hay referencia;
+- **exact match** / accuracy de formato en tareas con respuesta cerrada;
+- métricas *task-specific* (¿el JSON parsea? ¿el código pasa tests?);
+- **evaluación humana** o rúbrica (utilidad, fidelidad, toxicidad);
+- *suites* de benchmark (MMLU y similares) con el caveat de contaminación.
 
-## Ejercicios
+Para modelos generativos actuales, una sola métrica automática casi nunca basta. LightEval cubre *leaderboards* de LLM; no sustituye un F1 de clasificación binaria.
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Evaluacion**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+## Perplejidad
 
-## Siguiente paso
+En language modeling autoregresivo, la perplejidad resume cómo de “sorprendido” está el modelo por el texto: más baja, mejor ajuste a esa distribución de tokens (exponencial de la cross-entropy media).
 
-Continua con [Buenas Practicas](08-buenas-practicas.md).
+Advertencias:
+
+- **No compares perplejidad entre tokenizers distintos.** Más tokens por frase cambia la media por token.
+- Tampoco compares a la ligera modelos con vocabularios distintos o con distinto preprocesado.
+- Una PPL baja en el test de Wikipedia no implica un buen asistente de chat.
+
+Úsala para language modeling y para detectar degradación de un checkpoint, no como nota única de un producto conversacional.
+
+## Evaluate y LightEval
+
+[`evaluate`](https://huggingface.co/docs/evaluate) sigue existiendo para métricas clásicas y para enchufar `compute_metrics` al `Trainer`. [LightEval](https://huggingface.co/docs/lighteval/index) apunta a evaluación de LLM con varios backends. **Ninguna es dependencia de Transformers.** sklearn, numpy o un script de negocio valen si la métrica está bien definida.
+
+El `Trainer` de 5.x acepta `compute_metrics` igual que en el manual Hugging Face; no copies aquí otro `Trainer` completo.
+
+## Qué reportar
+
+1. Tarea y split (con revisión/fecha del dataset si existe).
+2. Métrica(s) y por qué.
+3. Baseline (modelo sin FT, mayoría, o el checkpoint previo).
+4. Variabilidad: una seed no es un paper, pero un único número de un run overfitado tampoco.
+
+Siguiente: decisiones que evitan sorpresas en [buenas prácticas](08-buenas-practicas.md).
