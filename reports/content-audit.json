@@ -7,21 +7,21 @@
     "priorities": {
       "P0": 0,
       "P1": 0,
-      "P2": 96,
-      "P3": 646
+      "P2": 87,
+      "P3": 655
     },
     "flags": {
       "known_outdated_pattern": 0,
-      "generic_template": 88,
+      "generic_template": 79,
       "generic_example": 71,
-      "duplicated_code": 96,
+      "duplicated_code": 87,
       "very_short": 196,
       "high_freshness_risk": 141
     },
     "trackedTemplatePhrase": {
       "pattern": "Este capitulo profundiza",
-      "chapters": 88,
-      "manuals": 18,
+      "chapters": 79,
+      "manuals": 17,
       "areas": [
         "data-engineering",
         "full-stack",
@@ -30,36 +30,13 @@
     },
     "lengthBands": {
       "very_short": 196,
-      "short": 404,
-      "normal": 139,
+      "short": 400,
+      "normal": 143,
       "long": 3
     },
     "duplicateGroups": 10
   },
   "manuals": [
-    {
-      "path": "full-stack/frontend/tailwind",
-      "slug": "tailwind",
-      "area": "full-stack",
-      "chapters": 9,
-      "priorities": {
-        "P0": 0,
-        "P1": 0,
-        "P2": 9,
-        "P3": 0
-      },
-      "flags": {
-        "known_outdated_pattern": 0,
-        "generic_template": 9,
-        "generic_example": 0,
-        "duplicated_code": 9,
-        "very_short": 0,
-        "high_freshness_risk": 0
-      },
-      "trackedPhrase": 9,
-      "reviewFlags": 9,
-      "genericRatio": 1
-    },
     {
       "path": "data-engineering/delta-lake",
       "slug": "delta-lake",
@@ -1372,6 +1349,29 @@
       "genericRatio": 0
     },
     {
+      "path": "full-stack/frontend/tailwind",
+      "slug": "tailwind",
+      "area": "full-stack",
+      "chapters": 9,
+      "priorities": {
+        "P0": 0,
+        "P1": 0,
+        "P2": 0,
+        "P3": 9
+      },
+      "flags": {
+        "known_outdated_pattern": 0,
+        "generic_template": 0,
+        "generic_example": 0,
+        "duplicated_code": 0,
+        "very_short": 0,
+        "high_freshness_risk": 0
+      },
+      "trackedPhrase": 0,
+      "reviewFlags": 0,
+      "genericRatio": 0
+    },
+    {
       "path": "full-stack/frontend/ux",
       "slug": "ux",
       "area": "full-stack",
@@ -1806,7 +1806,6 @@
         "full-stack/backend/laravel",
         "full-stack/backend/nestjs",
         "full-stack/backend/spring-boot",
-        "full-stack/frontend/tailwind",
         "full-stack/frontend/zustand",
         "ia/transformers",
         "ia/vector-databases"
@@ -1868,15 +1867,6 @@
         "full-stack/backend/laravel/01-introduccion-y-entorno.md",
         "full-stack/backend/nestjs/01-introduccion-y-entorno.md",
         "full-stack/backend/spring-boot/01-introduccion-y-entorno.md",
-        "full-stack/frontend/tailwind/01-introduccion-y-configuracion.md",
-        "full-stack/frontend/tailwind/02-utility-first.md",
-        "full-stack/frontend/tailwind/03-layout-responsive.md",
-        "full-stack/frontend/tailwind/04-tipografia-color-y-espaciado.md",
-        "full-stack/frontend/tailwind/05-componentes-reutilizables.md",
-        "full-stack/frontend/tailwind/06-estados-variantes-y-dark-mode.md",
-        "full-stack/frontend/tailwind/07-personalizacion-del-tema.md",
-        "full-stack/frontend/tailwind/08-integracion-con-frameworks.md",
-        "full-stack/frontend/tailwind/09-buenas-practicas.md",
         "full-stack/frontend/zustand/01-introduccion-y-casos-de-uso.md",
         "full-stack/frontend/zustand/02-stores-basicos.md",
         "full-stack/frontend/zustand/03-selectores-y-rendimiento.md",
@@ -1901,7 +1891,7 @@
         "ia/vector-databases/06-patrones-para-rag.md",
         "ia/vector-databases/07-buenas-practicas.md"
       ],
-      "count": 88
+      "count": 79
     },
     {
       "hash": "5a9d824dcf18e14a",
@@ -11647,171 +11637,144 @@
       "area": "full-stack",
       "manual": "tailwind",
       "manualPath": "full-stack/frontend/tailwind",
-      "title": "Introduccion Y Configuracion",
-      "wordCount": 285,
-      "usefulLines": 43,
-      "headings": 11,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 23,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "title": "Introducción y configuración",
+      "wordCount": 362,
+      "usefulLines": 49,
+      "headings": 10,
+      "codeBlocks": 6,
+      "links": 6,
+      "lists": 9,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "full-stack/frontend/tailwind/02-utility-first.md",
       "area": "full-stack",
       "manual": "tailwind",
       "manualPath": "full-stack/frontend/tailwind",
-      "title": "Utility First",
-      "wordCount": 276,
+      "title": "Utility-first",
+      "wordCount": 358,
       "usefulLines": 43,
-      "headings": 11,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 23,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "headings": 9,
+      "codeBlocks": 3,
+      "links": 3,
+      "lists": 16,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "full-stack/frontend/tailwind/03-layout-responsive.md",
       "area": "full-stack",
       "manual": "tailwind",
       "manualPath": "full-stack/frontend/tailwind",
-      "title": "Layout Responsive",
-      "wordCount": 278,
-      "usefulLines": 43,
-      "headings": 11,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 23,
+      "title": "Layout y responsive",
+      "wordCount": 321,
+      "usefulLines": 51,
+      "headings": 8,
+      "codeBlocks": 4,
+      "links": 4,
+      "lists": 9,
       "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "full-stack/frontend/tailwind/04-tipografia-color-y-espaciado.md",
       "area": "full-stack",
       "manual": "tailwind",
       "manualPath": "full-stack/frontend/tailwind",
-      "title": "Tipografia Color Y Espaciado",
-      "wordCount": 304,
-      "usefulLines": 44,
-      "headings": 11,
+      "title": "Tipografía, color y espaciado",
+      "wordCount": 286,
+      "usefulLines": 45,
+      "headings": 9,
       "codeBlocks": 2,
-      "links": 1,
-      "lists": 24,
+      "links": 5,
+      "lists": 9,
       "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "full-stack/frontend/tailwind/05-componentes-reutilizables.md",
       "area": "full-stack",
       "manual": "tailwind",
       "manualPath": "full-stack/frontend/tailwind",
-      "title": "Componentes Reutilizables",
-      "wordCount": 279,
-      "usefulLines": 43,
-      "headings": 11,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 23,
+      "title": "Componentes reutilizables",
+      "wordCount": 301,
+      "usefulLines": 66,
+      "headings": 9,
+      "codeBlocks": 6,
+      "links": 5,
+      "lists": 9,
       "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "full-stack/frontend/tailwind/06-estados-variantes-y-dark-mode.md",
       "area": "full-stack",
       "manual": "tailwind",
       "manualPath": "full-stack/frontend/tailwind",
-      "title": "Estados Variantes Y Dark Mode",
-      "wordCount": 315,
-      "usefulLines": 44,
-      "headings": 11,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 24,
+      "title": "Estados, variantes y dark mode",
+      "wordCount": 319,
+      "usefulLines": 55,
+      "headings": 10,
+      "codeBlocks": 6,
+      "links": 5,
+      "lists": 12,
       "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "full-stack/frontend/tailwind/07-personalizacion-del-tema.md",
       "area": "full-stack",
       "manual": "tailwind",
       "manualPath": "full-stack/frontend/tailwind",
-      "title": "Personalizacion Del Tema",
-      "wordCount": 295,
-      "usefulLines": 44,
-      "headings": 11,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 24,
+      "title": "Personalización del tema",
+      "wordCount": 330,
+      "usefulLines": 55,
+      "headings": 9,
+      "codeBlocks": 3,
+      "links": 4,
+      "lists": 13,
       "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "full-stack/frontend/tailwind/08-integracion-con-frameworks.md",
       "area": "full-stack",
       "manual": "tailwind",
       "manualPath": "full-stack/frontend/tailwind",
-      "title": "Integracion Con Frameworks",
-      "wordCount": 294,
-      "usefulLines": 44,
-      "headings": 11,
+      "title": "Integración con frameworks",
+      "wordCount": 362,
+      "usefulLines": 49,
+      "headings": 10,
       "codeBlocks": 2,
-      "links": 1,
-      "lists": 24,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "links": 5,
+      "lists": 14,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "full-stack/frontend/tailwind/09-buenas-practicas.md",
       "area": "full-stack",
       "manual": "tailwind",
       "manualPath": "full-stack/frontend/tailwind",
-      "title": "Buenas Practicas",
-      "wordCount": 270,
-      "usefulLines": 41,
-      "headings": 10,
-      "codeBlocks": 2,
-      "links": 0,
-      "lists": 23,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "title": "Buenas prácticas",
+      "wordCount": 394,
+      "usefulLines": 50,
+      "headings": 13,
+      "codeBlocks": 0,
+      "links": 5,
+      "lists": 14,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "full-stack/frontend/ux/01-introduccion-a-ipo.md",

@@ -1,69 +1,98 @@
-# Estados Variantes Y Dark Mode
+# Estados, variantes y dark mode
 
-Este capitulo profundiza en **Estados Variantes Y Dark Mode** dentro del manual de **Tailwind CSS**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+Una utility puede activarse solo en un **estado** (`hover:`), un **ancestro** (`group-hover:`), ARIA/datos, o **esquema de color** (`dark:`). No hace falta memorizar cien variants: unas cuantas cubren el 90 % de la UI.
 
-## Objetivo
+Documentación: [hover, focus and other states](https://tailwindcss.com/docs/hover-focus-and-other-states), [dark mode](https://tailwindcss.com/docs/dark-mode), [@custom-variant](https://tailwindcss.com/docs/functions-and-directives#custom-variant).
 
-Al terminar este capitulo sabras explicar estados variantes y dark mode, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+## Composición
 
-## Conceptos clave
-
-- **Estados Variantes Y Dark Mode:** pieza central de Tailwind CSS en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Estados:** aspecto a dominar dentro de Estados Variantes Y Dark Mode.
-- **Variantes:** aspecto a dominar dentro de Estados Variantes Y Dark Mode.
-- **Dark:** aspecto a dominar dentro de Estados Variantes Y Dark Mode.
-
-## Desarrollo del tema
-
-### Enfoque practico
-
-1. Define el problema que resuelve **Estados Variantes Y Dark Mode**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
+```html
+<button
+  type="button"
+  class="rounded-md bg-blue-700 px-4 py-2 text-sm font-medium text-white hover:bg-blue-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+>
+  Guardar
+</button>
 ```
 
-## Ejemplo
+- `hover:` — puntero; Tailwind lo envuelve en `@media (hover: hover)` en muchos casos.
+- `focus-visible:` — foco de teclado, sin el anillo al click de ratón. Prefiérelo a `focus:` en botones.
+- `disabled:` — acoplado a `disabled` HTML, no solo a una clase visual.
+
+Otras que sí usan equipos reales:
+
+| Variant | Idea |
+| --- | --- |
+| `group` + `group-hover:` | El padre se marca `group`; el hijo reacciona. |
+| `peer` + `peer-checked:` / `peer-invalid:` | Hermano (checkbox, input). |
+| `aria-expanded:` / `aria-current:` | Estado ya expuesto a AT. |
+| `data-active:` | `data-active` en el nodo (menús). |
+| `motion-reduce:` | Menos o nada de animación si el SO lo pide. |
+
+```html
+<a href="/cursos" class="group flex items-center gap-2 text-zinc-800">
+  <span class="group-hover:underline">Ver catálogo</span>
+</a>
+```
+
+No sustituyas un `<button>` por `<div onclick>`.
+
+## Dark mode: default vs manual
+
+**Por defecto**, `dark:` usa `prefers-color-scheme`. No hay `darkMode: 'class'` en un `tailwind.config.js`: eso es **v3**.
+
+```html
+<div class="bg-white text-zinc-900 dark:bg-zinc-900 dark:text-zinc-50">
+  <p class="text-zinc-600 dark:text-zinc-300">Cuerpo con contraste en ambos esquemas.</p>
+</div>
+```
+
+### Selector manual (clase)
+
+Si el usuario elige tema, **redefines** la variant:
 
 ```css
-/* Utilidades Tailwind (concepto) */
-.card {
-  @apply rounded-lg border bg-white p-4 shadow-sm;
-}
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+Entonces `dark:` aplica cuando `.dark` está en un ancestro (`<html class="dark">`), no por el media query del SO.
+
+### `data-theme`
+
+```css
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+```
+
+```html
+<html data-theme="dark">
+```
+
+### Flash (FOUC)
+
+Si la preferencia está en `localStorage`, aplica la clase **en el `<head>`** (script inline) **antes** de pintar. Si esperas a React/Vue hidratar, hay un frame claro/oscuro incorrecto. La [doc de dark mode](https://tailwindcss.com/docs/dark-mode) muestra el `classList.toggle` al cargar. No hace falta un theme manager: sí hace falta **orden**.
+
+Con `@custom-variant` de clase, el media query del SO **deja de** gobernar `dark:` salvo que tu script lo lea y escriba `.dark`.
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de estados variantes y dark mode.
-- No probar casos limite ni errores esperados.
+- Solo `hover:` y olvidar teclado (`focus-visible`).
+- `dark:bg-zinc-900` con el mismo `text-zinc-900`.
+- Receta v3 `darkMode: 'class'` en un proyecto v4.
 
-## Buenas practicas
+## Buenas prácticas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Componentiza y evita estado global innecesario.
-- Prueba interacciones criticas.
+- Pares light/dark de fondo **y** texto **y** borde.
+- `motion-reduce:transition-none` (o duración 0) en animaciones.
+- `disabled` real + variant.
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Estados Variantes Y Dark Mode**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Añade `focus-visible` al botón y recorre con Tab.
+2. Activa dark de sistema y corrige un texto que desaparezca.
+3. Cambia a `@custom-variant dark` con `.dark` y un script mínimo en el `head`.
 
 ## Siguiente paso
 
-Continua con [Personalizacion Del Tema](07-personalizacion-del-tema.md).
+Continúa con [Personalización del tema](07-personalizacion-del-tema.md).

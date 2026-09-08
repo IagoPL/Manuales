@@ -1,68 +1,109 @@
-# Componentes Reutilizables
+# Componentes reutilizables
 
-Este capitulo profundiza en **Componentes Reutilizables** dentro del manual de **Tailwind CSS**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+La crítica habitual: “¿quince clases en cada botón?”. La respuesta oficial no es `@apply` en masa: es **decidir el nivel de abstracción**.
 
-## Objetivo
+Documentación: [managing duplication](https://tailwindcss.com/docs/styling-with-utility-classes#managing-duplication), [custom styles](https://tailwindcss.com/docs/adding-custom-styles), [@utility](https://tailwindcss.com/docs/functions-and-directives#utility), [@apply](https://tailwindcss.com/docs/functions-and-directives#apply).
 
-Al terminar este capitulo sabras explicar componentes reutilizables, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+## 1. Repetición aceptable
 
-## Conceptos clave
+Una ficha que solo existe en esa vista: deja las utilities en el HTML. Un bucle (`map`) escribe el string **una vez**. Editar con multicursor en el mismo fichero también cuenta.
 
-- **Componentes Reutilizables:** pieza central de Tailwind CSS en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Componentes:** aspecto a dominar dentro de Componentes Reutilizables.
-- **Reutilizables:** aspecto a dominar dentro de Componentes Reutilizables.
+## 2. Componente o template (el camino habitual)
 
-## Desarrollo del tema
+Si se repite markup **y** comportamiento (click, `disabled`, icono), extrae:
 
-### Enfoque practico
+```jsx
+export function Button({ variant = 'primary', children, ...props }) {
+  const variantes = {
+    primary:
+      'bg-blue-700 text-white hover:bg-blue-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700',
+    secondary:
+      'bg-zinc-100 text-zinc-900 hover:bg-zinc-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-400',
+  }
 
-1. Define el problema que resuelve **Componentes Reutilizables**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
-```
-
-## Ejemplo
-
-```css
-/* Utilidades Tailwind (concepto) */
-.card {
-  @apply rounded-lg border bg-white p-4 shadow-sm;
+  return (
+    <button
+      type="button"
+      className={`rounded-md px-4 py-2 text-sm font-medium disabled:opacity-50 ${variantes[variant]}`}
+      {...props}
+    >
+      {children}
+    </button>
+  )
 }
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+Las clases están **completas** (capítulo 1). Vue/Svelte/Blade: el mismo mapa de strings. Este es el mecanismo principal cuando ya tienes un framework.
+
+## 3. Capa CSS (`@layer components` / `@utility`)
+
+Cuando una clase semántica **aporta** (override de un widget de terceros, un objeto que no merece componente) y quieres que las utilities del HTML puedan **pisarla**:
+
+```css
+@import "tailwindcss";
+
+@layer components {
+  .ficha {
+    background-color: var(--color-white);
+    border-radius: var(--radius-lg);
+    padding: --spacing(6);
+    box-shadow: var(--shadow-md);
+  }
+}
+```
+
+```html
+<div class="ficha rounded-none"><!-- esquinas a cero, el utility gana --></div>
+```
+
+`@utility` registra una utility **nueva** que acepta `hover:` / `md:` como las de fábrica:
+
+```css
+@utility content-auto {
+  content-visibility: auto;
+}
+```
+
+Úsala cuando Tailwind no trae esa propiedad, no para rebautizar `flex`.
+
+## `@apply`: casos reales, no receta
+
+`@apply` copia utilities dentro de CSS tuyo. Sirve para **parches** (Select2, un datepicker) y seguir hablando el idioma del theme:
+
+```css
+.select2-dropdown {
+  @apply rounded-b-lg shadow-md;
+}
+```
+
+No conviertas cada botón en:
+
+```css
+.btn {
+  @apply px-4 py-2 bg-blue-500 text-white rounded;
+}
+```
+
+Eso es volver a CSS tradicional **y** acoplarte al pipeline de Tailwind en cada `<style>` (capítulo 8: Vue/Svelte necesitan `@reference`). En React/Vue, el componente del apartado 2 es más barato de mantener.
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de componentes reutilizables.
-- No probar casos limite ni errores esperados.
+- `@apply` como arquitectura de componentes.
+- Extraer un componente por **una** clase repetida dos veces.
+- Props que concatenan `bg-${color}` (el scanner no las ve).
 
-## Buenas practicas
+## Buenas prácticas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Componentiza y evita estado global innecesario.
-- Prueba interacciones criticas.
+- Duplicación en un fichero → markup; entre ficheros → componente; CSS custom → excepción documentada.
+- `disabled` HTML real + `disabled:` visual.
+- `focus-visible:` para teclado, no solo `hover:`.
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Componentes Reutilizables**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Extrae un `Button` con dos variantes estáticas.
+2. Escribe un `@layer components` para un widget que no controlas.
+3. Intenta (y descarta) un `.btn { @apply … }` para el mismo botón de React.
 
 ## Siguiente paso
 
-Continua con [Estados Variantes Y Dark Mode](06-estados-variantes-y-dark-mode.md).
+Continúa con [Estados, variantes y dark mode](06-estados-variantes-y-dark-mode.md).

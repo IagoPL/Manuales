@@ -1,68 +1,74 @@
-# Utility First
+# Utility-first
 
-Este capitulo profundiza en **Utility First** dentro del manual de **Tailwind CSS**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+Utility-first significa **componer** estilos con clases del theme en el propio elemento, en lugar de inventar un nombre CSS por cada pieza visual.
 
-## Objetivo
+Documentación: [styling with utility classes](https://tailwindcss.com/docs/styling-with-utility-classes), [arbitrary values](https://tailwindcss.com/docs/adding-custom-styles#using-arbitrary-values).
 
-Al terminar este capitulo sabras explicar utility first, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
-
-## Conceptos clave
-
-- **Utility First:** pieza central de Tailwind CSS en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Utility:** aspecto a dominar dentro de Utility First.
-- **First:** aspecto a dominar dentro de Utility First.
-
-## Desarrollo del tema
-
-### Enfoque practico
-
-1. Define el problema que resuelve **Utility First**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
-```
-
-## Ejemplo
+## CSS con nombre vs composición
 
 ```css
-/* Utilidades Tailwind (concepto) */
-.card {
-  @apply rounded-lg border bg-white p-4 shadow-sm;
+.card-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
 }
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+```html
+<h2 class="text-lg font-semibold tracking-tight">Ofertas de la semana</h2>
+```
+
+Ninguno es “el único CSS correcto”. Utility-first gana cuando el diseño es **único de esa pantalla** y quieres ver el cambio **junto al markup**. CSS semántico gana cuando el mismo objeto vive en muchos sitios *sin* un componente (o cuando el diseño es un sistema ajeno a Tailwind).
+
+## Ventajas
+
+- El cambio es local: no hay un `.card` de 200 líneas que alguien más reutiliza mal.
+- Las utilities salen de **tokens** (`text-lg`, `gap-4`): menos “#3a7bd5 otra vez”.
+- Variants (`hover:`, `md:`) se apilan en el mismo string (capítulos 3 y 6).
+- Menos nombres que inventar y olvidar.
+
+## Costes
+
+- Strings largas: cuesta leer al principio.
+- Si copias el mismo bloque en cinco ficheros, **no** has ganado: extrae un componente (capítulo 5).
+- No sustituye layout mental: sigues decidiendo flex/grid.
+
+Un botón usado una vez puede llevar doce clases. El mismo botón en header, modal y tabla es un `<Button />`, no un `.btn { @apply … }` por sistema.
+
+## Arbitrary values
+
+Cuando un valor **no** está en el theme y es puntual:
+
+```html
+<aside class="w-[37rem] grid grid-cols-[minmax(0,1fr)_12rem]">
+  <!-- ... -->
+</aside>
+```
+
+El scanner ve la clase completa y genera CSS. Es el equivalente a un inline style **con** variants (`lg:w-[37rem]`).
+
+Si `37rem` o ese grid aparecen tres veces, **deja de ser arbitrary**: token en `@theme` (capítulo 7) o un componente. Arbitrary no es un theme paralelo en notación `[…]`.
+
+Espacios en valores: `_` se convierte en espacio (`grid-cols-[1fr_12rem]`).
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de utility first.
-- No probar casos limite ni errores esperados.
+- Utility-first como religión: “prohibido CSS”.
+- `@apply` de 20 utilities para “limpiar el HTML” (capítulo 5).
+- Mezclar un design system de clases BEM *y* Tailwind sin criterio.
 
-## Buenas practicas
+## Buenas prácticas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Componentiza y evita estado global innecesario.
-- Prueba interacciones criticas.
+- Empieza en el markup; extrae cuando duela de verdad.
+- Arbitrary para **excepciones**; tokens para **repetición**.
+- El HTML sigue siendo `h2`, `button`, `nav`.
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Utility First**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Reescribe un `.hero-title` de tres propiedades a utilities.
+2. Añade `w-[37rem]` y luego muévelo a un token `--width-panel` (adelanta el cap. 7 si quieres).
+3. Cuenta cuántas veces se repite el mismo string de clases en una vista: 1 vs 5 cambia la abstracción.
 
 ## Siguiente paso
 
-Continua con [Layout Responsive](03-layout-responsive.md).
+Continúa con [Layout y responsive](03-layout-responsive.md).
