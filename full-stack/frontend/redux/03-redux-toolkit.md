@@ -1,70 +1,115 @@
 # Redux Toolkit
 
-Este capitulo profundiza en **Redux Toolkit** dentro del manual de **Redux**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+RTK existe para que no escribas a mano action types, creators, `combineReducers`, thunk suelto y DevTools. El paquete oficial es `@reduxjs/toolkit`. Si hoy escribes Redux, **escribes RTK**.
 
-## Objetivo
+Documentación: [Getting Started](https://redux-toolkit.js.org/introduction/getting-started), [createSlice](https://redux-toolkit.js.org/api/createSlice), [configureStore](https://redux-toolkit.js.org/api/configureStore), [Immer](https://redux-toolkit.js.org/usage/immer-reducers).
 
-Al terminar este capitulo sabras explicar redux toolkit, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+## `configureStore`
 
-## Conceptos clave
+Además de juntar slices:
 
-- **Redux Toolkit:** pieza central de Redux en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Redux:** aspecto a dominar dentro de Redux Toolkit.
-- **Toolkit:** aspecto a dominar dentro de Redux Toolkit.
+- Middleware **thunk** (incluido).
+- En desarrollo: avisos si **mutas** el state de verdad o metes valores **no serializables**.
+- Conexión a **Redux DevTools**.
 
-## Desarrollo del tema
+Puedes sustituir o concatenar middleware; el capítulo 7 lo hace con listeners. No instales `redux-thunk` aparte: ya viene.
 
-### Enfoque practico
+## `createSlice`: tareas
 
-1. Define el problema que resuelve **Redux Toolkit**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
+Un slice = nombre + estado inicial + reducers. RTK genera **action creators** y el **reducer**.
 
-### Flujo recomendado
+```js
+import { createSlice } from '@reduxjs/toolkit'
 
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
+const tareasSlice = createSlice({
+  name: 'tareas',
+  initialState: { items: [], filtro: 'todas' },
+  reducers: {
+    tareaAnadida(state, action) {
+      state.items.push({
+        id: action.payload.id,
+        titulo: action.payload.titulo,
+        hecha: false,
+      })
+    },
+    tareaAlternada(state, action) {
+      const tarea = state.items.find((t) => t.id === action.payload)
+      if (tarea) tarea.hecha = !tarea.hecha
+    },
+    filtroCambiado(state, action) {
+      state.filtro = action.payload
+    },
+  },
+})
+
+export const { tareaAnadida, tareaAlternada, filtroCambiado } = tareasSlice.actions
+export default tareasSlice.reducer
 ```
 
-## Ejemplo
+`tareaAnadida({ id, titulo })` despacha algo como `{ type: 'tareas/tareaAnadida', payload: { id, titulo } }`. No declares constantes `TAREAS_ANADIDA`.
 
-```javascript
-// Ejemplo en Redux
-const config = { debug: true, retries: 3 };
+Store:
 
-export function setup() {
-  console.log('Inicializando', config);
+```js
+import { configureStore } from '@reduxjs/toolkit'
+import tareasReducer from './tareasSlice'
+
+export const store = configureStore({
+  reducer: { tareas: tareasReducer },
+})
+```
+
+## Immer: parece mutar, no muta el state real
+
+Dentro de los reducers de `createSlice` (y `createReducer`) puedes escribir `state.items.push(...)` o `tarea.hecha = !tarea.hecha`. **Immer** intercepta esas escrituras y produce el siguiente estado **inmutable**. El store sigue siendo inmutable; DevTools sigue viendo un diff.
+
+No concluyas “Redux ahora permite mutar el estado”. Fuera del receta de Immer (un reducer a mano, un listener que haga `getState().tareas.items.push`) sigues rompiendo el contrato. Tampoco mutes `action.payload` si vas a reutilizar el objeto.
+
+## En React
+
+```jsx
+import { useDispatch, useSelector } from 'react-redux'
+import { tareaAnadida, tareaAlternada } from './tareasSlice'
+
+export function ListaTareas() {
+  const items = useSelector((state) => state.tareas.items)
+  const dispatch = useDispatch()
+
+  return (
+    <ul>
+      {items.map((t) => (
+        <li key={t.id}>
+          <button type="button" onClick={() => dispatch(tareaAlternada(t.id))}>
+            {t.hecha ? 'Hecha' : 'Pendiente'}
+          </button>
+          {t.titulo}
+        </li>
+      ))}
+    </ul>
+  )
 }
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+Un carrito (`lineas`, `cantidad`) o un contador (`increment`) son el mismo patrón; las tareas evitan que todo el manual sea `+1`.
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de redux toolkit.
-- No probar casos limite ni errores esperados.
+- Un único slice `app` de 80 campos: parte por feature (`tareas`, `sesion`).
+- Mutar el state **después** de `return` o fuera del reducer.
+- Desactivar los checks de serialización “porque molestan” sin entender el valor no serializable.
 
-## Buenas practicas
+## Buenas prácticas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Componentiza y evita estado global innecesario.
-- Prueba interacciones criticas.
+- Un fichero de slice por feature; exporta actions, reducer y selectors.
+- `name` del slice estable: cambia el `type` de todas las actions.
+- Lee el check de serialización como un aliado (persist, DevTools, RTK Query).
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Redux Toolkit**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Añade `tareaEliminada` que quite un `id` de `items`.
+2. Despacha `tareaAnadida` y `filtroCambiado` y míralos en DevTools.
+3. Intenta (en un reducer a mano, no en el slice) hacer `state.items.push` *sin* Immer y observa el aviso en desarrollo.
 
 ## Siguiente paso
 
-Continua con [Slices Y Async Thunks](04-slices-y-async-thunks.md).
+Continúa con [Slices y async thunks](04-slices-y-async-thunks.md).

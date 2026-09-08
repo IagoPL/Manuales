@@ -1,69 +1,100 @@
 # Middleware
 
-Este capitulo profundiza en **Middleware** dentro del manual de **Redux**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+Un middleware se sienta **entre** `dispatch` y el reducer: ve la action, puede loguear, retrasar, o despachar más cosas. El reducer sigue siendo puro.
 
-## Objetivo
-
-Al terminar este capitulo sabras explicar middleware, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
-
-## Conceptos clave
-
-- **Middleware:** pieza central de Redux en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Middleware:** aspecto a dominar dentro de Middleware.
-
-## Desarrollo del tema
-
-### Enfoque practico
-
-1. Define el problema que resuelve **Middleware**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
+```text
+dispatch(action)  →  middleware…  →  reducer  →  nuevo state
 ```
 
-## Ejemplo
+Documentación: [Redux middleware](https://redux.js.org/understanding/history-and-design/middleware), [configureStore middleware](https://redux-toolkit.js.org/api/configureStore#middleware), [createListenerMiddleware](https://redux-toolkit.js.org/api/createListenerMiddleware).
 
-```javascript
-// Ejemplo en Redux
-const config = { debug: true, retries: 3 };
+## Lo que ya trae RTK
 
-export function setup() {
-  console.log('Inicializando', config);
+`configureStore` instala por defecto:
+
+- **Thunk:** funciones como actions (y `createAsyncThunk`).
+- **Inmutabilidad** (dev): avisa si mutaste el state de verdad.
+- **Serialización** (dev): avisa si el state/action no es JSON-friendly.
+
+No escribas un middleware custom para “añadir thunk” o “conectar DevTools”. No instales `redux-saga` como primera opción: es potente y legacy-común en repos antiguos; para “cuando ocurra X, haz Y” usa **listener middleware**.
+
+Observables (`redux-observable`) igual: avanzado, no el default.
+
+## Listener: reaccionar a una action
+
+```js
+import { configureStore, createListenerMiddleware } from '@reduxjs/toolkit'
+import tareasReducer, { tareaAlternada } from './tareasSlice'
+import { api } from './api'
+
+const listener = createListenerMiddleware()
+
+// `items` es la forma de los caps. 3–4; con entity adapter usarías selectById.
+listener.startListening({
+  actionCreator: tareaAlternada,
+  effect: async (action, listenerApi) => {
+    const id = action.payload
+    const tarea = listenerApi
+      .getState()
+      .tareas.items.find((t) => t.id === id)
+    if (tarea.hecha) {
+      // efecto: analítica, toast, persistencia local… no el GET de la lista
+      console.info('tarea completada', id)
+    }
+  },
+})
+
+export const store = configureStore({
+  reducer: {
+    [api.reducerPath]: api.reducer,
+    tareas: tareasReducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware()
+      .prepend(listener.middleware) // antes del check de serialización
+      .concat(api.middleware),
+})
+```
+
+`startListening` admite `actionCreator`, `type`, `matcher` o un `predicate` (incluido “cambió este trozo de state”). El `effect` corre **después** del reducer. `prepend` evita que el check de serialización se queje de las actions internas del listener (llevan funciones).
+
+Esto no es para cachear `/api/tareas`: eso es Query.
+
+## Middleware custom mínimo
+
+Solo si RTK no cubre el caso (p. ej. un logger propio en un entorno sin DevTools):
+
+```js
+const crono = (storeApi) => (next) => (action) => {
+  const t0 = performance.now()
+  const result = next(action)
+  if (performance.now() - t0 > 16) {
+    console.warn('reducer lento', action.type)
+  }
+  return result
 }
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+`next(action)` sigue la cadena. Olvidar `return next(...)` se traga la action. Encadena con `getDefaultMiddleware().concat(crono)`.
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de middleware.
-- No probar casos limite ni errores esperados.
+- Saga “porque en el curso de 2018 salía”.
+- Middleware que muta `action.payload` para todos los slices.
+- Listener que vuelve a implementar fetching (usa Query o un thunk).
 
-## Buenas practicas
+## Buenas prácticas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Componentiza y evita estado global innecesario.
-- Prueba interacciones criticas.
+- Efectos reactivos → listener; HTTP cacheable → Query; orquestación puntual → thunk.
+- Un listener por intención (`tarea completada`), no un “god listener”.
+- En tests, puedes omitir listeners no relacionados en un `configureStore` de prueba.
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Middleware**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Completa una tarea y comprueba que el `effect` corre una vez por `tareaAlternada`.
+2. Cambia el listener a un `predicate` que mire `items` hechas y no el type.
+3. Quita `prepend` en un branch de prueba y lee el warning de serialización (dev).
 
 ## Siguiente paso
 
-Continua con [Testing](08-testing.md).
+Continúa con [Testing](08-testing.md).

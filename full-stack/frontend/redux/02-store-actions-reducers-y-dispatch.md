@@ -1,71 +1,100 @@
-# Store Actions Reducers Y Dispatch
+# Store, actions, reducers y dispatch
 
-Este capitulo profundiza en **Store Actions Reducers Y Dispatch** dentro del manual de **Redux**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+El modelo mental no ha cambiado: un **store** guarda el **state**; un **reducer** es una función pura `(state, action) => nextState`; **dispatch** entrega la action al store. Un **selector** lee (y a veces deriva) sin escribir.
 
-## Objetivo
+Documentación: [Redux core concepts](https://redux.js.org/tutorials/essentials/part-1-overview-concepts), [configureStore](https://redux-toolkit.js.org/api/configureStore), [inmutabilidad](https://redux.js.org/usage/structuring-reducers/immutable-update-patterns).
 
-Al terminar este capitulo sabras explicar store actions reducers y dispatch, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+## Piezas
 
-## Conceptos clave
+| Pieza | Rol |
+| --- | --- |
+| **State** | Árbol serializable (objetos, arrays, primitivos). Nada de funciones, promesas ni instancias de clase. |
+| **Action** | Objeto `{ type, payload? }` que *describe* lo ocurrido. |
+| **Reducer** | Puro: mismo input → mismo output; no hace `fetch` ni toca el DOM. |
+| **Store** | `getState()`, `dispatch()`, `subscribe()`. En la práctica lo crea RTK. |
+| **Selector** | `state => state.tareas.items` o una derivación (`items.filter(...)`). |
 
-- **Store Actions Reducers Y Dispatch:** pieza central de Redux en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Store:** aspecto a dominar dentro de Store Actions Reducers Y Dispatch.
-- **Actions:** aspecto a dominar dentro de Store Actions Reducers Y Dispatch.
-- **Reducers:** aspecto a dominar dentro de Store Actions Reducers Y Dispatch.
+**Inmutabilidad:** el reducer **devuelve** un estado nuevo (o el mismo referencia si no cambió). No hace `state.items.push(...)` a mano sobre el objeto real. En el capítulo 3 Immer *simula* mutaciones y genera esa copia por ti.
 
-## Desarrollo del tema
+## Reducer conceptual (para entender el core)
 
-### Enfoque practico
+Sin store todavía: una función que podrías testear con `expect(reducer(s, a)).toEqual(...)`.
 
-1. Define el problema que resuelve **Store Actions Reducers Y Dispatch**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
+```js
+const inicial = { items: [] }
 
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
-```
-
-## Ejemplo
-
-```javascript
-// Ejemplo en Redux
-const config = { debug: true, retries: 3 };
-
-export function setup() {
-  console.log('Inicializando', config);
+function tareasReducer(state = inicial, action) {
+  if (action.type === 'tareas/anadida') {
+    return { items: [...state.items, action.payload] }
+  }
+  return state
 }
+
+const despues = tareasReducer(inicial, {
+  type: 'tareas/anadida',
+  payload: { id: 't1', titulo: 'Comprar pan', hecha: false },
+})
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+Esto es Redux “desnudo”: `switch (action.type)` y constantes `TAREAS_ANADIDA` son el mismo modelo, más verboso. **No** es cómo montas una app nueva.
+
+`createStore` del paquete `redux` es la API de bajo nivel que RTK envuelve. El equipo la considera **obsoleta para código nuevo**; no la uses como receta.
+
+## Implementación práctica: `configureStore`
+
+```js
+import { configureStore } from '@reduxjs/toolkit'
+import tareasReducer from './tareasSlice'
+
+export const store = configureStore({
+  reducer: {
+    tareas: tareasReducer,
+  },
+})
+
+store.dispatch({
+  type: 'tareas/anadida',
+  payload: { id: 't1', titulo: 'Comprar pan', hecha: false },
+})
+
+const items = store.getState().tareas.items
+```
+
+Una llamada hace el trabajo que antes era `combineReducers` + thunk + DevTools + comprobaciones en desarrollo (mutación y serialización). El reducer del slice lo escribe `createSlice` en el [capítulo 3](03-redux-toolkit.md); aquí basta saber que **la clave `tareas` es la rama del estado**.
+
+En React:
+
+```jsx
+import { Provider } from 'react-redux'
+import { store } from './store'
+
+root.render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+)
+```
+
+Dentro de `App`: `useDispatch()` para mandar actions; `useSelector(state => state.tareas.items)` para leer. `connect` / `mapStateToProps` es el puente de class components: legacy, no el camino de este manual.
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de store actions reducers y dispatch.
-- No probar casos limite ni errores esperados.
+- Mutar `state` en un reducer escrito a mano (`state.items.push`).
+- Meter un `Date` o un axios instance en el state: DevTools y persistencia se rompen; el check de serialización avisa en desarrollo.
+- Despachar desde el reducer.
 
-## Buenas practicas
+## Buenas prácticas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Componentiza y evita estado global innecesario.
-- Prueba interacciones criticas.
+- Actions con `type` estable y `payload` explícito; RTK las genera (cap. 3).
+- Selectors pequeños en el mismo fichero del slice.
+- Un store por app, no uno por pantalla.
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Store Actions Reducers Y Dispatch**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Ejecuta el reducer conceptual dos veces seguidas con la misma action y comprueba que no reutilizas el array `items` (referencias distintas).
+2. Monta `configureStore` con `{ tareas: tareasReducer }` y lee `getState()`.
+3. Envuelve un componente en `Provider` y pinta `items.length` con `useSelector`.
 
 ## Siguiente paso
 
-Continua con [Redux Toolkit](03-redux-toolkit.md).
+Continúa con [Redux Toolkit](03-redux-toolkit.md).
