@@ -30,5 +30,8 @@ jobs:
           CI_VALIDATE_LINKS: true
           GITHUB_REPOSITORY: ${{ github.repository }}
 
+      - name: Content quality audit
+        run: npm run docs:audit
+
       - name: Completion report
         run: npm run docs:report
