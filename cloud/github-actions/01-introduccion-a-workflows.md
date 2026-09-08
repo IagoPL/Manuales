@@ -1,71 +1,75 @@
-# Introduccion A Workflows
+# Introducción a workflows
 
-Este capitulo profundiza en **Introduccion A Workflows** dentro del manual de **GitHub Actions**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+GitHub Actions ejecuta automatización **dentro del repositorio**: tests, builds, linters, deploys. Un **workflow** es un fichero YAML en `.github/workflows/` que GitHub descubre solo si está en esa ruta y termina en `.yml` o `.yaml`.
 
-## Objetivo
+No sustituye a un runner de CI externo: es el CI de GitHub, disparado por eventos del propio repo (`push`, `pull_request`, cron, disparo manual, …).
 
-Al terminar este capitulo sabras explicar introduccion a workflows, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+Documentación oficial: [Quickstart](https://docs.github.com/en/actions/get-started/quickstart), [sintaxis](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions).
 
-## Conceptos clave
+## Piezas (mapa, no el detalle)
 
-- **Introduccion A Workflows:** pieza central de GitHub Actions en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Introduccion:** aspecto a dominar dentro de Introduccion A Workflows.
-- **Workflows:** aspecto a dominar dentro de Introduccion A Workflows.
+| Pieza | Qué es |
+| --- | --- |
+| Evento | Lo que arranca una ejecución (`on:`). |
+| Workflow | El YAML. Puede tener varios jobs. |
+| Job | Unidad que corre en **un** runner (VM efímera). En paralelo por defecto. |
+| Step | Un comando (`run`) o una action (`uses`). |
+| Runner | Máquina: `ubuntu-latest`, Windows, macOS o self-hosted. |
 
-## Desarrollo del tema
+Jobs, steps y runners se desarrollan en el [siguiente capítulo](02-jobs-steps-y-runners.md). Los triggers, en el [capítulo 3](03-eventos-y-triggers.md).
 
-### Enfoque practico
+## Primer workflow
 
-1. Define el problema que resuelve **Introduccion A Workflows**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
-```
-
-## Ejemplo
+Crea `.github/workflows/ci.yml` en la rama por defecto:
 
 ```yaml
-# Ejemplo de configuracion (GitHub Actions)
-version: "3.9"
-services:
-  app:
-    image: nginx:1.27
-    ports:
-      - "8080:80"
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - run: echo "El workflow arranco"
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+Tras el push, la pestaña **Actions** del repo muestra la ejecución. `runs-on: ubuntu-latest` pide un runner alojado por GitHub. `actions/checkout` clona el repo en esa VM: sin checkout, los `run` no ven tu código.
+
+Las versiones de las actions oficiales cambian. Fija una major (`@v6`) o, en producción, un SHA; el capítulo 2 y el de seguridad cubren el pin.
+
+## Cuándo usarlo
+
+- CI en cada PR: lint, tests, build.
+- Deploy al fusionar `main` (este repo publica VitePress así).
+- Tareas programadas (backups, informes) con `schedule`.
+
+No hace falta un workflow por cada script: agrupa pasos relacionados en jobs con un propósito claro.
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de introduccion a workflows.
-- No probar casos limite ni errores esperados.
+- Guardar el YAML fuera de `.github/workflows/` o con extensión que no sea YAML: GitHub no lo ejecuta.
+- Olvidar `actions/checkout` y preguntarse por qué `npm test` no encuentra `package.json`.
+- Disparar deploys en todos los `push` de todas las ramas. Restringe `branches` o deja el deploy en un job con `needs` + condición (capítulo 2).
+- Copiar actions de Marketplace sin mirar permisos ni versión.
 
-## Buenas practicas
+## Buenas prácticas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Infra como codigo y cambios revisados.
-- Principio de minimo privilegio.
+- Un `name:` legible: aparece en la UI.
+- Empieza por un workflow mínimo y añade jobs; no copies un YAML de 200 líneas el primer día.
+- En el YAML de este propio repo (`validate.yml`, `deploy.yml`) verás el mismo esquema: evento → job → checkout → comandos.
+- Secrets y `permissions` van en el [capítulo 5](05-secrets-permisos-y-seguridad.md). No pongas tokens en el YAML.
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Introduccion A Workflows**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Añade un workflow que se ejecute en `push` a tu rama y liste ficheros con `ls`.
+2. Fuerza un fallo (`run: exit 1`) y observa el estado en Actions.
+3. Abre el `validate.yml` de este repositorio y localiza `on`, `jobs` y `steps`.
 
 ## Siguiente paso
 
-Continua con [Jobs Steps Y Runners](02-jobs-steps-y-runners.md).
+Continúa con [Jobs, steps y runners](02-jobs-steps-y-runners.md).

@@ -6,24 +6,23 @@
     "areas": 8,
     "priorities": {
       "P0": 0,
-      "P1": 14,
+      "P1": 6,
       "P2": 117,
-      "P3": 611
+      "P3": 619
     },
     "flags": {
       "known_outdated_pattern": 0,
-      "generic_template": 123,
-      "generic_example": 106,
-      "duplicated_code": 131,
+      "generic_template": 115,
+      "generic_example": 98,
+      "duplicated_code": 123,
       "very_short": 196,
       "high_freshness_risk": 141
     },
     "trackedTemplatePhrase": {
       "pattern": "Este capitulo profundiza",
-      "chapters": 123,
-      "manuals": 23,
+      "chapters": 115,
+      "manuals": 22,
       "areas": [
-        "cloud",
         "data-engineering",
         "full-stack",
         "ia"
@@ -31,8 +30,8 @@
     },
     "lengthBands": {
       "very_short": 196,
-      "short": 428,
-      "normal": 115,
+      "short": 421,
+      "normal": 122,
       "long": 3
     },
     "duplicateGroups": 11
@@ -45,44 +44,21 @@
       "chapters": 7,
       "priorities": {
         "P0": 0,
-        "P1": 7,
+        "P1": 5,
         "P2": 0,
-        "P3": 0
+        "P3": 2
       },
       "flags": {
         "known_outdated_pattern": 0,
-        "generic_template": 7,
-        "generic_example": 7,
-        "duplicated_code": 7,
+        "generic_template": 5,
+        "generic_example": 5,
+        "duplicated_code": 5,
         "very_short": 0,
         "high_freshness_risk": 7
       },
-      "trackedPhrase": 7,
-      "reviewFlags": 7,
-      "genericRatio": 1
-    },
-    {
-      "path": "ia/vllm",
-      "slug": "vllm",
-      "area": "ia",
-      "chapters": 7,
-      "priorities": {
-        "P0": 0,
-        "P1": 6,
-        "P2": 0,
-        "P3": 1
-      },
-      "flags": {
-        "known_outdated_pattern": 0,
-        "generic_template": 6,
-        "generic_example": 6,
-        "duplicated_code": 6,
-        "very_short": 0,
-        "high_freshness_risk": 7
-      },
-      "trackedPhrase": 6,
-      "reviewFlags": 6,
-      "genericRatio": 0.857
+      "trackedPhrase": 5,
+      "reviewFlags": 5,
+      "genericRatio": 0.714
     },
     {
       "path": "full-stack/backend/php",
@@ -384,15 +360,15 @@
       "genericRatio": 1
     },
     {
-      "path": "cloud/github-actions",
-      "slug": "github-actions",
-      "area": "cloud",
-      "chapters": 8,
+      "path": "ia/vllm",
+      "slug": "vllm",
+      "area": "ia",
+      "chapters": 7,
       "priorities": {
         "P0": 0,
         "P1": 1,
         "P2": 0,
-        "P3": 7
+        "P3": 6
       },
       "flags": {
         "known_outdated_pattern": 0,
@@ -400,11 +376,11 @@
         "generic_example": 1,
         "duplicated_code": 1,
         "very_short": 0,
-        "high_freshness_risk": 8
+        "high_freshness_risk": 7
       },
       "trackedPhrase": 1,
       "reviewFlags": 1,
-      "genericRatio": 0.125
+      "genericRatio": 0.143
     },
     {
       "path": "bases-de-datos/mysql",
@@ -815,6 +791,29 @@
         "duplicated_code": 0,
         "very_short": 0,
         "high_freshness_risk": 0
+      },
+      "trackedPhrase": 0,
+      "reviewFlags": 0,
+      "genericRatio": 0
+    },
+    {
+      "path": "cloud/github-actions",
+      "slug": "github-actions",
+      "area": "cloud",
+      "chapters": 8,
+      "priorities": {
+        "P0": 0,
+        "P1": 0,
+        "P2": 0,
+        "P3": 8
+      },
+      "flags": {
+        "known_outdated_pattern": 0,
+        "generic_template": 0,
+        "generic_example": 0,
+        "duplicated_code": 0,
+        "very_short": 0,
+        "high_freshness_risk": 8
       },
       "trackedPhrase": 0,
       "reviewFlags": 0,
@@ -1793,7 +1792,6 @@
       "lang": "txt",
       "chars": 75,
       "manuals": [
-        "cloud/github-actions",
         "data-engineering/dbt",
         "data-engineering/delta-lake",
         "data-engineering/iceberg",
@@ -1818,7 +1816,6 @@
         "ia/vllm"
       ],
       "chapters": [
-        "cloud/github-actions/01-introduccion-a-workflows.md",
         "data-engineering/dbt/02-sources-models-y-refs.md",
         "data-engineering/dbt/03-tests-documentacion-y-lineage.md",
         "data-engineering/dbt/04-snapshots-y-seeds.md",
@@ -1913,8 +1910,6 @@
         "full-stack/frontend/zustand/06-integracion-con-react.md",
         "full-stack/frontend/zustand/07-patrones-de-arquitectura.md",
         "full-stack/frontend/zustand/08-testing.md",
-        "ia/huggingface/01-introduccion-al-ecosistema.md",
-        "ia/huggingface/02-transformers-pipelines-y-tokenizers.md",
         "ia/huggingface/03-datasets.md",
         "ia/huggingface/04-fine-tuning.md",
         "ia/huggingface/05-hub-y-modelos.md",
@@ -1935,14 +1930,9 @@
         "ia/vector-databases/05-rendimiento.md",
         "ia/vector-databases/06-patrones-para-rag.md",
         "ia/vector-databases/07-buenas-practicas.md",
-        "ia/vllm/01-introduccion-y-casos-de-uso.md",
-        "ia/vllm/02-servidor-openai-compatible.md",
-        "ia/vllm/03-carga-de-modelos.md",
-        "ia/vllm/04-batching-y-rendimiento.md",
-        "ia/vllm/06-observabilidad.md",
         "ia/vllm/07-buenas-practicas.md"
       ],
-      "count": 123
+      "count": 115
     },
     {
       "hash": "5a9d824dcf18e14a",
@@ -1985,8 +1975,6 @@
         "data-engineering/parquet/07-buenas-practicas.md",
         "full-stack/backend/django/01-introduccion-y-entorno.md",
         "full-stack/backend/fastapi/01-introduccion-y-entorno.md",
-        "ia/huggingface/01-introduccion-al-ecosistema.md",
-        "ia/huggingface/02-transformers-pipelines-y-tokenizers.md",
         "ia/huggingface/03-datasets.md",
         "ia/huggingface/04-fine-tuning.md",
         "ia/huggingface/05-hub-y-modelos.md",
@@ -2007,14 +1995,9 @@
         "ia/vector-databases/05-rendimiento.md",
         "ia/vector-databases/06-patrones-para-rag.md",
         "ia/vector-databases/07-buenas-practicas.md",
-        "ia/vllm/01-introduccion-y-casos-de-uso.md",
-        "ia/vllm/02-servidor-openai-compatible.md",
-        "ia/vllm/03-carga-de-modelos.md",
-        "ia/vllm/04-batching-y-rendimiento.md",
-        "ia/vllm/06-observabilidad.md",
         "ia/vllm/07-buenas-practicas.md"
       ],
-      "count": 53
+      "count": 46
     },
     {
       "hash": "fb1882696289f802",
@@ -3830,21 +3813,18 @@
       "area": "cloud",
       "manual": "github-actions",
       "manualPath": "cloud/github-actions",
-      "title": "Introduccion A Workflows",
-      "wordCount": 288,
-      "usefulLines": 46,
-      "headings": 12,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 24,
-      "lengthBand": "short",
+      "title": "Introducción a workflows",
+      "wordCount": 404,
+      "usefulLines": 49,
+      "headings": 8,
+      "codeBlocks": 1,
+      "links": 6,
+      "lists": 16,
+      "lengthBand": "normal",
       "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code",
         "high_freshness_risk"
       ],
-      "priority": "P1"
+      "priority": "P3"
     },
     {
       "path": "cloud/github-actions/02-jobs-steps-y-runners.md",
@@ -13113,42 +13093,36 @@
       "area": "ia",
       "manual": "huggingface",
       "manualPath": "ia/huggingface",
-      "title": "Introduccion Al Ecosistema",
-      "wordCount": 288,
+      "title": "Introducción al ecosistema Hugging Face",
+      "wordCount": 430,
       "usefulLines": 43,
-      "headings": 12,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 23,
-      "lengthBand": "short",
+      "headings": 8,
+      "codeBlocks": 1,
+      "links": 4,
+      "lists": 20,
+      "lengthBand": "normal",
       "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code",
         "high_freshness_risk"
       ],
-      "priority": "P1"
+      "priority": "P3"
     },
     {
       "path": "ia/huggingface/02-transformers-pipelines-y-tokenizers.md",
       "area": "ia",
       "manual": "huggingface",
       "manualPath": "ia/huggingface",
-      "title": "Transformers Pipelines Y Tokenizers",
-      "wordCount": 304,
-      "usefulLines": 44,
-      "headings": 12,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 24,
-      "lengthBand": "short",
+      "title": "Transformers, pipelines y tokenizers",
+      "wordCount": 354,
+      "usefulLines": 57,
+      "headings": 8,
+      "codeBlocks": 4,
+      "links": 4,
+      "lists": 16,
+      "lengthBand": "normal",
       "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code",
         "high_freshness_risk"
       ],
-      "priority": "P1"
+      "priority": "P3"
     },
     {
       "path": "ia/huggingface/03-datasets.md",
@@ -14050,84 +14024,72 @@
       "area": "ia",
       "manual": "vllm",
       "manualPath": "ia/vllm",
-      "title": "Introduccion Y Casos De Uso",
-      "wordCount": 314,
-      "usefulLines": 44,
-      "headings": 12,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 24,
-      "lengthBand": "short",
+      "title": "Introducción y casos de uso",
+      "wordCount": 453,
+      "usefulLines": 43,
+      "headings": 8,
+      "codeBlocks": 1,
+      "links": 5,
+      "lists": 21,
+      "lengthBand": "normal",
       "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code",
         "high_freshness_risk"
       ],
-      "priority": "P1"
+      "priority": "P3"
     },
     {
       "path": "ia/vllm/02-servidor-openai-compatible.md",
       "area": "ia",
       "manual": "vllm",
       "manualPath": "ia/vllm",
-      "title": "Servidor Openai Compatible",
-      "wordCount": 294,
-      "usefulLines": 44,
-      "headings": 12,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 24,
+      "title": "Servidor OpenAI compatible",
+      "wordCount": 295,
+      "usefulLines": 53,
+      "headings": 9,
+      "codeBlocks": 3,
+      "links": 4,
+      "lists": 11,
       "lengthBand": "short",
       "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code",
         "high_freshness_risk"
       ],
-      "priority": "P1"
+      "priority": "P3"
     },
     {
       "path": "ia/vllm/03-carga-de-modelos.md",
       "area": "ia",
       "manual": "vllm",
       "manualPath": "ia/vllm",
-      "title": "Carga De Modelos",
-      "wordCount": 285,
-      "usefulLines": 43,
-      "headings": 12,
+      "title": "Carga de modelos",
+      "wordCount": 418,
+      "usefulLines": 40,
+      "headings": 9,
       "codeBlocks": 2,
-      "links": 1,
-      "lists": 23,
-      "lengthBand": "short",
+      "links": 3,
+      "lists": 17,
+      "lengthBand": "normal",
       "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code",
         "high_freshness_risk"
       ],
-      "priority": "P1"
+      "priority": "P3"
     },
     {
       "path": "ia/vllm/04-batching-y-rendimiento.md",
       "area": "ia",
       "manual": "vllm",
       "manualPath": "ia/vllm",
-      "title": "Batching Y Rendimiento",
-      "wordCount": 283,
-      "usefulLines": 43,
-      "headings": 12,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 23,
-      "lengthBand": "short",
+      "title": "Batching y rendimiento",
+      "wordCount": 393,
+      "usefulLines": 41,
+      "headings": 7,
+      "codeBlocks": 1,
+      "links": 5,
+      "lists": 16,
+      "lengthBand": "normal",
       "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code",
         "high_freshness_risk"
       ],
-      "priority": "P1"
+      "priority": "P3"
     },
     {
       "path": "ia/vllm/05-despliegue.md",
@@ -14153,20 +14115,17 @@
       "manual": "vllm",
       "manualPath": "ia/vllm",
       "title": "Observabilidad",
-      "wordCount": 259,
+      "wordCount": 363,
       "usefulLines": 42,
-      "headings": 12,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 22,
-      "lengthBand": "short",
+      "headings": 8,
+      "codeBlocks": 1,
+      "links": 5,
+      "lists": 15,
+      "lengthBand": "normal",
       "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code",
         "high_freshness_risk"
       ],
-      "priority": "P1"
+      "priority": "P3"
     },
     {
       "path": "ia/vllm/07-buenas-practicas.md",

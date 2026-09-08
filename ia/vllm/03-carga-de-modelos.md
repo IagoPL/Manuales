@@ -1,69 +1,71 @@
-# Carga De Modelos
+# Carga de modelos
 
-Este capitulo profundiza en **Carga De Modelos** dentro del manual de **vLLM**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+vLLM carga **pesos + tokenizer + config** de un id del Hub o de una ruta local. Eso ocurre al construir `LLM(...)` o al arrancar `vllm serve <modelo>`. Si falla la carga, no hay API que depurar: primero VRAM, id, revisión y permiso del repo.
 
-## Objetivo
+Documentación oficial: [CLI serve](https://docs.vllm.ai/en/latest/cli/serve/) (`--model`, `--tokenizer`, `--revision`, `--quantization`, `--max-model-len`, `--trust-remote-code`), [offline inference](https://docs.vllm.ai/en/latest/examples/basic/offline_inference/).
 
-Al terminar este capitulo sabras explicar carga de modelos, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+## Dónde está el modelo
 
-## Conceptos clave
-
-- **Carga De Modelos:** pieza central de vLLM en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Carga:** aspecto a dominar dentro de Carga De Modelos.
-- **Modelos:** aspecto a dominar dentro de Carga De Modelos.
-
-## Desarrollo del tema
-
-### Enfoque practico
-
-1. Define el problema que resuelve **Carga De Modelos**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
+```bash
+vllm serve Qwen/Qwen3-0.6B
 ```
 
-## Ejemplo
+Equivalente offline:
 
 ```python
-# Ejemplo con vLLM
-from pathlib import Path
+from vllm import LLM
 
-def procesar(ruta: str) -> list[str]:
-    return Path(ruta).read_text(encoding='utf-8').splitlines()
+llm = LLM(model="Qwen/Qwen3-0.6B")
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+- **Id del Hub** (`org/nombre`): descarga (o reusa) el cache de Hugging Face.
+- **Ruta local:** directorio con `config.json`, tokenizer y shards. Útil cuando no hay red o ya copiaste los pesos.
+
+`--tokenizer` solo si el tokenizer no va en el mismo repo. `--revision` fija un commit o tag del Hub cuando necesitas reproducir un snapshot.
+
+Repos **gated** o privados: token en el entorno (`HF_TOKEN`) o `hf auth login`. Sin eso, el error parece de descarga.
+
+## Lo que cabe en GPU
+
+Tras los pesos, vLLM reserva KV cache. Si no entra:
+
+- modelo más pequeño, o cuantizado;
+- `--max-model-len` menor que el contexto máximo del card;
+- `--gpu-memory-utilization` más bajo si compartes la GPU (capítulo 5);
+- `--tensor-parallel-size` si el modelo es más grande que una GPU (capítulo 5).
+
+`--max-model-len` recorta prompt + salida. No lo subas “por si acaso”: comes VRAM y no ganas calidad.
+
+## Cuantización
+
+`--quantization` (y el argumento homónimo de `LLM`) indica el método cuando aplica (`awq`, `gptq`, `fp8`, … según lo que soporte tu versión). Muchos checkpoints ya traen `quantization_config` en el card: entonces no inventes un método distinto al del repo.
+
+GGUF y otros formatos tienen recetas propias en la doc de offline inference; no mezcles un GGUF con flags de AWQ.
+
+## Código remoto
+
+`--trust-remote-code` ejecuta código Python del repo del modelo. Actívalo **solo** si el card lo exige y confías en el origen. El default es no confiar.
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de carga de modelos.
-- No probar casos limite ni errores esperados.
+- Id mal escrito o modelo de otra arquitectura no soportada.
+- Tokenizer de otro checkpoint.
+- `trust_remote_code=True` por costumbre.
+- Ignorar que el default de `--model` en la CLI es un Qwen pequeño: en producción el id lo pones tú.
 
-## Buenas practicas
+## Buenas prácticas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Fija version de modelo y dataset.
-- Evalua antes de desplegar.
+- Fija modelo + revisión en la config del servicio.
+- Monta `~/.cache/huggingface` (o el cache de vLLM) en volumen para no redescargar.
+- Comprueba `GET /v1/models` después de cargar: el nombre que ves es el que debe ir en el JSON.
+- Si el card pide una versión mínima de `transformers` / vLLM, alinea el entorno.
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Carga De Modelos**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Carga el mismo id por Hub y, si puedes, desde una copia local.
+2. Arranca con `--max-model-len` pequeño y uno grande; mira si el segundo OOM.
+3. Lee el card de un modelo AWQ y decide si debes pasar `--quantization` o no.
 
 ## Siguiente paso
 
-Continua con [Batching Y Rendimiento](04-batching-y-rendimiento.md).
+Continúa con [Batching y rendimiento](04-batching-y-rendimiento.md).

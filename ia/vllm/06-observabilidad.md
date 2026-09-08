@@ -1,68 +1,66 @@
 # Observabilidad
 
-Este capitulo profundiza en **Observabilidad** dentro del manual de **vLLM**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+Un servidor vLLM que “responde a curl” no está operado. El proceso ya expone **Prometheus** en el mismo puerto HTTP, ruta `/metrics`, con prefijo `vllm:`. No hace falta un sidecar para empezar.
 
-## Objetivo
+Cómo se arranca el servidor está en [Despliegue](05-despliegue.md). Qué significan TTFT y KV cache, en [Batching](04-batching-y-rendimiento.md).
 
-Al terminar este capitulo sabras explicar observabilidad, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+Documentación oficial: [métricas](https://docs.vllm.ai/en/latest/design/metrics/), [ejemplo Prometheus/Grafana](https://docs.vllm.ai/en/stable/examples/observability/prometheus_grafana/).
 
-## Conceptos clave
+## Ver métricas
 
-- **Observabilidad:** pieza central de vLLM en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Observabilidad:** aspecto a dominar dentro de Observabilidad.
-
-## Desarrollo del tema
-
-### Enfoque practico
-
-1. Define el problema que resuelve **Observabilidad**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
+```bash
+curl -s http://127.0.0.1:8000/metrics | head
 ```
 
-## Ejemplo
+Deberías ver texto Prometheus (`# HELP`, `# TYPE`, series `vllm:...`). Si da 404, no estás contra el `vllm serve` (o el puerto es otro).
 
-```python
-# Ejemplo con vLLM
-from pathlib import Path
+Nombres útiles (pueden llevar label `model_name`):
 
-def procesar(ruta: str) -> list[str]:
-    return Path(ruta).read_text(encoding='utf-8').splitlines()
-```
+| Métrica | Tipo | Para qué |
+| --- | --- | --- |
+| `vllm:num_requests_running` | Gauge | Batch en ejecución. |
+| `vllm:kv_cache_usage_perc` | Gauge | Fracción de bloques KV usados. |
+| `vllm:prompt_tokens_total` / `vllm:generation_tokens_total` | Counter | Volumen de tokens. |
+| `vllm:request_success_total` | Counter | Peticiones terminadas (razón de fin). |
+| `vllm:time_to_first_token_seconds` | Histogram | TTFT. |
+| `vllm:inter_token_latency_seconds` | Histogram | Latencia entre tokens. |
+| `vllm:e2e_request_latency_seconds` | Histogram | Latencia extremo a extremo. |
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+Prometheus hace scrape periódico de esa URL. El ejemplo oficial lanza Prometheus/Grafana con Docker y un `scrape_configs` hacia el puerto 8000. No copies un dashboard de un blog: parte del JSON del repo de vLLM o construye paneles sobre estas series.
+
+## Logs de peticiones
+
+En la CLI, `--enable-log-requests` registra peticiones (el detalle depende del nivel de log). `--disable-log-stats` apaga el resumen periódico. En desarrollo ayuda; en producción con PII, no loguees prompts a disco compartido.
+
+## Qué mirar en incidente
+
+1. ¿El proceso vive? `GET /v1/models`.
+2. ¿Hay cola / KV llena? `num_requests_running`, `kv_cache_usage_perc`.
+3. ¿TTFT o ITL se fueron? histogramas anteriores.
+4. ¿OOM o restart? métricas a cero y logs del contenedor.
+
+GPU a nivel de hardware (DCGM, `nvidia-smi`) complementa; no sustituye las series `vllm:`.
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de observabilidad.
-- No probar casos limite ni errores esperados.
+- Scrapear el puerto equivocado o un `LLM()` offline que no abre HTTP.
+- Alertar sobre un counter sin `rate()`.
+- Exponer `/metrics` a Internet junto con la API.
+- Confundir “no hay series” con “el modelo es lento”: primero confirma el scrape.
 
-## Buenas practicas
+## Buenas prácticas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Fija version de modelo y dataset.
-- Evalua antes de desplegar.
+- Un job de Prometheus por instancia de vLLM (label de modelo y host).
+- SLOs sobre histogramas (p95 TTFT), no sobre un echo de curl.
+- Retención y grabación de deploys (versión de imagen + id de modelo) para correlacionar regresiones.
+- El capítulo 7 recoge prácticas de operación más amplias.
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Observabilidad**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Con el servidor arriba, genera tráfico (varios chats) y vuelve a `curl /metrics`.
+2. Localiza `vllm:generation_tokens_total` y comprueba que sube.
+3. Apunta tres series que usarías en una alerta (KV, cola, TTFT).
 
 ## Siguiente paso
 
-Continua con [Buenas Practicas](07-buenas-practicas.md).
+Continúa con [Buenas prácticas](07-buenas-practicas.md).

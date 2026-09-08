@@ -1,70 +1,97 @@
-# Transformers Pipelines Y Tokenizers
+# Transformers, pipelines y tokenizers
 
-Este capitulo profundiza en **Transformers Pipelines Y Tokenizers** dentro del manual de **Hugging Face**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+`transformers` carga un modelo del Hub y lo usa para inferencia. Hay dos APIs que conviene separar:
 
-## Objetivo
+- **`pipeline`:** una línea por tarea (generación, clasificación, ASR, …). Encapsula tokenizer + modelo + postproceso.
+- **`AutoTokenizer` / `AutoModel*`:** controlas ids, `generate()`, device y dtype.
 
-Al terminar este capitulo sabras explicar transformers pipelines y tokenizers, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+El tokenizer **no es opcional**: el modelo solo ve números. Si usas un tokenizer de otro checkpoint, los ids no coinciden con los pesos.
 
-## Conceptos clave
+Documentación oficial: [Quickstart](https://huggingface.co/docs/transformers/en/quicktour), [Pipeline](https://huggingface.co/docs/transformers/en/main_classes/pipelines).
 
-- **Transformers Pipelines Y Tokenizers:** pieza central de Hugging Face en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Transformers:** aspecto a dominar dentro de Transformers Pipelines Y Tokenizers.
-- **Pipelines:** aspecto a dominar dentro de Transformers Pipelines Y Tokenizers.
-- **Tokenizers:** aspecto a dominar dentro de Transformers Pipelines Y Tokenizers.
+## Pipeline
 
-## Desarrollo del tema
-
-### Enfoque practico
-
-1. Define el problema que resuelve **Transformers Pipelines Y Tokenizers**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
-```
-
-## Ejemplo
+Instala un `transformers` reciente y PyTorch. Elige **modelo y tarea** a la vez:
 
 ```python
-# Ejemplo con Hugging Face
-from pathlib import Path
+from transformers import pipeline
 
-def procesar(ruta: str) -> list[str]:
-    return Path(ruta).read_text(encoding='utf-8').splitlines()
+pipe = pipeline(
+    "text-generation",
+    model="Qwen/Qwen2.5-0.5B-Instruct",
+)
+out = pipe("Explica tokenizacion en una frase:", max_new_tokens=40)
+print(out[0]["generated_text"])
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+Sin `model=`, `pipeline` descarga un checkpoint por defecto de esa tarea: útil para un demo, mala idea en un servicio (no sabes qué pesos hay).
+
+Otras tareas habituales: `sentiment-analysis` / `text-classification`, `token-classification`, `automatic-speech-recognition`, `image-classification`. La lista vive en la referencia de Pipeline.
+
+En GPU:
+
+```python
+pipe = pipeline("text-generation", model="Qwen/Qwen2.5-0.5B-Instruct", device=0)
+```
+
+`device_map="auto"` (con Accelerate) reparte pesos si el modelo no cabe en un solo dispositivo. Eso ya no es un “hello world”: mide VRAM.
+
+## Tokenizer
+
+```python
+from transformers import AutoTokenizer
+
+tokenizer = AutoTokenizer.from_pretrained("Qwen/Qwen2.5-0.5B-Instruct")
+ids = tokenizer("Hola, mundo")
+print(ids)
+print(tokenizer.convert_ids_to_tokens(ids["input_ids"]))
+print(tokenizer.decode(ids["input_ids"]))
+```
+
+- `encode` / `__call__`: texto → `input_ids` (y a menudo `attention_mask`).
+- `decode`: ids → texto.
+- `padding` y `truncation` importan en batch: un texto más largo que el `max_length` del modelo revienta o se corta.
+
+El tokenizer viaja **con el mismo id** que el modelo salvo que el repo documente otro. No mezcles un BERT tokenizer con un Qwen.
+
+## De ids a generate
+
+Cuando `pipeline` se queda corto:
+
+```python
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
+name = "Qwen/Qwen2.5-0.5B-Instruct"
+tokenizer = AutoTokenizer.from_pretrained(name)
+model = AutoModelForCausalLM.from_pretrained(name, dtype="auto", device_map="auto")
+
+inputs = tokenizer("El token es", return_tensors="pt").to(model.device)
+out = model.generate(**inputs, max_new_tokens=32)
+print(tokenizer.decode(out[0], skip_special_tokens=True))
+```
+
+`dtype="auto"` evita cargar en float32 y convertir después. Fine-tuning con `Trainer` es el [capítulo 4](04-fine-tuning.md).
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de transformers pipelines y tokenizers.
-- No probar casos limite ni errores esperados.
+- Usar el tokenizer de un modelo y los pesos de otro.
+- No truncar y pasar 4k tokens a un modelo de 512.
+- Dejar el modelo en CPU sin `device` y pensar que `pipeline` “ya usa la GPU”.
+- Confiar en el modelo default de `pipeline("sentiment-analysis")` en producción.
 
-## Buenas practicas
+## Buenas prácticas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Fija version de modelo y dataset.
-- Evalua antes de desplegar.
+- Fija `model=` (y `revision=` si necesitas un commit).
+- Revisa `tokenizer.model_max_length` antes de batch.
+- Para chat, usa la plantilla del tokenizer (`apply_chat_template`) cuando el modelo es instruct; no concatenes roles a mano si el card dice lo contrario.
+- Inferencia masiva de un LLM: evalúa un servidor (vLLM), no un `for` con `pipeline`.
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Transformers Pipelines Y Tokenizers**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Tokeniza la misma frase con dos modelos distintos y compara longitud de `input_ids`.
+2. Genera texto con `pipeline` y con `model.generate` sobre el mismo checkpoint.
+3. Fuerza `truncation=True, max_length=8` y observa qué se pierde al decodificar.
 
 ## Siguiente paso
 
-Continua con [Datasets](03-datasets.md).
+Continúa con [Datasets](03-datasets.md).

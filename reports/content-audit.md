@@ -16,18 +16,18 @@ schemaVersion: 1
 | Prioridad | Capítulos | Significado |
 | --- | ---: | --- |
 | P0 | 0 | Patrón técnico conocido (obsoleto / incorrecto) |
-| P1 | 14 | Plantilla genérica en tecnología de alto ritmo de cambio |
+| P1 | 6 | Plantilla genérica en tecnología de alto ritmo de cambio |
 | P2 | 117 | Plantilla, ejemplo genérico o código duplicado entre manuales |
-| P3 | 611 | Sin señales de revisión editorial (puede tener solo riesgo de frescura) |
+| P3 | 619 | Sin señales de revisión editorial (puede tener solo riesgo de frescura) |
 
 ### Señales
 
 | Flag | Capítulos |
 | --- | ---: |
-| generic_template | 123 |
-| generic_example | 106 |
+| generic_template | 115 |
+| generic_example | 98 |
 | very_short | 196 |
-| duplicated_code | 131 |
+| duplicated_code | 123 |
 | high_freshness_risk | 141 |
 | known_outdated_pattern | 0 |
 
@@ -36,17 +36,17 @@ schemaVersion: 1
 | Banda | Palabras | Capítulos |
 | --- | --- | ---: |
 | very_short | ≤ 119 | 196 |
-| short | 120–349 | 428 |
-| normal | 350–1200 | 115 |
+| short | 120–349 | 421 |
+| normal | 350–1200 | 122 |
 | long | ≥ 1201 | 3 |
 
 ## Patrón conocido: `Este capitulo profundiza`
 
-- Capítulos actuales: **123**
-- Manuales afectados: **23**
-- Áreas: `cloud`, `data-engineering`, `full-stack`, `ia`
+- Capítulos actuales: **115**
+- Manuales afectados: **22**
+- Áreas: `data-engineering`, `full-stack`, `ia`
 
-Auditoría previa de referencia: ~126. Recuento actual: **123**.
+Auditoría previa de referencia: ~126. Recuento actual: **115**.
 
 ### 20 manuales con más casos
 
@@ -62,16 +62,16 @@ Auditoría previa de referencia: ~126. Recuento actual: **123**.
 | data-engineering/dbt | 7 | 8 |
 | data-engineering/parquet | 7 | 7 |
 | full-stack/arquitectura/microservicios | 7 | 7 |
-| ia/huggingface | 7 | 7 |
 | ia/vector-databases | 7 | 7 |
 | full-stack/arquitectura/cqrs | 6 | 6 |
 | full-stack/arquitectura/event-driven | 6 | 6 |
-| ia/vllm | 6 | 7 |
-| cloud/github-actions | 1 | 8 |
+| ia/huggingface | 5 | 7 |
 | full-stack/backend/aspnet-core | 1 | 15 |
 | full-stack/backend/django | 1 | 15 |
 | full-stack/backend/express | 1 | 15 |
 | full-stack/backend/fastapi | 1 | 16 |
+| full-stack/backend/laravel | 1 | 16 |
+| full-stack/backend/nestjs | 1 | 16 |
 
 ## Prioridad P0
 
@@ -79,21 +79,13 @@ _Ninguno._
 
 ## Prioridad P1
 
-14 capítulos. Primeros 25:
+6 capítulos. Primeros 25:
 
-- `cloud/github-actions/01-introduccion-a-workflows.md`
-- `ia/huggingface/01-introduccion-al-ecosistema.md`
-- `ia/huggingface/02-transformers-pipelines-y-tokenizers.md`
 - `ia/huggingface/03-datasets.md`
 - `ia/huggingface/04-fine-tuning.md`
 - `ia/huggingface/05-hub-y-modelos.md`
 - `ia/huggingface/06-evaluacion.md`
 - `ia/huggingface/07-despliegue.md`
-- `ia/vllm/01-introduccion-y-casos-de-uso.md`
-- `ia/vllm/02-servidor-openai-compatible.md`
-- `ia/vllm/03-carga-de-modelos.md`
-- `ia/vllm/04-batching-y-rendimiento.md`
-- `ia/vllm/06-observabilidad.md`
 - `ia/vllm/07-buenas-practicas.md`
 
 ## Manuales con más deuda detectada
@@ -103,8 +95,7 @@ Los ratios son solo para priorizar; no se muestran en la web pública.
 
 | Manual | Capítulos | Flags revisión | P0 | P1 | P2 | Genéricos |
 | --- | --- | --- | --- | --- | --- | --- |
-| ia/huggingface | 7 | 7 | 0 | 7 | 0 | 7/7 |
-| ia/vllm | 7 | 6 | 0 | 6 | 0 | 6/7 |
+| ia/huggingface | 7 | 5 | 0 | 5 | 0 | 5/7 |
 | full-stack/backend/php | 12 | 12 | 0 | 0 | 12 | 12/12 |
 | full-stack/frontend/redux | 9 | 9 | 0 | 0 | 9 | 9/9 |
 | full-stack/frontend/tailwind | 9 | 9 | 0 | 0 | 9 | 9/9 |
@@ -118,8 +109,9 @@ Los ratios son solo para priorizar; no se muestran en la web pública.
 | ia/vector-databases | 7 | 7 | 0 | 0 | 7 | 7/7 |
 | full-stack/arquitectura/cqrs | 6 | 6 | 0 | 0 | 6 | 6/6 |
 | full-stack/arquitectura/event-driven | 6 | 6 | 0 | 0 | 6 | 6/6 |
+| ia/vllm | 7 | 1 | 0 | 1 | 0 | 1/7 |
 
-Manuales donde **todos** los capítulos son plantilla: `ia/huggingface` (7), `full-stack/backend/php` (12), `full-stack/frontend/redux` (9), `full-stack/frontend/tailwind` (9), `data-engineering/delta-lake` (8), `data-engineering/iceberg` (8), `full-stack/frontend/zustand` (8), `ia/transformers` (8), `data-engineering/parquet` (7), `full-stack/arquitectura/microservicios` (7), `ia/vector-databases` (7), `full-stack/arquitectura/cqrs` (6), `full-stack/arquitectura/event-driven` (6).
+Manuales donde **todos** los capítulos son plantilla: `full-stack/backend/php` (12), `full-stack/frontend/redux` (9), `full-stack/frontend/tailwind` (9), `data-engineering/delta-lake` (8), `data-engineering/iceberg` (8), `full-stack/frontend/zustand` (8), `ia/transformers` (8), `data-engineering/parquet` (7), `full-stack/arquitectura/microservicios` (7), `ia/vector-databases` (7), `full-stack/arquitectura/cqrs` (6), `full-stack/arquitectura/event-driven` (6).
 
 ## Tecnologías con mayor riesgo de actualización
 
@@ -128,10 +120,10 @@ Lista configurable en `scripts/content-audit.config.mjs` (`highFreshnessManuals`
 
 | Manual | Capítulos | Plantilla | P0 | P1 |
 | --- | --- | --- | --- | --- |
-| ia/huggingface | 7 | 7 | 0 | 7 |
-| ia/vllm | 7 | 6 | 0 | 6 |
-| cloud/github-actions | 8 | 1 | 0 | 1 |
+| ia/huggingface | 7 | 5 | 0 | 5 |
+| ia/vllm | 7 | 1 | 0 | 1 |
 | full-stack/frontend/vue | 10 | 0 | 0 | 0 |
+| cloud/github-actions | 8 | 0 | 0 | 0 |
 | cloud/kubernetes | 14 | 0 | 0 | 0 |
 | devops/terraform | 8 | 0 | 0 | 0 |
 | full-stack/frontend/angular | 12 | 0 | 0 | 0 |
@@ -142,7 +134,7 @@ Lista configurable en `scripts/content-audit.config.mjs` (`highFreshnessManuals`
 | ia/ollama | 7 | 0 | 0 | 0 |
 | ia/rag | 7 | 0 | 0 | 0 |
 
-Plantilla + frescura alta (prioridad P1): `ia/huggingface` (7), `ia/vllm` (6), `cloud/github-actions` (1).
+Plantilla + frescura alta (prioridad P1): `ia/huggingface` (5), `ia/vllm` (1).
 
 ## Duplicados relevantes
 
@@ -151,8 +143,8 @@ Bloques de código con el mismo hash (tras quitar comentarios y colapsar espacio
 
 | Hash | Lang | Manuales | Capítulos | Ejemplo |
 | --- | --- | --- | --- | --- |
-| `34c4a79450ca7290` | txt | 23 | 123 | `cloud/github-actions/01-introduccion-a-workflows.md` |
-| `5a9d824dcf18e14a` | python | 9 | 53 | `data-engineering/delta-lake/01-introduccion-y-arquitectura.md` |
+| `34c4a79450ca7290` | txt | 22 | 115 | `data-engineering/dbt/02-sources-models-y-refs.md` |
+| `5a9d824dcf18e14a` | python | 9 | 46 | `data-engineering/delta-lake/01-introduccion-y-arquitectura.md` |
 | `fb1882696289f802` | txt | 3 | 19 | `full-stack/arquitectura/cqrs/01-introduccion-y-motivacion.md` |
 | `6a2c2f980ddd3635` | javascript | 3 | 18 | `full-stack/backend/express/01-introduccion-y-entorno.md` |
 | `496f0a56711e035c` | php | 2 | 13 | `full-stack/backend/laravel/01-introduccion-y-entorno.md` |
