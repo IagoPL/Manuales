@@ -131,7 +131,7 @@ Desactivar facts si el play solo copia un fichero y quieres velocidad:
 
 `roles/nginx/templates/nginx.conf.j2`:
 
-```jinja2
+```jinja
 user www-data;
 worker_processes {{ nginx_worker_processes | default(2) }};
 error_log /var/log/nginx/error.log warn;
@@ -186,7 +186,7 @@ Task:
 
 Condicionales en plantilla:
 
-```jinja2
+```jinja
 {% if app_env == 'production' %}
 access_log /var/log/nginx/access.json json_combined;
 {% else %}

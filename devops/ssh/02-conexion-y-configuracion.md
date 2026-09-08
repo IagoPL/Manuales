@@ -28,7 +28,7 @@ exit
 
 Crea o edita `~/.ssh/config` (modo `600`):
 
-```sshconfig
+```ssh-config
 Host prod-api
   HostName 203.0.113.10
   User deploy
@@ -67,7 +67,7 @@ ssh staging
 
 Ejemplo con keepalive:
 
-```sshconfig
+```ssh-config
 Host *
   ServerAliveInterval 30
   ServerAliveCountMax 3
@@ -80,7 +80,7 @@ Host *
 
 Arquitectura tipica: solo el bastion es publico; las maquinas internas no tienen SSH expuesto.
 
-```sshconfig
+```ssh-config
 Host bastion
   HostName bastion.ejemplo.com
   User ops
@@ -103,7 +103,7 @@ ssh -J ops@bastion.ejemplo.com postgres@10.0.1.20
 
 Abrir un canal maestro reutilizable:
 
-```sshconfig
+```ssh-config
 Host *
   ControlMaster auto
   ControlPath ~/.ssh/cm-%r@%h:%p

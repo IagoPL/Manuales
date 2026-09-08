@@ -18,9 +18,20 @@ export default defineConfig({
   lastUpdated: true,
   appearance: true,
   head: [
-    ['link', { rel: 'icon', type: 'image/png', href: '/favicon.png' }],
-    ['link', { rel: 'shortcut icon', type: 'image/png', href: '/favicon.png' }]
+    ['link', { rel: 'icon', type: 'image/png', href: `${base}favicon.png` }],
+    ['link', { rel: 'shortcut icon', type: 'image/png', href: `${base}favicon.png` }]
   ],
+  markdown: {
+    config(md) {
+      const renderInlineCode = md.renderer.rules.code_inline
+      if (!renderInlineCode) return
+
+      md.renderer.rules.code_inline = (tokens, idx, options, env, self) => {
+        const html = renderInlineCode(tokens, idx, options, env, self)
+        return html.replace(/^<code/, '<code v-pre')
+      }
+    }
+  },
   ignoreDeadLinks: strictLinks ? false : true,
   srcExclude: ['_revision-pendiente/**', 'node_modules/**'],
   transformPageData(pageData) {
