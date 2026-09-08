@@ -1,5 +1,8 @@
 ---
 layout: home
+title: Manuales de programación, DevOps, datos e IA
+titleTemplate: false
+description: Biblioteca práctica de manuales técnicos sobre desarrollo full stack, ingeniería de datos, bases de datos, DevOps, cloud e inteligencia artificial.
 ---
 
 <script setup>

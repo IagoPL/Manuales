@@ -1,5 +1,6 @@
 ---
-title: Estado del repositorio
+title: Estado de la biblioteca
+description: "Inventario de la biblioteca de Manuales: capítulos, manuales y áreas, con contadores objetivos por categoría."
 ---
 
 <script setup>
@@ -41,9 +42,9 @@ const areas = manuales.categories.map((category) => ({
   <table class="status-table">
     <thead>
       <tr>
-        <th>Area</th>
-        <th>Manuales</th>
-        <th>Capitulos</th>
+        <th scope="col">Area</th>
+        <th scope="col">Manuales</th>
+        <th scope="col">Capitulos</th>
       </tr>
     </thead>
     <tbody>
@@ -63,9 +64,9 @@ const areas = manuales.categories.map((category) => ({
   <table class="status-table">
     <thead>
       <tr>
-        <th>Area</th>
-        <th>Manual</th>
-        <th>Capitulos</th>
+        <th scope="col">Area</th>
+        <th scope="col">Manual</th>
+        <th scope="col">Capitulos</th>
       </tr>
     </thead>
     <tbody>
