@@ -12,7 +12,7 @@ import {
 } from './lib/content'
 
 const root = process.cwd()
-const ignoredDirs = new Set(['.git', '.github', '.vitepress', 'node_modules', '_revision-pendiente', 'recursos'])
+const ignoredDirs = new Set(['.git', '.github', '.vitepress', 'node_modules', '_revision-pendiente', 'recursos', 'reports'])
 
 const categoryMeta: Record<string, { title: string; description: string; order: number }> = {
   'full-stack': {

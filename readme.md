@@ -128,6 +128,18 @@ Snowflake queda documentado en [Bases de datos](bases-de-datos/snowflake/01-intr
 - [Diseno de APIs REST](full-stack/arquitectura/apis-rest/01-introduccion-a-rest.md)
 - [Arquitectura full stack](full-stack/arquitectura/01-introduccion.md)
 
+## Comandos de mantenimiento
+
+Los indicadores de esta auditoría son internos. No se publican en la web.
+
+```bash
+npm ci
+npm run docs:dev
+npm run docs:build
+npm run docs:report    # completitud (borrador vs no borrador)
+npm run docs:audit     # deuda editorial (plantillas, frescura, patrones)
+```
+
 ## Criterios de organizacion
 
 - Cada manual vive en su propia carpeta.

@@ -3,7 +3,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 
 const root = process.cwd()
-const ignoredDirs = new Set(['.git', '.github', '.vitepress', 'node_modules', '_revision-pendiente', 'recursos', 'public', 'scripts'])
+const ignoredDirs = new Set(['.git', '.github', '.vitepress', 'node_modules', '_revision-pendiente', 'recursos', 'public', 'scripts', 'reports'])
 const STUB_MARKER = /^#\s+.+\r?\n\r?\nPendiente de completar\./m
 const INDEX_STUB_MARKER = /^# Manual de .+\r?\n\r?\nEste manual[\s\S]*## Capitulos previstos/m
 const DRAFT_FRONTMATTER = /^---[\s\S]*?\ndraft:\s*true\b/m

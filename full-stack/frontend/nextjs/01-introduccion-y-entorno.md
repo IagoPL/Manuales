@@ -1,70 +1,83 @@
-# Introduccion Y Entorno
+# Introducción y entorno
 
-Este capitulo profundiza en **Introduccion Y Entorno** dentro del manual de **Next.js**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+Next.js es un **framework de React**: añade enrutado, bundling y formas de renderizar (cliente, servidor, estático) sobre la biblioteca. React solo pinta componentes; Next.js decide **qué URL** corresponde a qué archivo, cómo se empaqueta el código y cómo sale HTML al navegador.
 
-## Objetivo
+Si solo necesitas una SPA que consume una API, Vite + React puede bastar (ver [Introducción a React](../react/01-introduccion.md)). Next.js merece la pena cuando quieres rutas de archivo, SSR/SSG, Route Handlers o un despliegue full-stack sin montar ese andamiaje a mano.
 
-Al terminar este capitulo sabras explicar introduccion y entorno, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+Documentación oficial: [Instalación](https://nextjs.org/docs/getting-started/installation).
 
-## Conceptos clave
+## Requisitos
 
-- **Introduccion Y Entorno:** pieza central de Next.js en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Introduccion:** aspecto a dominar dentro de Introduccion Y Entorno.
-- **Entorno:** aspecto a dominar dentro de Introduccion Y Entorno.
+- Node.js **20.9** o superior.
+- npm, pnpm, yarn o bun.
+- Navegadores modernos (Chrome/Edge/Firefox 111+, Safari 16.4+).
 
-## Desarrollo del tema
-
-### Enfoque practico
-
-1. Define el problema que resuelve **Introduccion Y Entorno**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
+```bash
+node -v
 ```
 
-## Ejemplo
+## Crear el proyecto
 
-```javascript
-// Ejemplo en Next.js
-const config = { debug: true, retries: 3 };
+La vía soportada es `create-next-app` (no Create React App):
 
-export function setup() {
-  console.log('Inicializando', config);
-}
+```bash
+npx create-next-app@latest mi-app
+cd mi-app
+npm run dev
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+Abre `http://localhost:3000`. `--yes` salta las preguntas y aplica los valores por defecto actuales del CLI (TypeScript, ESLint, Tailwind, App Router, alias `@/*`).
+
+Durante la instalación puedes elegir:
+
+- TypeScript o JavaScript.
+- ESLint, Biome o sin linter.
+- Tailwind.
+- Carpeta `src/`.
+- **App Router** (recomendado) o Pages Router.
+- Alias de imports.
+
+El App Router es el camino por defecto y el que usa este manual. El siguiente capítulo detalla `app/`, `layout.tsx` y `page.tsx`.
+
+Scripts que deja el CLI:
+
+| Script | Función |
+| --- | --- |
+| `next dev` | Servidor de desarrollo. Turbopack es el bundler por defecto. |
+| `next build` | Build de producción. |
+| `next start` | Sirve el build (`next start` después de `next build`). |
+
+## React frente a Next.js
+
+| | React (biblioteca) | Next.js (framework) |
+| --- | --- | --- |
+| Qué resuelve | UI con componentes | App: rutas, render, datos, empaquetado |
+| Entrada típica | `createRoot` + Vite | `create-next-app` → carpeta `app/` |
+| Routing | Lo eliges tú | Sistema de ficheros |
+| Servidor | Opcional y manual | Integrado (SSR, Server Components, Route Handlers) |
+
+No hace falta “aprender Next.js en lugar de React”: los componentes, props, estado y JSX son los mismos. Next.js añade convenciones (`page.tsx`, `layout.tsx`, Server Components) encima.
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de introduccion y entorno.
-- No probar casos limite ni errores esperados.
+- Crear la app con `create-react-app` y “añadir Next después”. Empieza con `create-next-app`.
+- Usar Node 18 u otro runtime por debajo de 20.9.
+- Convertir todo a Client Component (`'use client'`) en el primer archivo. El valor del App Router está en dejar trabajo en el servidor cuando no hay interactividad.
+- Copiar la estructura de `pages/` (Pages Router) en un proyecto App Router.
 
-## Buenas practicas
+## Buenas prácticas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Componentiza y evita estado global innecesario.
-- Prueba interacciones criticas.
+- Fija la versión de Next en `package.json` y actualiza con el flujo oficial (`npx next upgrade` cuando toque).
+- Un proyecto, un router: App **o** Pages como principal, no mezcles por costumbre.
+- Deja `app/` para rutas; extrae UI reutilizable a `components/` y lógica a `lib/` (el siguiente capítulo lo desarrolla).
+- En desarrollo usa `npm run dev` y comprueba que el cambio en `app/page.tsx` recarga.
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Introduccion Y Entorno**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Genera `mi-app` con `create-next-app` y arranca `npm run dev`.
+2. Cambia el texto de la home y confirma el HMR.
+3. Anota si el CLI te creó `app/` o `src/app/` y abre el `layout` raíz: debe incluir `html` y `body`.
 
 ## Siguiente paso
 
-Continua con [App Router Y Estructura](02-app-router-y-estructura.md).
+Continúa con [App Router y estructura](02-app-router-y-estructura.md).

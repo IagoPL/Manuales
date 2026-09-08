@@ -68,22 +68,18 @@ const isLoggedIn = true;
 
 ## Renderización de elementos React
 
-En React, JSX se convierte en elementos React que se renderizan en el DOM utilizando `ReactDOM.render`.
+JSX se transpila a llamadas que crean elementos React. Esos elementos se montan en un nodo del DOM con `createRoot` (React 18+). No uses `ReactDOM.render`; esa API quedó sustituida por `react-dom/client`.
 
 ### Ejemplo
 
 ```jsx
-import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client'
 
-const element = <h1>Hola, mundo</h1>;
-ReactDOM.render(element, document.getElementById('root'));
+const element = <h1>Hola, mundo</h1>
+createRoot(document.getElementById('root')).render(element)
 ```
 
-El método `ReactDOM.render` toma dos argumentos:
-
-1. El elemento React a renderizar.
-2. El contenedor en el DOM donde debe insertarse.
+`createRoot` recibe el contenedor del DOM (habitualmente `<div id="root">`). `render` recibe el árbol React que debe mostrarse ahí. En una aplicación Vite o de framework, este montaje vive en `main.jsx` / `index.jsx` y se hace una sola vez.
 
 ---
 
