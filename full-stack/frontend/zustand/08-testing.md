@@ -1,65 +1,71 @@
 # Testing
 
-Este capitulo profundiza en **Testing** dentro del manual de **Zustand**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+El usuario no ve Zustand. Prioriza **comportamiento** (RTL) y, si la lógica del store es densa, **acciones** con `getState`. Un store de módulo **conserva** state entre tests: hay que resetear.
 
-## Objetivo
+Documentación: [testing](https://zustand.docs.pmnd.rs/learn/guides/testing).
 
-Al terminar este capitulo sabras explicar testing, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+## Store: acciones
 
-## Conceptos clave
+```js
+import { useCarritoStore } from './carritoStore'
 
-- **Testing:** pieza central de Zustand en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Testing:** aspecto a dominar dentro de Testing.
+const inicial = useCarritoStore.getInitialState()
 
-## Desarrollo del tema
+beforeEach(() => {
+  useCarritoStore.setState(inicial, true)
+})
 
-### Enfoque practico
-
-1. Define el problema que resuelve **Testing**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
+test('anadir empuja una linea', () => {
+  useCarritoStore.getState().anadir('sku-1')
+  expect(useCarritoStore.getState().lineas).toHaveLength(1)
+})
 ```
 
-## Ejemplo
+`setState(inicial, true)` **reemplaza** (no merge). Sin `true` puedes dejar claves viejas.
 
-```javascript
-// Ejemplo en Zustand
-const config = { debug: true, retries: 3 };
+La guía oficial mockea `zustand` para registrar cada `create`/`createStore` y resetear en `afterEach` con `getInitialState`. Úsalo cuando hay muchos stores; para uno, el `beforeEach` basta.
 
-export function setup() {
-  console.log('Inicializando', config);
-}
+## Componentes: RTL + store real
+
+```jsx
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { MiniCarrito } from './MiniCarrito'
+
+test('al pulsar, el contador pasa a 1', async () => {
+  const user = userEvent.setup()
+  render(<MiniCarrito />)
+  await user.click(screen.getByRole('button', { name: /carrito/i }))
+  expect(screen.getByRole('button', { name: /carrito \(1\)/i })).toBeInTheDocument()
+})
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+No mockees el hook de Zustand como primera estrategia. Prefiere estado controlado (`setState` antes del render) o un **store por test** con Provider (capítulo 6).
+
+## Persist
+
+No unit-testees `localStorage` en todos los casos. Si importa: storage de mentira o mock, y aserta `tema` tras `rehydrate`, no el JSON interno del middleware. La mayoría de tests pueden usar el store **sin** `persist`.
+
+## Aislamiento
+
+Tests que dependen del orden = el store global se filtró. Reset o `createStore()` fresco + Context. El mock oficial evita que el test B herede el carrito del A.
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de testing.
-- No probar casos limite ni errores esperados.
+- Un `describe` que asume `lineas` vacío porque “el archivo anterior lo vació”.
+- Snapshot del objeto middleware.
+- Mock de `useCarritoStore` que no se parece al store.
 
-## Buenas practicas
+## Buenas prácticas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Componentiza y evita estado global innecesario.
-- Prueba interacciones criticas.
+- Reset explícito o mock de la guía.
+- RTL para clicks; `getState` para reglas raras (`checkout` que vacía).
+- Misma receta que Redux: no testees el type de la action.
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Testing**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Test de `anadir` + reset entre casos.
+2. RTL sobre `MiniCarrito`.
+3. Crea un store por test con `createStore` y envuélvelo.
+
+Fin del manual Zustand.

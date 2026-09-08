@@ -1,70 +1,87 @@
-# Stores Basicos
+# Stores básicos
 
-Este capitulo profundiza en **Stores Basicos** dentro del manual de **Zustand**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+`create` fabrica un hook con el store enganchado: `getState`, `setState`, `subscribe`. Dentro, `set` y `get` actualizan y leen.
 
-## Objetivo
+Documentación: [create](https://zustand.docs.pmnd.rs/reference/apis/create), [TypeScript](https://zustand.docs.pmnd.rs/learn/guides/beginner-typescript).
 
-Al terminar este capitulo sabras explicar stores basicos, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+## `create`, `set`, `get`
 
-## Conceptos clave
+```js
+import { create } from 'zustand'
 
-- **Stores Basicos:** pieza central de Zustand en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Stores:** aspecto a dominar dentro de Stores Basicos.
-- **Basicos:** aspecto a dominar dentro de Stores Basicos.
-
-## Desarrollo del tema
-
-### Enfoque practico
-
-1. Define el problema que resuelve **Stores Basicos**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
+export const useCarritoStore = create((set, get) => ({
+  lineas: [],
+  anadir: (id) =>
+    set((state) => ({
+      lineas: [...state.lineas, { id, cantidad: 1 }],
+    })),
+  vaciar: () => set({ lineas: [] }),
+  totalUnidades: () =>
+    get().lineas.reduce((n, l) => n + l.cantidad, 0),
+}))
 ```
 
-## Ejemplo
+- `set({ lineas: [] })` — objeto: **merge superficial** con el state actual.
+- `set((state) => ({ … }))` — función: lees el state fresco (clicks rápidos, async).
+- `get()` — lees sin suscribirte (acciones, no componentes).
 
-```javascript
-// Ejemplo en Zustand
-const config = { debug: true, retries: 3 };
+`set` **no** hace deep merge. `set({ user: { nombre: 'Ana' } })` **sustituye** `user` entero. Nested:
 
-export function setup() {
-  console.log('Inicializando', config);
+```js
+set((state) => ({
+  usuario: {
+    ...state.usuario,
+    nombre: 'Ana',
+  },
+}))
+```
+
+Arrays: nuevo array (`map`, `filter`, spread). No `state.lineas.push(...)` sobre el array del store. Immer es opcional (capítulo 5), no un requisito.
+
+`set(next, true)` **reemplaza** el state (el segundo argumento `replace`). Útil al resetear; peligroso si olvidas acciones.
+
+## TypeScript (forma actual)
+
+La forma **currificada** `create<T>()((set) => …)` es la recomendada para inferir middleware:
+
+```ts
+type CarritoStore = {
+  lineas: { id: string; cantidad: number }[]
+  anadir: (id: string) => void
 }
+
+export const useCarritoStore = create<CarritoStore>()((set) => ({
+  lineas: [],
+  anadir: (id) =>
+    set((state) => ({
+      lineas: [...state.lineas, { id, cantidad: 1 }],
+    })),
+}))
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+El resto del manual usa JS cuando simplifica; los snippets TS siguen este patrón.
+
+## Inmutabilidad
+
+El store notifica si la referencia de lo seleccionado cambia (`Object.is` en v5). Mutar `state.lineas[0].cantidad++` sin `set` no dispara bien a los suscriptores. Siempre `set` / `setState`.
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de stores basicos.
-- No probar casos limite ni errores esperados.
+- Creer que `set({ user: { … } })` conserva `user.email`.
+- Guardar `totalUnidades` en el state en vez de calcularlo (capítulo 3).
+- Import default `create`: en v5 los defaults se eliminaron; usa `import { create }`.
 
-## Buenas practicas
+## Buenas prácticas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Componentiza y evita estado global innecesario.
-- Prueba interacciones criticas.
+- Estado plano cuando puedas; spread consciente si anidas.
+- Acciones de dominio (`anadir`, `vaciar`), no veinte `setCantidad1` sueltos.
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Stores Basicos**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Implementa `cambiarCantidad(id, n)` sin mutar `lineas`.
+2. Llama `anadir` dos veces seguidas y comprueba que no pisa la primera línea.
+3. Tipa el store con `create<CarritoStore>()`.
 
 ## Siguiente paso
 
-Continua con [Selectores Y Rendimiento](03-selectores-y-rendimiento.md).
+Continúa con [Selectores y rendimiento](03-selectores-y-rendimiento.md).

@@ -7,21 +7,21 @@
     "priorities": {
       "P0": 0,
       "P1": 0,
-      "P2": 87,
-      "P3": 655
+      "P2": 79,
+      "P3": 663
     },
     "flags": {
       "known_outdated_pattern": 0,
-      "generic_template": 79,
-      "generic_example": 71,
-      "duplicated_code": 87,
+      "generic_template": 71,
+      "generic_example": 63,
+      "duplicated_code": 79,
       "very_short": 196,
       "high_freshness_risk": 141
     },
     "trackedTemplatePhrase": {
       "pattern": "Este capitulo profundiza",
-      "chapters": 79,
-      "manuals": 17,
+      "chapters": 71,
+      "manuals": 16,
       "areas": [
         "data-engineering",
         "full-stack",
@@ -30,11 +30,11 @@
     },
     "lengthBands": {
       "very_short": 196,
-      "short": 400,
-      "normal": 143,
+      "short": 399,
+      "normal": 144,
       "long": 3
     },
-    "duplicateGroups": 10
+    "duplicateGroups": 9
   },
   "manuals": [
     {
@@ -64,29 +64,6 @@
       "path": "data-engineering/iceberg",
       "slug": "iceberg",
       "area": "data-engineering",
-      "chapters": 8,
-      "priorities": {
-        "P0": 0,
-        "P1": 0,
-        "P2": 8,
-        "P3": 0
-      },
-      "flags": {
-        "known_outdated_pattern": 0,
-        "generic_template": 8,
-        "generic_example": 8,
-        "duplicated_code": 8,
-        "very_short": 0,
-        "high_freshness_risk": 0
-      },
-      "trackedPhrase": 8,
-      "reviewFlags": 8,
-      "genericRatio": 1
-    },
-    {
-      "path": "full-stack/frontend/zustand",
-      "slug": "zustand",
-      "area": "full-stack",
       "chapters": 8,
       "priorities": {
         "P0": 0,
@@ -1395,6 +1372,29 @@
       "genericRatio": 0
     },
     {
+      "path": "full-stack/frontend/zustand",
+      "slug": "zustand",
+      "area": "full-stack",
+      "chapters": 8,
+      "priorities": {
+        "P0": 0,
+        "P1": 0,
+        "P2": 0,
+        "P3": 8
+      },
+      "flags": {
+        "known_outdated_pattern": 0,
+        "generic_template": 0,
+        "generic_example": 0,
+        "duplicated_code": 0,
+        "very_short": 0,
+        "high_freshness_risk": 0
+      },
+      "trackedPhrase": 0,
+      "reviewFlags": 0,
+      "genericRatio": 0
+    },
+    {
       "path": "herramientas/docker",
       "slug": "docker",
       "area": "herramientas",
@@ -1806,7 +1806,6 @@
         "full-stack/backend/laravel",
         "full-stack/backend/nestjs",
         "full-stack/backend/spring-boot",
-        "full-stack/frontend/zustand",
         "ia/transformers",
         "ia/vector-databases"
       ],
@@ -1867,14 +1866,6 @@
         "full-stack/backend/laravel/01-introduccion-y-entorno.md",
         "full-stack/backend/nestjs/01-introduccion-y-entorno.md",
         "full-stack/backend/spring-boot/01-introduccion-y-entorno.md",
-        "full-stack/frontend/zustand/01-introduccion-y-casos-de-uso.md",
-        "full-stack/frontend/zustand/02-stores-basicos.md",
-        "full-stack/frontend/zustand/03-selectores-y-rendimiento.md",
-        "full-stack/frontend/zustand/04-persistencia.md",
-        "full-stack/frontend/zustand/05-middleware.md",
-        "full-stack/frontend/zustand/06-integracion-con-react.md",
-        "full-stack/frontend/zustand/07-patrones-de-arquitectura.md",
-        "full-stack/frontend/zustand/08-testing.md",
         "ia/transformers/01-introduccion-y-arquitectura.md",
         "ia/transformers/02-tokenizacion-y-embeddings.md",
         "ia/transformers/03-attention.md",
@@ -1891,7 +1882,7 @@
         "ia/vector-databases/06-patrones-para-rag.md",
         "ia/vector-databases/07-buenas-practicas.md"
       ],
-      "count": 79
+      "count": 71
     },
     {
       "hash": "5a9d824dcf18e14a",
@@ -1981,27 +1972,6 @@
         "full-stack/arquitectura/microservicios/07-trade-offs.md"
       ],
       "count": 19
-    },
-    {
-      "hash": "6a2c2f980ddd3635",
-      "lang": "javascript",
-      "chars": 109,
-      "manuals": [
-        "full-stack/backend/express",
-        "full-stack/frontend/zustand"
-      ],
-      "chapters": [
-        "full-stack/backend/express/01-introduccion-y-entorno.md",
-        "full-stack/frontend/zustand/01-introduccion-y-casos-de-uso.md",
-        "full-stack/frontend/zustand/02-stores-basicos.md",
-        "full-stack/frontend/zustand/03-selectores-y-rendimiento.md",
-        "full-stack/frontend/zustand/04-persistencia.md",
-        "full-stack/frontend/zustand/05-middleware.md",
-        "full-stack/frontend/zustand/06-integracion-con-react.md",
-        "full-stack/frontend/zustand/07-patrones-de-arquitectura.md",
-        "full-stack/frontend/zustand/08-testing.md"
-      ],
-      "count": 9
     },
     {
       "hash": "3320248a647ec61e",
@@ -12010,60 +11980,48 @@
       "area": "full-stack",
       "manual": "zustand",
       "manualPath": "full-stack/frontend/zustand",
-      "title": "Introduccion Y Casos De Uso",
-      "wordCount": 312,
-      "usefulLines": 45,
-      "headings": 11,
+      "title": "Introducción y casos de uso",
+      "wordCount": 326,
+      "usefulLines": 34,
+      "headings": 7,
       "codeBlocks": 2,
-      "links": 1,
-      "lists": 24,
+      "links": 6,
+      "lists": 7,
       "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "full-stack/frontend/zustand/02-stores-basicos.md",
       "area": "full-stack",
       "manual": "zustand",
       "manualPath": "full-stack/frontend/zustand",
-      "title": "Stores Basicos",
-      "wordCount": 275,
-      "usefulLines": 44,
-      "headings": 11,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 23,
+      "title": "Stores básicos",
+      "wordCount": 214,
+      "usefulLines": 56,
+      "headings": 8,
+      "codeBlocks": 3,
+      "links": 3,
+      "lists": 11,
       "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "full-stack/frontend/zustand/03-selectores-y-rendimiento.md",
       "area": "full-stack",
       "manual": "zustand",
       "manualPath": "full-stack/frontend/zustand",
-      "title": "Selectores Y Rendimiento",
-      "wordCount": 282,
-      "usefulLines": 44,
-      "headings": 11,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 23,
+      "title": "Selectores y rendimiento",
+      "wordCount": 244,
+      "usefulLines": 46,
+      "headings": 8,
+      "codeBlocks": 4,
+      "links": 4,
+      "lists": 10,
       "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "full-stack/frontend/zustand/04-persistencia.md",
@@ -12071,19 +12029,15 @@
       "manual": "zustand",
       "manualPath": "full-stack/frontend/zustand",
       "title": "Persistencia",
-      "wordCount": 257,
-      "usefulLines": 43,
-      "headings": 11,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 22,
+      "wordCount": 318,
+      "usefulLines": 58,
+      "headings": 8,
+      "codeBlocks": 1,
+      "links": 2,
+      "lists": 16,
       "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "full-stack/frontend/zustand/05-middleware.md",
@@ -12091,59 +12045,47 @@
       "manual": "zustand",
       "manualPath": "full-stack/frontend/zustand",
       "title": "Middleware",
-      "wordCount": 259,
-      "usefulLines": 43,
-      "headings": 11,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 22,
+      "wordCount": 244,
+      "usefulLines": 62,
+      "headings": 10,
+      "codeBlocks": 3,
+      "links": 6,
+      "lists": 8,
       "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "full-stack/frontend/zustand/06-integracion-con-react.md",
       "area": "full-stack",
       "manual": "zustand",
       "manualPath": "full-stack/frontend/zustand",
-      "title": "Integracion Con React",
-      "wordCount": 293,
-      "usefulLines": 45,
-      "headings": 11,
+      "title": "Integración con React",
+      "wordCount": 308,
+      "usefulLines": 61,
+      "headings": 9,
       "codeBlocks": 2,
-      "links": 1,
-      "lists": 24,
+      "links": 5,
+      "lists": 16,
       "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "full-stack/frontend/zustand/07-patrones-de-arquitectura.md",
       "area": "full-stack",
       "manual": "zustand",
       "manualPath": "full-stack/frontend/zustand",
-      "title": "Patrones De Arquitectura",
-      "wordCount": 282,
-      "usefulLines": 44,
-      "headings": 11,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 23,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "title": "Patrones de arquitectura",
+      "wordCount": 413,
+      "usefulLines": 39,
+      "headings": 10,
+      "codeBlocks": 0,
+      "links": 4,
+      "lists": 9,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "full-stack/frontend/zustand/08-testing.md",
@@ -12151,19 +12093,15 @@
       "manual": "zustand",
       "manualPath": "full-stack/frontend/zustand",
       "title": "Testing",
-      "wordCount": 252,
-      "usefulLines": 41,
-      "headings": 10,
+      "wordCount": 234,
+      "usefulLines": 43,
+      "headings": 8,
       "codeBlocks": 2,
-      "links": 0,
-      "lists": 22,
+      "links": 1,
+      "lists": 9,
       "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "herramientas/docker/01-introduccion.md",

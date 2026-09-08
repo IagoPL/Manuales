@@ -1,71 +1,94 @@
-# Integracion Con React
+# Integración con React
 
-Este capitulo profundiza en **Integracion Con React** dentro del manual de **Zustand**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+El caso habitual: el hook de `create` en un Client Component. Selectores (capítulo 3), eventos que llaman acciones, React pinta.
 
-## Objetivo
+Documentación: [create](https://zustand.docs.pmnd.rs/reference/apis/create), [createStore](https://zustand.docs.pmnd.rs/reference/apis/create-store.html), [Next.js](https://zustand.docs.pmnd.rs/learn/guides/nextjs), [SSR](https://zustand.docs.pmnd.rs/learn/guides/ssr-and-hydration).
 
-Al terminar este capitulo sabras explicar integracion con react, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+## Hook global (sin Provider)
 
-## Conceptos clave
+```jsx
+import { useCarritoStore } from './carritoStore'
 
-- **Integracion Con React:** pieza central de Zustand en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Integracion:** aspecto a dominar dentro de Integracion Con React.
-- **Con:** aspecto a dominar dentro de Integracion Con React.
-- **React:** aspecto a dominar dentro de Integracion Con React.
+export function MiniCarrito() {
+  const n = useCarritoStore((state) => state.lineas.length)
+  const anadir = useCarritoStore((state) => state.anadir)
 
-## Desarrollo del tema
-
-### Enfoque practico
-
-1. Define el problema que resuelve **Integracion Con React**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
-```
-
-## Ejemplo
-
-```javascript
-// Ejemplo en Zustand
-const config = { debug: true, retries: 3 };
-
-export function setup() {
-  console.log('Inicializando', config);
+  return (
+    <button type="button" onClick={() => anadir('sku-1')}>
+      Carrito ({n})
+    </button>
+  )
 }
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+No envuelves la app. El store es **estado de módulo**: un singleton en ese JS. En un SPA de cliente suele bastar.
+
+## `create` vs `createStore` vs `useStore`
+
+| API | Qué es |
+| --- | --- |
+| `create(...)` | Store vanilla **más** hook React (`useCarritoStore(selector)`). |
+| `createStore(...)` (también `zustand/vanilla`) | Solo la API: `getState`, `setState`, `subscribe`. Sin hook. |
+| `useStore(store, selector)` | Engancha un store vanilla a React (p. ej. el del Context). |
+
+Tres nombres distintos. No llames “el store” al hook y al `createStore` como si fueran lo mismo.
+
+## Provider cuando sí aporta
+
+“Zustand no usa Provider” **no** es absoluto. Necesitas una **instancia**:
+
+- el mismo widget dos veces (dos carritos de demo);
+- tests aislados;
+- props de arranque distintas;
+- **SSR / Next**: un store **por request**, no un global compartido entre usuarios.
+
+```jsx
+import { createContext, useContext, useState } from 'react'
+import { createStore, useStore } from 'zustand'
+import { carritoCreator } from './carritoCreator'
+
+const CarritoCtx = createContext(null)
+
+export function CarritoProvider({ children }) {
+  const [store] = useState(() => createStore(carritoCreator))
+  return <CarritoCtx.Provider value={store}>{children}</CarritoCtx.Provider>
+}
+
+export function useCarrito(selector) {
+  const store = useContext(CarritoCtx)
+  if (!store) throw new Error('CarritoProvider')
+  return useStore(store, selector)
+}
+```
+
+(`carritoCreator` es un `StateCreator`; el patrón oficial Next usa `useState(() => createCounterStore())`.)
+
+## RSC / SSR (sin un curso de Next)
+
+- Un store **global de módulo en el servidor** se comparte entre requests: no.
+- Los Server Components **no** deben leer/escribir el store (no hay hooks ni Context en RSC).
+- Hidrata el mismo HTML que pintó el server; `persist` + `localStorage` desincroniza (capítulo 4: `skipHydration` / `rehydrate` en cliente).
+
+En un Vite SPA sin SSR, el singleton de `create` sigue siendo el camino corto.
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de integracion con react.
-- No probar casos limite ni errores esperados.
+- Store global en un layout Next App Router “porque en el tutorial de 2023 salía”.
+- `useCarritoStore()` sin selector en un header que se pinta siempre.
+- Confundir `useStore` (hook genérico) con el hook que devolvió `create`.
 
-## Buenas practicas
+## Buenas prácticas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Componentiza y evita estado global innecesario.
-- Prueba interacciones criticas.
+- Selectores en cada componente.
+- Provider solo cuando la instancia importa.
+- Client Components para cualquier hook de Zustand.
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Integracion Con React**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Monta `MiniCarrito` con dos selectores.
+2. Duplica el widget con `CarritoProvider` y comprueba que no comparten líneas.
+3. Marca qué ficheros serían `'use client'` en App Router.
 
 ## Siguiente paso
 
-Continua con [Patrones De Arquitectura](07-patrones-de-arquitectura.md).
+Continúa con [Patrones de arquitectura](07-patrones-de-arquitectura.md).

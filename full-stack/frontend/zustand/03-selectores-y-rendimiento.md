@@ -1,70 +1,79 @@
-# Selectores Y Rendimiento
+# Selectores y rendimiento
 
-Este capitulo profundiza en **Selectores Y Rendimiento** dentro del manual de **Zustand**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+El hook se suscribe a lo que **devuelve** el selector. En Zustand 5 la igualdad por defecto es `Object.is`. Por eso **no** conviene `useCarritoStore()` sin selector si solo necesitas un campo: cualquier `set` re-renderiza.
 
-## Objetivo
+Documentación: [useShallow](https://zustand.docs.pmnd.rs/learn/guides/prevent-rerenders-with-use-shallow), [migración v5](https://zustand.docs.pmnd.rs/reference/migrations/migrating-to-v5), [TypeScript / selectores](https://zustand.docs.pmnd.rs/learn/guides/beginner-typescript).
 
-Al terminar este capitulo sabras explicar selectores y rendimiento, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+## Selector de un primitive
 
-## Conceptos clave
-
-- **Selectores Y Rendimiento:** pieza central de Zustand en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Selectores:** aspecto a dominar dentro de Selectores Y Rendimiento.
-- **Rendimiento:** aspecto a dominar dentro de Selectores Y Rendimiento.
-
-## Desarrollo del tema
-
-### Enfoque practico
-
-1. Define el problema que resuelve **Selectores Y Rendimiento**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
+```js
+const count = useCarritoStore((state) => state.lineas.length)
+const vaciar = useCarritoStore((state) => state.vaciar)
 ```
 
-## Ejemplo
+Dos hooks: cada uno es estable si esa referencia/`Object.is` no cambia. `vaciar` (función del store) suele ser la misma mientras no recrees el store.
 
-```javascript
-// Ejemplo en Zustand
-const config = { debug: true, retries: 3 };
+## El objeto anónimo
 
-export function setup() {
-  console.log('Inicializando', config);
-}
+```js
+// Problemático en v5: objeto nuevo en cada store update → bucle o renders de más
+const { lineas, anadir } = useCarritoStore((state) => ({
+  lineas: state.lineas,
+  anadir: state.anadir,
+}))
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+`create` **ya no** acepta una equality fn como segundo argumento (eso era v4). Opciones actuales:
+
+1. **Dos selectores** (a menudo lo más claro).
+2. **`useShallow`**: compara las **claves** del objeto/array, no la envoltura.
+
+```js
+import { useShallow } from 'zustand/react/shallow'
+
+const { lineas, anadir } = useCarritoStore(
+  useShallow((state) => ({
+    lineas: state.lineas,
+    anadir: state.anadir,
+  })),
+)
+```
+
+No uses `useShallow` “siempre”. Un `state.count` no lo necesita. Sirve cuando el selector **fabrica** un objeto o array nuevo (`Object.keys`, pick de varios campos).
+
+`createWithEqualityFn` / `useStoreWithEqualityFn` viven en `zustand/traditional` si quieres el comportamiento v4. Este manual no los necesita para el caso habitual.
+
+## Estado derivado
+
+No guardes `totalUnidades` ni `lineasFiltradas` si salen de `lineas` + `filtro`:
+
+```js
+const visibles = useCarritoStore((state) =>
+  state.filtro === 'todas'
+    ? state.lineas
+    : state.lineas.filter((l) => l.id === state.filtro),
+)
+```
+
+Si el array filtrado es **nuevo** en cada llamada y duele, entonces `useShallow` o memoizar con criterio. Primero selector pequeño; no memoices por deporte.
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de selectores y rendimiento.
-- No probar casos limite ni errores esperados.
+- `const store = useStore()` y leer `store.x` en el render.
+- Equality `shallow` pasada a `create` como en v4.
+- Copiar `filteredItems` al state en cada tecla del filtro.
 
-## Buenas practicas
+## Buenas prácticas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Componentiza y evita estado global innecesario.
-- Prueba interacciones criticas.
+- Un dato, un selector, salvo pick consciente + `useShallow`.
+- Derivar en el selector, no duplicar.
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Selectores Y Rendimiento**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Sustituye un `useCarritoStore()` por selectores de `lineas.length` y `vaciar`.
+2. Reproduce el objeto anónimo y envuélvelo en `useShallow`.
+3. Calcula el total en el selector, no en el store.
 
 ## Siguiente paso
 
-Continua con [Persistencia](04-persistencia.md).
+Continúa con [Persistencia](04-persistencia.md).
