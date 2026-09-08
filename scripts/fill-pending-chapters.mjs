@@ -290,7 +290,7 @@ function isIndexStubContent(content, fileName) {
 }
 
 function collectPending() {
-  const skip = new Set(['node_modules', '.git', '.vitepress', '.github', 'scripts', 'recursos', '_revision-pendiente'])
+  const skip = new Set(['node_modules', '.git', '.vitepress', '.github', 'scripts', 'recursos', '_revision-pendiente', 'reports'])
   const pending = new Set()
 
   function walk(dir) {

@@ -33,7 +33,7 @@ export default defineConfig({
     }
   },
   ignoreDeadLinks: strictLinks ? false : true,
-  srcExclude: ['_revision-pendiente/**', 'node_modules/**'],
+  srcExclude: ['_revision-pendiente/**', 'node_modules/**', 'reports/**'],
   transformPageData(pageData) {
     const filePath = path.join(process.cwd(), pageData.relativePath)
     if (fs.existsSync(filePath)) {
