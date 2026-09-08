@@ -7,21 +7,21 @@
     "priorities": {
       "P0": 0,
       "P1": 0,
-      "P2": 105,
-      "P3": 637
+      "P2": 96,
+      "P3": 646
     },
     "flags": {
       "known_outdated_pattern": 0,
-      "generic_template": 97,
-      "generic_example": 80,
-      "duplicated_code": 105,
+      "generic_template": 88,
+      "generic_example": 71,
+      "duplicated_code": 96,
       "very_short": 196,
       "high_freshness_risk": 141
     },
     "trackedTemplatePhrase": {
       "pattern": "Este capitulo profundiza",
-      "chapters": 97,
-      "manuals": 19,
+      "chapters": 88,
+      "manuals": 18,
       "areas": [
         "data-engineering",
         "full-stack",
@@ -30,36 +30,13 @@
     },
     "lengthBands": {
       "very_short": 196,
-      "short": 407,
-      "normal": 136,
+      "short": 404,
+      "normal": 139,
       "long": 3
     },
     "duplicateGroups": 10
   },
   "manuals": [
-    {
-      "path": "full-stack/frontend/redux",
-      "slug": "redux",
-      "area": "full-stack",
-      "chapters": 9,
-      "priorities": {
-        "P0": 0,
-        "P1": 0,
-        "P2": 9,
-        "P3": 0
-      },
-      "flags": {
-        "known_outdated_pattern": 0,
-        "generic_template": 9,
-        "generic_example": 9,
-        "duplicated_code": 9,
-        "very_short": 0,
-        "high_freshness_risk": 0
-      },
-      "trackedPhrase": 9,
-      "reviewFlags": 9,
-      "genericRatio": 1
-    },
     {
       "path": "full-stack/frontend/tailwind",
       "slug": "tailwind",
@@ -1372,6 +1349,29 @@
       "genericRatio": 0
     },
     {
+      "path": "full-stack/frontend/redux",
+      "slug": "redux",
+      "area": "full-stack",
+      "chapters": 9,
+      "priorities": {
+        "P0": 0,
+        "P1": 0,
+        "P2": 0,
+        "P3": 9
+      },
+      "flags": {
+        "known_outdated_pattern": 0,
+        "generic_template": 0,
+        "generic_example": 0,
+        "duplicated_code": 0,
+        "very_short": 0,
+        "high_freshness_risk": 0
+      },
+      "trackedPhrase": 0,
+      "reviewFlags": 0,
+      "genericRatio": 0
+    },
+    {
       "path": "full-stack/frontend/ux",
       "slug": "ux",
       "area": "full-stack",
@@ -1806,7 +1806,6 @@
         "full-stack/backend/laravel",
         "full-stack/backend/nestjs",
         "full-stack/backend/spring-boot",
-        "full-stack/frontend/redux",
         "full-stack/frontend/tailwind",
         "full-stack/frontend/zustand",
         "ia/transformers",
@@ -1869,15 +1868,6 @@
         "full-stack/backend/laravel/01-introduccion-y-entorno.md",
         "full-stack/backend/nestjs/01-introduccion-y-entorno.md",
         "full-stack/backend/spring-boot/01-introduccion-y-entorno.md",
-        "full-stack/frontend/redux/01-introduccion-y-casos-de-uso.md",
-        "full-stack/frontend/redux/02-store-actions-reducers-y-dispatch.md",
-        "full-stack/frontend/redux/03-redux-toolkit.md",
-        "full-stack/frontend/redux/04-slices-y-async-thunks.md",
-        "full-stack/frontend/redux/05-normalizacion-de-estado.md",
-        "full-stack/frontend/redux/06-rtk-query.md",
-        "full-stack/frontend/redux/07-middleware.md",
-        "full-stack/frontend/redux/08-testing.md",
-        "full-stack/frontend/redux/09-patrones-y-buenas-practicas.md",
         "full-stack/frontend/tailwind/01-introduccion-y-configuracion.md",
         "full-stack/frontend/tailwind/02-utility-first.md",
         "full-stack/frontend/tailwind/03-layout-responsive.md",
@@ -1911,7 +1901,7 @@
         "ia/vector-databases/06-patrones-para-rag.md",
         "ia/vector-databases/07-buenas-practicas.md"
       ],
-      "count": 97
+      "count": 88
     },
     {
       "hash": "5a9d824dcf18e14a",
@@ -2008,20 +1998,10 @@
       "chars": 109,
       "manuals": [
         "full-stack/backend/express",
-        "full-stack/frontend/redux",
         "full-stack/frontend/zustand"
       ],
       "chapters": [
         "full-stack/backend/express/01-introduccion-y-entorno.md",
-        "full-stack/frontend/redux/01-introduccion-y-casos-de-uso.md",
-        "full-stack/frontend/redux/02-store-actions-reducers-y-dispatch.md",
-        "full-stack/frontend/redux/03-redux-toolkit.md",
-        "full-stack/frontend/redux/04-slices-y-async-thunks.md",
-        "full-stack/frontend/redux/05-normalizacion-de-estado.md",
-        "full-stack/frontend/redux/06-rtk-query.md",
-        "full-stack/frontend/redux/07-middleware.md",
-        "full-stack/frontend/redux/08-testing.md",
-        "full-stack/frontend/redux/09-patrones-y-buenas-practicas.md",
         "full-stack/frontend/zustand/01-introduccion-y-casos-de-uso.md",
         "full-stack/frontend/zustand/02-stores-basicos.md",
         "full-stack/frontend/zustand/03-selectores-y-rendimiento.md",
@@ -2031,7 +2011,7 @@
         "full-stack/frontend/zustand/07-patrones-de-arquitectura.md",
         "full-stack/frontend/zustand/08-testing.md"
       ],
-      "count": 18
+      "count": 9
     },
     {
       "hash": "3320248a647ec61e",
@@ -11523,40 +11503,32 @@
       "area": "full-stack",
       "manual": "redux",
       "manualPath": "full-stack/frontend/redux",
-      "title": "Introduccion Y Casos De Uso",
-      "wordCount": 315,
-      "usefulLines": 45,
-      "headings": 11,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 24,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "title": "Introducción y casos de uso",
+      "wordCount": 496,
+      "usefulLines": 38,
+      "headings": 9,
+      "codeBlocks": 1,
+      "links": 5,
+      "lists": 16,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "full-stack/frontend/redux/02-store-actions-reducers-y-dispatch.md",
       "area": "full-stack",
       "manual": "redux",
       "manualPath": "full-stack/frontend/redux",
-      "title": "Store Actions Reducers Y Dispatch",
-      "wordCount": 312,
-      "usefulLines": 45,
-      "headings": 11,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 24,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "title": "Store, actions, reducers y dispatch",
+      "wordCount": 365,
+      "usefulLines": 64,
+      "headings": 8,
+      "codeBlocks": 3,
+      "links": 5,
+      "lists": 9,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "full-stack/frontend/redux/03-redux-toolkit.md",
@@ -11564,79 +11536,63 @@
       "manual": "redux",
       "manualPath": "full-stack/frontend/redux",
       "title": "Redux Toolkit",
-      "wordCount": 276,
-      "usefulLines": 44,
-      "headings": 11,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 23,
+      "wordCount": 317,
+      "usefulLines": 78,
+      "headings": 9,
+      "codeBlocks": 3,
+      "links": 5,
+      "lists": 12,
       "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "full-stack/frontend/redux/04-slices-y-async-thunks.md",
       "area": "full-stack",
       "manual": "redux",
       "manualPath": "full-stack/frontend/redux",
-      "title": "Slices Y Async Thunks",
-      "wordCount": 303,
-      "usefulLines": 45,
-      "headings": 11,
+      "title": "Slices y async thunks",
+      "wordCount": 337,
+      "usefulLines": 82,
+      "headings": 9,
       "codeBlocks": 2,
-      "links": 1,
-      "lists": 24,
+      "links": 3,
+      "lists": 9,
       "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "full-stack/frontend/redux/05-normalizacion-de-estado.md",
       "area": "full-stack",
       "manual": "redux",
       "manualPath": "full-stack/frontend/redux",
-      "title": "Normalizacion de estado",
-      "wordCount": 283,
-      "usefulLines": 44,
-      "headings": 11,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 23,
+      "title": "Normalización de estado",
+      "wordCount": 257,
+      "usefulLines": 59,
+      "headings": 7,
+      "codeBlocks": 4,
+      "links": 3,
+      "lists": 12,
       "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "full-stack/frontend/redux/06-rtk-query.md",
       "area": "full-stack",
       "manual": "redux",
       "manualPath": "full-stack/frontend/redux",
-      "title": "Rtk Query",
-      "wordCount": 273,
-      "usefulLines": 44,
-      "headings": 11,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 23,
+      "title": "RTK Query",
+      "wordCount": 269,
+      "usefulLines": 68,
+      "headings": 8,
+      "codeBlocks": 3,
+      "links": 5,
+      "lists": 9,
       "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "full-stack/frontend/redux/07-middleware.md",
@@ -11644,19 +11600,15 @@
       "manual": "redux",
       "manualPath": "full-stack/frontend/redux",
       "title": "Middleware",
-      "wordCount": 257,
-      "usefulLines": 43,
-      "headings": 11,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 22,
+      "wordCount": 286,
+      "usefulLines": 67,
+      "headings": 8,
+      "codeBlocks": 3,
+      "links": 4,
+      "lists": 12,
       "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "full-stack/frontend/redux/08-testing.md",
@@ -11664,39 +11616,31 @@
       "manual": "redux",
       "manualPath": "full-stack/frontend/redux",
       "title": "Testing",
-      "wordCount": 260,
-      "usefulLines": 43,
-      "headings": 11,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 22,
+      "wordCount": 269,
+      "usefulLines": 64,
+      "headings": 8,
+      "codeBlocks": 3,
+      "links": 4,
+      "lists": 9,
       "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "full-stack/frontend/redux/09-patrones-y-buenas-practicas.md",
       "area": "full-stack",
       "manual": "redux",
       "manualPath": "full-stack/frontend/redux",
-      "title": "Patrones Y Buenas Practicas",
-      "wordCount": 296,
-      "usefulLines": 43,
-      "headings": 10,
-      "codeBlocks": 2,
-      "links": 0,
-      "lists": 24,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "title": "Patrones y buenas prácticas",
+      "wordCount": 431,
+      "usefulLines": 62,
+      "headings": 11,
+      "codeBlocks": 3,
+      "links": 1,
+      "lists": 13,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "full-stack/frontend/tailwind/01-introduccion-y-configuracion.md",

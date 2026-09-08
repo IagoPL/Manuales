@@ -17,17 +17,17 @@ schemaVersion: 1
 | --- | ---: | --- |
 | P0 | 0 | Patrón técnico conocido (obsoleto / incorrecto) |
 | P1 | 0 | Plantilla genérica en tecnología de alto ritmo de cambio |
-| P2 | 105 | Plantilla, ejemplo genérico o código duplicado entre manuales |
-| P3 | 637 | Sin señales de revisión editorial (puede tener solo riesgo de frescura) |
+| P2 | 96 | Plantilla, ejemplo genérico o código duplicado entre manuales |
+| P3 | 646 | Sin señales de revisión editorial (puede tener solo riesgo de frescura) |
 
 ### Señales
 
 | Flag | Capítulos |
 | --- | ---: |
-| generic_template | 97 |
-| generic_example | 80 |
+| generic_template | 88 |
+| generic_example | 71 |
 | very_short | 196 |
-| duplicated_code | 105 |
+| duplicated_code | 96 |
 | high_freshness_risk | 141 |
 | known_outdated_pattern | 0 |
 
@@ -36,23 +36,22 @@ schemaVersion: 1
 | Banda | Palabras | Capítulos |
 | --- | --- | ---: |
 | very_short | ≤ 119 | 196 |
-| short | 120–349 | 407 |
-| normal | 350–1200 | 136 |
+| short | 120–349 | 404 |
+| normal | 350–1200 | 139 |
 | long | ≥ 1201 | 3 |
 
 ## Patrón conocido: `Este capitulo profundiza`
 
-- Capítulos actuales: **97**
-- Manuales afectados: **19**
+- Capítulos actuales: **88**
+- Manuales afectados: **18**
 - Áreas: `data-engineering`, `full-stack`, `ia`
 
-Auditoría previa de referencia: ~126. Recuento actual: **97**.
+Auditoría previa de referencia: ~126. Recuento actual: **88**.
 
 ### 20 manuales con más casos
 
 | Manual | Casos | Capítulos |
 | --- | --- | --- |
-| full-stack/frontend/redux | 9 | 9 |
 | full-stack/frontend/tailwind | 9 | 9 |
 | data-engineering/delta-lake | 8 | 8 |
 | data-engineering/iceberg | 8 | 8 |
@@ -89,7 +88,6 @@ Los ratios son solo para priorizar; no se muestran en la web pública.
 
 | Manual | Capítulos | Flags revisión | P0 | P1 | P2 | Genéricos |
 | --- | --- | --- | --- | --- | --- | --- |
-| full-stack/frontend/redux | 9 | 9 | 0 | 0 | 9 | 9/9 |
 | full-stack/frontend/tailwind | 9 | 9 | 0 | 0 | 9 | 9/9 |
 | data-engineering/delta-lake | 8 | 8 | 0 | 0 | 8 | 8/8 |
 | data-engineering/iceberg | 8 | 8 | 0 | 0 | 8 | 8/8 |
@@ -104,8 +102,9 @@ Los ratios son solo para priorizar; no se muestran en la web pública.
 | bases-de-datos/mysql | 14 | 4 | 0 | 0 | 2 | 0/14 |
 | bases-de-datos/oracle-sql | 7 | 5 | 0 | 0 | 2 | 0/7 |
 | bases-de-datos/postgresql | 16 | 2 | 0 | 0 | 2 | 0/16 |
+| full-stack/backend/aspnet-core | 15 | 15 | 0 | 0 | 1 | 1/15 |
 
-Manuales donde **todos** los capítulos son plantilla: `full-stack/frontend/redux` (9), `full-stack/frontend/tailwind` (9), `data-engineering/delta-lake` (8), `data-engineering/iceberg` (8), `full-stack/frontend/zustand` (8), `ia/transformers` (8), `data-engineering/parquet` (7), `full-stack/arquitectura/microservicios` (7), `ia/vector-databases` (7), `full-stack/arquitectura/cqrs` (6), `full-stack/arquitectura/event-driven` (6).
+Manuales donde **todos** los capítulos son plantilla: `full-stack/frontend/tailwind` (9), `data-engineering/delta-lake` (8), `data-engineering/iceberg` (8), `full-stack/frontend/zustand` (8), `ia/transformers` (8), `data-engineering/parquet` (7), `full-stack/arquitectura/microservicios` (7), `ia/vector-databases` (7), `full-stack/arquitectura/cqrs` (6), `full-stack/arquitectura/event-driven` (6).
 
 ## Tecnologías con mayor riesgo de actualización
 
@@ -137,10 +136,10 @@ Bloques de código con el mismo hash (tras quitar comentarios y colapsar espacio
 
 | Hash | Lang | Manuales | Capítulos | Ejemplo |
 | --- | --- | --- | --- | --- |
-| `34c4a79450ca7290` | txt | 19 | 97 | `data-engineering/dbt/02-sources-models-y-refs.md` |
+| `34c4a79450ca7290` | txt | 18 | 88 | `data-engineering/dbt/02-sources-models-y-refs.md` |
 | `5a9d824dcf18e14a` | python | 7 | 40 | `data-engineering/delta-lake/01-introduccion-y-arquitectura.md` |
 | `fb1882696289f802` | txt | 3 | 19 | `full-stack/arquitectura/cqrs/01-introduccion-y-motivacion.md` |
-| `6a2c2f980ddd3635` | javascript | 3 | 18 | `full-stack/backend/express/01-introduccion-y-entorno.md` |
+| `6a2c2f980ddd3635` | javascript | 2 | 9 | `full-stack/backend/express/01-introduccion-y-entorno.md` |
 | `3320248a647ec61e` | sql | 3 | 3 | `bases-de-datos/mysql/04-indices-y-explain.md` |
 | `ed0e2a5ce46cd7bc` | sql | 3 | 3 | `bases-de-datos/mysql/03-consultas-joins-y-agregaciones.md` |
 | `31d2e54669733206` | sql | 2 | 2 | `bases-de-datos/mysql/03-consultas-joins-y-agregaciones.md` |

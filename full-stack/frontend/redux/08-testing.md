@@ -1,69 +1,96 @@
 # Testing
 
-Este capitulo profundiza en **Testing** dentro del manual de **Redux**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+El usuario no sabe si hay Redux. El equipo Redux recomienda **tests de integración**: componente + `Provider` + **store real**. Mockea la red, no `useSelector` / `useDispatch`.
 
-## Objetivo
+Documentación: [Writing Tests](https://redux.js.org/usage/writing-tests), [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/), [MSW](https://mswjs.io/).
 
-Al terminar este capitulo sabras explicar testing, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+## Integración (estrategia principal)
 
-## Conceptos clave
+Vitest (o Jest) + RTL o **Vitest Browser Mode**. Store con `configureStore` y el mismo reducer que producción (o un `setupStore(preloadedState)`). MSW para `/api/tareas`.
 
-- **Testing:** pieza central de Redux en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Testing:** aspecto a dominar dentro de Testing.
+```js
+import { configureStore } from '@reduxjs/toolkit'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { Provider } from 'react-redux'
+import { api } from './api'
+import tareasReducer, { tareaAnadida } from './tareasSlice'
+import { ListaTareas } from './ListaTareas'
 
-## Desarrollo del tema
-
-### Enfoque practico
-
-1. Define el problema que resuelve **Testing**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
-```
-
-## Ejemplo
-
-```javascript
-// Ejemplo en Redux
-const config = { debug: true, retries: 3 };
-
-export function setup() {
-  console.log('Inicializando', config);
+function renderConStore(ui, { preloadedState } = {}) {
+  const store = configureStore({
+    reducer: { [api.reducerPath]: api.reducer, tareas: tareasReducer },
+    middleware: (gdm) => gdm().concat(api.middleware),
+    preloadedState,
+  })
+  return {
+    store,
+    ...render(<Provider store={store}>{ui}</Provider>),
+  }
 }
+
+test('al pulsar, la tarea aparece como hecha', async () => {
+  const user = userEvent.setup()
+  renderConStore(<ListaTareas />, {
+    preloadedState: {
+      tareas: {
+        items: [{ id: 't1', titulo: 'Pan', hecha: false }],
+        filtro: 'todas',
+      },
+    },
+  })
+
+  await user.click(screen.getByRole('button', { name: /pendiente/i }))
+  expect(screen.getByRole('button', { name: /hecha/i })).toBeInTheDocument()
+})
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+No asserts de `store.getState()` salvo que depuren un fallo. Lo observable es el DOM.
+
+Para Query, MSW responde `GET /api/tareas` y el test espera el título en pantalla, no `useGetTareasQuery`. Tras el test, `store.dispatch(api.util.resetApiState())` evita caché entre casos si reutilizas el store.
+
+## Unitario: reducer o selector denso
+
+Útil cuando la lógica es pura y fácil de equivocar (reglas de filtro, merge). El reducer de `createSlice` se exporta y se llama como función:
+
+```js
+import reducer, { tareaAlternada } from './tareasSlice'
+
+const inicio = { items: [{ id: 't1', titulo: 'Pan', hecha: false }], filtro: 'todas' }
+expect(reducer(inicio, tareaAlternada('t1')).items[0].hecha).toBe(true)
+```
+
+Si el mismo comportamiento ya lo cubre el test de la lista, no dupliques por deporte.
+
+## Qué no hacer
+
+```js
+vi.mock('react-redux', () => ({
+  useSelector: vi.fn(),
+  useDispatch: () => vi.fn(),
+}))
+```
+
+Eso testea tu mock. Tampoco mockees selectors importados del slice como estrategia por defecto.
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de testing.
-- No probar casos limite ni errores esperados.
+- Un test por cada action type (“el type es `tareas/tareaAnadida`”).
+- Store singleton importado en todos los tests sin aislar estado.
+- Esperar a `findBy` sin MSW y llorar por el `fetch` real.
 
-## Buenas practicas
+## Buenas prácticas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Componentiza y evita estado global innecesario.
-- Prueba interacciones criticas.
+- `setupStore` compartido (como en la doc oficial) con `preloadedState`.
+- Hooks tipados (`useAppSelector`) se usan en producción; en el test no hace falta mockearlos.
+- Cubre el camino feliz y un error de red (MSW 500 → mensaje).
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Testing**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Escribe el test de “marcar hecha” contra `ListaTareas`.
+2. Añade MSW para `useGetTareasQuery` y espera un título.
+3. Intenta (y descarta) mockear `useDispatch`: el test se vuelve inútil al cambiar el slice.
 
 ## Siguiente paso
 
-Continua con [Patrones Y Buenas Practicas](09-patrones-y-buenas-practicas.md).
+Continúa con [Patrones y buenas prácticas](09-patrones-y-buenas-practicas.md).

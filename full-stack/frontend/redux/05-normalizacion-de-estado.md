@@ -1,70 +1,95 @@
-# Normalizacion de estado
+# Normalización de estado
 
-Este capitulo profundiza en **Normalizacion de estado** dentro del manual de **Redux**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+Anidar autores dentro de cada tarea duplica datos y complica un rename:
 
-## Objetivo
-
-Al terminar este capitulo sabras explicar normalizacion de estado, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
-
-## Conceptos clave
-
-- **Normalizacion de estado:** pieza central de Redux en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Normalizacion:** aspecto a dominar dentro de Normalizacion de estado.
-- **Estado:** aspecto a dominar dentro de Normalizacion de estado.
-
-## Desarrollo del tema
-
-### Enfoque practico
-
-1. Define el problema que resuelve **Normalizacion de estado**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
+```text
+tareas: [
+  { id: 't1', titulo: 'Pan', autor: { id: 'u1', nombre: 'Ana' } },
+  { id: 't2', titulo: 'Leche', autor: { id: 'u1', nombre: 'Ana' } },
+]
 ```
 
-## Ejemplo
+Cambiar el nombre de Ana implica recorrer todas las tareas. La forma **normalizada** guarda cada entidad una vez y relaciona por id:
 
-```javascript
-// Ejemplo en Redux
-const config = { debug: true, retries: 3 };
-
-export function setup() {
-  console.log('Inicializando', config);
-}
+```text
+usuarios.ids / usuarios.entities
+tareas.ids / tareas.entities     (autorId: 'u1')
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+No todo el state debe ser `{ ids, entities }`. Un `filtro: 'todas'` o un `wizardStep` se quedan planos. Normaliza **colecciones** que actualizas por id o compartes entre pantallas.
+
+Documentación: [Normalizing State Shape](https://redux.js.org/usage/structuring-reducers/normalizing-state-shape), [createEntityAdapter](https://redux-toolkit.js.org/api/createEntityAdapter).
+
+## `createEntityAdapter`
+
+RTK genera reducers CRUD y selectors memoizados sobre `{ ids, entities }`. El id por defecto es `entity.id`.
+
+```js
+import { createEntityAdapter, createSlice } from '@reduxjs/toolkit'
+
+const tareasAdapter = createEntityAdapter({
+  sortComparer: (a, b) => a.titulo.localeCompare(b.titulo),
+})
+
+const usuariosAdapter = createEntityAdapter()
+
+const tareasSlice = createSlice({
+  name: 'tareas',
+  initialState: tareasAdapter.getInitialState({ filtro: 'todas' }),
+  reducers: {
+    tareasRecibidas: tareasAdapter.setAll,
+    tareaUpsert: tareasAdapter.upsertOne,
+    tareaQuitada: tareasAdapter.removeOne,
+  },
+})
+
+const usuariosSlice = createSlice({
+  name: 'usuarios',
+  initialState: usuariosAdapter.getInitialState(),
+  reducers: {
+    usuariosRecibidos: usuariosAdapter.setAll,
+  },
+})
+
+export const tareasSelectors = tareasAdapter.getSelectors((state) => state.tareas)
+export const usuariosSelectors = usuariosAdapter.getSelectors((state) => state.usuarios)
+```
+
+`setAll` sustituye la colección (carga inicial). `upsertOne` crea o mezcla campos. `updateOne` espera `{ id, changes }`.
+
+Relación: la tarea guarda `autorId`, no el objeto autor. El nombre se resuelve en un selector o en la vista:
+
+```js
+const tarea = tareasSelectors.selectById(state, 't1')
+const autor = tarea ? usuariosSelectors.selectById(state, tarea.autorId) : undefined
+```
+
+`selectAll` devuelve el array ordenado; `selectById` es O(1) de cara al mapa.
+
+## Qué no normalizar
+
+- Un único `sesion.usuarioId` (no hay colección).
+- Borradores efímeros de un formulario.
+- Respuestas de RTK Query: **Query ya cachea** por endpoint/argumento. No copies esa lista a `tareas.entities` “para tenerla en Redux” (la tienes dos veces). Si necesitas ids para UI cliente, deriva con un selector sobre `api.endpoints...` o guarda solo selección (`tareaActivaId`).
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de normalizacion de estado.
-- No probar casos limite ni errores esperados.
+- Normalizar un array de tres flags.
+- Mutar `entities[id]` fuera del adapter (pierdes `ids` alineado).
+- IDs no estables (índice del array como id).
 
-## Buenas practicas
+## Buenas prácticas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Componentiza y evita estado global innecesario.
-- Prueba interacciones criticas.
+- `getInitialState({ filtro })` para mezclar metadatos con la tabla.
+- Selectors del adapter exportados junto al slice.
+- Relaciones por id; joins en selectors, no en cada reducer.
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Normalizacion de estado**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Parte un JSON anidado (tarea + autor) en dos `setAll`.
+2. Renombra un usuario y comprueba que las tareas no necesitan update.
+3. Deja `filtro` fuera de `entities` y léelo con un selector propio.
 
 ## Siguiente paso
 
-Continua con [Rtk Query](06-rtk-query.md).
+Continúa con [RTK Query](06-rtk-query.md).
