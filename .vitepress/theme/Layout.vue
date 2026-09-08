@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import DefaultTheme from 'vitepress/theme'
 import { useData } from 'vitepress'
+import Breadcrumbs from './Breadcrumbs.vue'
 
 const { page } = useData()
 const Layout = DefaultTheme.Layout
@@ -12,6 +13,10 @@ const Layout = DefaultTheme.Layout
       <strong>Borrador.</strong>
       Este capitulo esta en progreso y puede cambiar.
     </div>
-    <Layout />
+    <Layout>
+      <template #doc-before>
+        <Breadcrumbs />
+      </template>
+    </Layout>
   </div>
 </template>
