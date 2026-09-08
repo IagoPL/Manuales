@@ -7,20 +7,20 @@
     "priorities": {
       "P0": 0,
       "P1": 0,
-      "P2": 117,
-      "P3": 625
+      "P2": 111,
+      "P3": 631
     },
     "flags": {
       "known_outdated_pattern": 0,
-      "generic_template": 109,
-      "generic_example": 92,
-      "duplicated_code": 117,
+      "generic_template": 103,
+      "generic_example": 86,
+      "duplicated_code": 111,
       "very_short": 196,
       "high_freshness_risk": 141
     },
     "trackedTemplatePhrase": {
       "pattern": "Este capitulo profundiza",
-      "chapters": 109,
+      "chapters": 103,
       "manuals": 20,
       "areas": [
         "data-engineering",
@@ -30,36 +30,13 @@
     },
     "lengthBands": {
       "very_short": 196,
-      "short": 415,
-      "normal": 128,
+      "short": 411,
+      "normal": 132,
       "long": 3
     },
     "duplicateGroups": 11
   },
   "manuals": [
-    {
-      "path": "full-stack/backend/php",
-      "slug": "php",
-      "area": "full-stack",
-      "chapters": 12,
-      "priorities": {
-        "P0": 0,
-        "P1": 0,
-        "P2": 12,
-        "P3": 0
-      },
-      "flags": {
-        "known_outdated_pattern": 0,
-        "generic_template": 12,
-        "generic_example": 12,
-        "duplicated_code": 12,
-        "very_short": 0,
-        "high_freshness_risk": 0
-      },
-      "trackedPhrase": 12,
-      "reviewFlags": 12,
-      "genericRatio": 1
-    },
     {
       "path": "full-stack/frontend/redux",
       "slug": "redux",
@@ -335,6 +312,29 @@
       "trackedPhrase": 6,
       "reviewFlags": 6,
       "genericRatio": 1
+    },
+    {
+      "path": "full-stack/backend/php",
+      "slug": "php",
+      "area": "full-stack",
+      "chapters": 12,
+      "priorities": {
+        "P0": 0,
+        "P1": 0,
+        "P2": 6,
+        "P3": 6
+      },
+      "flags": {
+        "known_outdated_pattern": 0,
+        "generic_template": 6,
+        "generic_example": 6,
+        "duplicated_code": 6,
+        "very_short": 0,
+        "high_freshness_risk": 0
+      },
+      "trackedPhrase": 6,
+      "reviewFlags": 6,
+      "genericRatio": 0.5
     },
     {
       "path": "bases-de-datos/mysql",
@@ -1869,12 +1869,6 @@
         "full-stack/backend/fastapi/01-introduccion-y-entorno.md",
         "full-stack/backend/laravel/01-introduccion-y-entorno.md",
         "full-stack/backend/nestjs/01-introduccion-y-entorno.md",
-        "full-stack/backend/php/01-introduccion-a-php-y-entorno.md",
-        "full-stack/backend/php/02-sintaxis-basica-y-tipos-de-datos.md",
-        "full-stack/backend/php/03-control-de-flujo-y-funciones.md",
-        "full-stack/backend/php/04-arrays-y-manejo-de-datos.md",
-        "full-stack/backend/php/05-formularios-y-peticiones-http.md",
-        "full-stack/backend/php/06-sesiones-cookies-y-autenticacion-basica.md",
         "full-stack/backend/php/07-trabajo-con-archivos.md",
         "full-stack/backend/php/08-pdo-y-acceso-a-bases-de-datos.md",
         "full-stack/backend/php/09-programacion-orientada-a-objetos-en-php.md",
@@ -1924,7 +1918,7 @@
         "ia/vector-databases/06-patrones-para-rag.md",
         "ia/vector-databases/07-buenas-practicas.md"
       ],
-      "count": 109
+      "count": 103
     },
     {
       "hash": "5a9d824dcf18e14a",
@@ -2056,12 +2050,6 @@
       ],
       "chapters": [
         "full-stack/backend/laravel/01-introduccion-y-entorno.md",
-        "full-stack/backend/php/01-introduccion-a-php-y-entorno.md",
-        "full-stack/backend/php/02-sintaxis-basica-y-tipos-de-datos.md",
-        "full-stack/backend/php/03-control-de-flujo-y-funciones.md",
-        "full-stack/backend/php/04-arrays-y-manejo-de-datos.md",
-        "full-stack/backend/php/05-formularios-y-peticiones-http.md",
-        "full-stack/backend/php/06-sesiones-cookies-y-autenticacion-basica.md",
         "full-stack/backend/php/07-trabajo-con-archivos.md",
         "full-stack/backend/php/08-pdo-y-acceso-a-bases-de-datos.md",
         "full-stack/backend/php/09-programacion-orientada-a-objetos-en-php.md",
@@ -2069,7 +2057,7 @@
         "full-stack/backend/php/11-seguridad-en-php-puro.md",
         "full-stack/backend/php/12-proyecto-final-con-arquitectura-simple.md"
       ],
-      "count": 13
+      "count": 7
     },
     {
       "hash": "3320248a647ec61e",
@@ -10068,120 +10056,96 @@
       "area": "full-stack",
       "manual": "php",
       "manualPath": "full-stack/backend/php",
-      "title": "Introduccion A Php Y Entorno",
-      "wordCount": 320,
+      "title": "Introducción a PHP y entorno",
+      "wordCount": 488,
       "usefulLines": 46,
-      "headings": 11,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 24,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "headings": 9,
+      "codeBlocks": 4,
+      "links": 5,
+      "lists": 14,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "full-stack/backend/php/02-sintaxis-basica-y-tipos-de-datos.md",
       "area": "full-stack",
       "manual": "php",
       "manualPath": "full-stack/backend/php",
-      "title": "Sintaxis Basica Y Tipos De Datos",
-      "wordCount": 329,
-      "usefulLines": 46,
-      "headings": 11,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 24,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "title": "Sintaxis básica y tipos de datos",
+      "wordCount": 380,
+      "usefulLines": 58,
+      "headings": 9,
+      "codeBlocks": 5,
+      "links": 6,
+      "lists": 14,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "full-stack/backend/php/03-control-de-flujo-y-funciones.md",
       "area": "full-stack",
       "manual": "php",
       "manualPath": "full-stack/backend/php",
-      "title": "Control De Flujo Y Funciones",
-      "wordCount": 319,
-      "usefulLines": 46,
-      "headings": 11,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 24,
+      "title": "Control de flujo y funciones",
+      "wordCount": 317,
+      "usefulLines": 87,
+      "headings": 8,
+      "codeBlocks": 6,
+      "links": 6,
+      "lists": 14,
       "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "full-stack/backend/php/04-arrays-y-manejo-de-datos.md",
       "area": "full-stack",
       "manual": "php",
       "manualPath": "full-stack/backend/php",
-      "title": "Arrays Y Manejo De Datos",
-      "wordCount": 318,
-      "usefulLines": 46,
-      "headings": 11,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 24,
+      "title": "Arrays y manejo de datos",
+      "wordCount": 344,
+      "usefulLines": 87,
+      "headings": 9,
+      "codeBlocks": 5,
+      "links": 8,
+      "lists": 10,
       "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "full-stack/backend/php/05-formularios-y-peticiones-http.md",
       "area": "full-stack",
       "manual": "php",
       "manualPath": "full-stack/backend/php",
-      "title": "Formularios Y Peticiones Http",
-      "wordCount": 309,
-      "usefulLines": 46,
-      "headings": 11,
+      "title": "Formularios y peticiones HTTP",
+      "wordCount": 461,
+      "usefulLines": 88,
+      "headings": 9,
       "codeBlocks": 2,
-      "links": 1,
-      "lists": 24,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "links": 6,
+      "lists": 14,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "full-stack/backend/php/06-sesiones-cookies-y-autenticacion-basica.md",
       "area": "full-stack",
       "manual": "php",
       "manualPath": "full-stack/backend/php",
-      "title": "Sesiones Cookies Y Autenticacion Basica",
-      "wordCount": 317,
-      "usefulLines": 46,
-      "headings": 11,
+      "title": "Sesiones, cookies y autenticación básica",
+      "wordCount": 493,
+      "usefulLines": 111,
+      "headings": 8,
       "codeBlocks": 2,
-      "links": 1,
-      "lists": 24,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "links": 10,
+      "lists": 18,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "full-stack/backend/php/07-trabajo-con-archivos.md",
