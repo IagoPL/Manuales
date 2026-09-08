@@ -1,64 +1,82 @@
-# Buenas Practicas
+# Buenas prácticas
 
-Este capitulo profundiza en **Buenas Practicas** dentro del manual de **Tailwind CSS**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+Cierra el modelo: clases detectables, tokens, componentes, CSS a propósito, responsive, a11y, dark y un CSS de build **honesto**.
 
-## Objetivo
+Documentación: [detecting classes](https://tailwindcss.com/docs/detecting-classes-in-source-files), [styling with utilities](https://tailwindcss.com/docs/styling-with-utility-classes), [dark mode](https://tailwindcss.com/docs/dark-mode), [orden de clases con Prettier](https://tailwindcss.com/docs/editor-setup#class-sorting-with-prettier).
 
-Al terminar este capitulo sabras explicar buenas practicas, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+## Clases estáticas
 
-## Conceptos clave
+El scanner es texto. Mapas de strings completos, no `bg-${variant}-500`. Si una librería en `node_modules` trae utilities, `@source`.
 
-- **Buenas Practicas:** pieza central de Tailwind CSS en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Buenas:** aspecto a dominar dentro de Buenas Practicas.
-- **Practicas:** aspecto a dominar dentro de Buenas Practicas.
+## Tokens
 
-## Desarrollo del tema
+`w-[37rem]` o `bg-[#1a2b3c]` una vez: bien. Tres veces: `@theme` o variable. Arbitrary no es el theme.
 
-### Enfoque practico
+## Componentes vs CSS
 
-1. Define el problema que resuelve **Buenas Practicas**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
+Markup repetido + comportamiento → componente/template. CSS custom (`@layer`, `@utility`) cuando Tailwind no cubre el problema o hay que parchear un tercero. `@apply` no es la arquitectura (capítulo 5).
 
-### Flujo recomendado
+## Responsive
 
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
-```
+Base = móvil. `md:` / `lg:` = **desde ese ancho**. `@container` cuando el padre manda. Viewport meta.
 
-## Ejemplo
+## Accesibilidad
 
-```css
-/* Utilidades Tailwind (concepto) */
-.card {
-  @apply rounded-lg border bg-white p-4 shadow-sm;
-}
-```
+Tailwind **no** resuelve:
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+- Contraste (`text-zinc-400` puede ser ilegal sobre blanco).
+- Semántica (`button` vs `div`).
+- Foco de teclado (`focus-visible:outline`).
+- `disabled` real.
+- `prefers-reduced-motion` (`motion-reduce:`).
+
+Un `hover:` sin `focus-visible:` deja el teclado a ciegas.
+
+## Dark mode
+
+Cada fondo tiene texto y borde en `dark:`. Default = sistema; clase o `data-theme` = `@custom-variant` + script temprano (FOUC).
+
+## Orden de clases
+
+No discutan el orden a mano. El [plugin de Prettier oficial](https://tailwindcss.com/docs/editor-setup#class-sorting-with-prettier) las agrupa de forma estable. No es una regla de negocio.
+
+## CSS generado (performance)
+
+Tailwind **escanea** y emite utilities usadas. En v4 no configuras `purge` ni `content: []` como receta diaria: la detección es automática (ajustable con `@source`).
+
+Eso **no** significa “siempre el CSS mínimo imaginable”: safelist (`@source inline()`), CSS custom, y fuentes extra crecen el fichero. Habla de **CSS de build acotado a lo detectado**, no de milagros.
+
+Play CDN y concatenación dinámica hacen lo contrario: o hinchan, o faltan clases.
+
+## Recetas v3 que este manual no usa como camino principal
+
+| v3 | Ahora |
+| --- | --- |
+| `@tailwind base/components/utilities` | `@import "tailwindcss"` |
+| `tailwind.config.js` + `theme.extend` | `@theme` |
+| `content: [...]` | detección + `@source` si hace falta |
+| `darkMode: 'class'` | `@custom-variant dark (...)` |
+| `npx tailwindcss init` | plugin Vite / CLI v4 |
+| `purge` | no aplica como paso aparte |
+
+`@config` existe para **migrar**.
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de buenas practicas.
-- No probar casos limite ni errores esperados.
+- Theme flash por aplicar `.dark` después del primer paint.
+- Optimizar el orden de clases y olvidar el contraste.
+- Copiar un config JS enorme “por si el v4 lo necesita”.
 
-## Buenas practicas
+## Buenas prácticas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Componentiza y evita estado global innecesario.
-- Prueba interacciones criticas.
+- CSS-first; utilities en el markup; tokens cuando se repiten.
+- Probar light, dark, teclado, y un viewport estrecho.
+- La doc oficial es el catálogo de utilities; este manual es el modelo mental.
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Buenas Practicas**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Busca concatenaciones dinámicas en tu repo y sustituye por mapas.
+2. Activa Prettier + plugin y deja de ordenar clases a ojo.
+3. Relee 01–08 y marca cada decisión: token, componente o CSS suelto.
+
+Fin del manual Tailwind.

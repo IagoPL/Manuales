@@ -1,69 +1,82 @@
-# Integracion Con Frameworks
+# Integración con frameworks
 
-Este capitulo profundiza en **Integracion Con Frameworks** dentro del manual de **Tailwind CSS**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+Tailwind no se “instala distinto por cada framework” en el CSS: **siempre** hay un CSS global con `@import "tailwindcss";`. Cambia **quién procesa** ese CSS (plugin Vite, PostCSS, integración del meta-framework). No copies un snippet de Next en Angular.
 
-## Objetivo
+Documentación: [Vite](https://tailwindcss.com/docs/installation/using-vite), [framework guides](https://tailwindcss.com/docs/installation/framework-guides), [compatibility Vue/Svelte/Astro](https://tailwindcss.com/docs/compatibility), [@reference](https://tailwindcss.com/docs/functions-and-directives#reference).
 
-Al terminar este capitulo sabras explicar integracion con frameworks, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+## Patrón común
 
-## Conceptos clave
+1. Instala `tailwindcss` y el adaptador oficial de **tu** bundler.
+2. Un `app.css` / `index.css` con `@import "tailwindcss";` (y `@theme` si hay tokens).
+3. Importa ese CSS **una vez** en el entry (`main.tsx`, `app.vue`, layout raíz).
+4. Clases en el markup: `class` (Vue/Svelte/HTML) o `className` (React).
+5. Nombres de clase **completos** (capítulo 1). El scanner no entra en `node_modules` salvo `@source`.
 
-- **Integracion Con Frameworks:** pieza central de Tailwind CSS en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Integracion:** aspecto a dominar dentro de Integracion Con Frameworks.
-- **Con:** aspecto a dominar dentro de Integracion Con Frameworks.
-- **Frameworks:** aspecto a dominar dentro de Integracion Con Frameworks.
+## Vite
 
-## Desarrollo del tema
+```js
+import tailwindcss from '@tailwindcss/vite'
 
-### Enfoque practico
-
-1. Define el problema que resuelve **Integracion Con Frameworks**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
+export default defineConfig({
+  plugins: [tailwindcss()],
+})
 ```
 
-## Ejemplo
+Vale para Vite + React, Vue, Svelte, Solid, etc. El framework no sustituye el plugin.
 
-```css
-/* Utilidades Tailwind (concepto) */
-.card {
-  @apply rounded-lg border bg-white p-4 shadow-sm;
+## Meta-frameworks
+
+Next, Nuxt, SvelteKit, Astro, Laravel, Remix/React Router: usa la **guía oficial de ese stack** (entrada de CSS, App Router vs Pages, `globals.css`). La idea es la misma; los ficheros no.
+
+Monorepo: si el cwd no es el paquete de la app, `@import "tailwindcss" source("../src")` o `@source` explícito.
+
+## Vue, Svelte, Astro: `<style>` scoped
+
+La recomendación actual: **utilities en el markup**, no reprocesar Tailwind en cada bloque `<style>`. Esos bloques se compilán **aislados**; no ven el theme del CSS global.
+
+Si aun así usas `@apply` / `@variant` ahí, **`@reference`** importa el theme **sin duplicar** el CSS generado:
+
+```vue
+<template>
+  <h1>Catálogo</h1>
+</template>
+
+<style scoped>
+@reference "../app.css";
+h1 {
+  @apply text-2xl font-semibold;
 }
+</style>
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+Alternativa más barata: `color: var(--color-brand-500)` en el scoped CSS, sin `@apply`.
+
+Tailwind v4 **no** está pensado para Sass/Less/Stylus en esos bloques.
+
+## Qué no unificar
+
+“En Next, Vue y Angular haz exactamente esto” es falso: Next puede usar el plugin de PostCSS o el de Vite según la versión; Angular tiene su propio pipeline. Enlaza la guía, no inventes un `tailwind.config` común.
+
+Play CDN existe para demos: **no** es producción (runtime, sin el mismo control de CSS generado).
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de integracion con frameworks.
-- No probar casos limite ni errores esperados.
+- Importar Tailwind en diez componentes en vez de un global.
+- `class={`bg-${color}-500`}` en JSX.
+- `@apply` en Vue sin `@reference` y un error opaco.
 
-## Buenas practicas
+## Buenas prácticas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Componentiza y evita estado global innecesario.
-- Prueba interacciones criticas.
+- Un CSS de entrada; componentes = `class`/`className`.
+- `@source` solo para librerías ignoradas.
+- Guía oficial del framework el día de instalar.
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Integracion Con Frameworks**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. En Vite + React, importa `style.css` solo en `main`.
+2. En un SFC Vue, mueve un `@apply` a clases en el template.
+3. Abre la framework guide de tu stack y anota el fichero de CSS que piden.
 
 ## Siguiente paso
 
-Continua con [Buenas Practicas](09-buenas-practicas.md).
+Continúa con [Buenas prácticas](09-buenas-practicas.md).

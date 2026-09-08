@@ -1,69 +1,73 @@
-# Tipografia Color Y Espaciado
+# Tipografía, color y espaciado
 
-Este capitulo profundiza en **Tipografia Color Y Espaciado** dentro del manual de **Tailwind CSS**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+Las utilities de texto, color y espacio son **API de tokens**. `text-lg` no es un número mágico: apunta a variables del theme (`--text-lg`, `--color-*`, `--spacing`). No memorices el catálogo; aprende el **prefijo**.
 
-## Objetivo
+Documentación: [theme variables](https://tailwindcss.com/docs/theme), [font-size](https://tailwindcss.com/docs/font-size), [colors](https://tailwindcss.com/docs/colors), [padding](https://tailwindcss.com/docs/padding).
 
-Al terminar este capitulo sabras explicar tipografia color y espaciado, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+## Tipografía
 
-## Conceptos clave
+| Prefijo | Rol |
+| --- | --- |
+| `text-sm` / `text-lg` / `text-xl` | Tamaño (y a menudo line-height por defecto). |
+| `font-medium` / `font-semibold` / `font-bold` | Peso. |
+| `font-sans` / `font-mono` | Familia (`--font-*`). |
+| `leading-tight` / `leading-relaxed` | Interlineado. |
+| `tracking-tight` / `tracking-wide` | Tracking. |
 
-- **Tipografia Color Y Espaciado:** pieza central de Tailwind CSS en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Tipografia:** aspecto a dominar dentro de Tipografia Color Y Espaciado.
-- **Color:** aspecto a dominar dentro de Tipografia Color Y Espaciado.
-- **Espaciado:** aspecto a dominar dentro de Tipografia Color Y Espaciado.
-
-## Desarrollo del tema
-
-### Enfoque practico
-
-1. Define el problema que resuelve **Tipografia Color Y Espaciado**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
+```html
+<h1 class="text-2xl font-semibold tracking-tight text-zinc-900">Catálogo</h1>
+<p class="mt-2 text-sm leading-relaxed text-zinc-600">Cursos actualizados este mes.</p>
 ```
 
-## Ejemplo
+Jerarquía: el `h1` semántico + tamaño. No uses `div` + `text-2xl` como único encabezado de página.
 
-```css
-/* Utilidades Tailwind (concepto) */
-.card {
-  @apply rounded-lg border bg-white p-4 shadow-sm;
-}
+## Color
+
+Mismo token, distinta propiedad: `text-zinc-900`, `bg-zinc-50`, `border-zinc-200`. El número (**50–950**) es el escalón del theme, no “accesibilidad garantizada”.
+
+`text-gray-400` sobre `bg-white` **puede fallar** contraste WCAG. Comprueba (DevTools, axe, ratio). En dark, `dark:text-zinc-400` sobre `dark:bg-zinc-900` es otro par: hay que verificar **ambos**.
+
+Prefiere escalas con contraste pensado (`zinc`/`neutral` y un color de marca en `@theme`) antes que `gray-400` por costumbre.
+
+## Espaciado
+
+Una escala: `p-4`, `m-6`, `gap-3`, `space-y-2` (margen entre hijos apilados). `p-4` es `padding: calc(var(--spacing) * 4)` en el modelo actual, no un pixel suelto.
+
+```html
+<section class="space-y-4 p-6">
+  <h2 class="text-lg font-medium">Filtros</h2>
+  <div class="flex flex-wrap gap-2">
+    <button type="button" class="rounded-md bg-zinc-100 px-3 py-1.5 text-sm text-zinc-800">
+      Nivel
+    </button>
+  </div>
+</section>
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+`gap` en flex/grid; `space-y-*` cuando no hay flex/grid. No mezcles `mb-4` en cada hijo y `gap-4` en el padre a la vez sin querer.
+
+## Descubrir, no memorizar
+
+Documentación oficial + autocompletado del editor (extensión Tailwind). Si el valor se repite, token (capítulo 7), no `p-[18px]` en diez sitios.
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de tipografia color y espaciado.
-- No probar casos limite ni errores esperados.
+- `text-gray-400` “porque es secundario” sin medir contraste.
+- `text-xl` en un `span` que debería ser `h2`.
+- Escala de espaciado + pixels sueltos mezclados sin criterio.
 
-## Buenas practicas
+## Buenas prácticas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Componentiza y evita estado global innecesario.
-- Prueba interacciones criticas.
+- Color de texto y fondo como par; prueba dark (capítulo 6).
+- Una escala de type (p. ej. `sm` cuerpo, `lg`/`xl` títulos).
+- `type="button"` en botones que no envían formularios.
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Tipografia Color Y Espaciado**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Arma un bloque título + lead + meta con `text-*`, `font-*`, `mt-*`.
+2. Mide el contraste de `text-zinc-400` vs `text-zinc-600` sobre blanco.
+3. Sustituye tres `margin-bottom` sueltos por `space-y-*` o `gap-*`.
 
 ## Siguiente paso
 
-Continua con [Componentes Reutilizables](05-componentes-reutilizables.md).
+Continúa con [Componentes reutilizables](05-componentes-reutilizables.md).
