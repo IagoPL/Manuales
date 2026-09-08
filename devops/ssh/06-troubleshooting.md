@@ -87,7 +87,7 @@ Hay ruta hasta el host, pero nadie escucha en ese puerto:
 
 El cliente prueba muchas claves del agente antes de la buena.
 
-```sshconfig
+```ssh-config
 Host prod
   IdentityFile ~/.ssh/id_ed25519_prod
   IdentitiesOnly yes

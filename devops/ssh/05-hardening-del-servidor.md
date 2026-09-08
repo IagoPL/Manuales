@@ -16,7 +16,7 @@ sudo sshd -t && sudo systemctl reload sshd
 
 ## Ajustes minimos recomendados
 
-```sshdconfig
+```ssh-config
 Port 22
 Protocol 2
 PermitRootLogin no

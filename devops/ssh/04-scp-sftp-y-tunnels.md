@@ -67,7 +67,7 @@ Ahora tu cliente Postgres apunta a `localhost:5432` y el trafico viaja cifrado h
 
 Via config:
 
-```sshconfig
+```ssh-config
 Host db-tunnel
   HostName bastion.ejemplo.com
   User deploy

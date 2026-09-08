@@ -31,7 +31,7 @@ ssh-add -l
 
 En `~/.ssh/config`:
 
-```sshconfig
+```ssh-config
 Host *
   AddKeysToAgent yes
   IdentityFile ~/.ssh/id_ed25519
@@ -55,7 +55,7 @@ ssh -A ops@bastion.ejemplo.com
 
 O en config (solo hosts de confianza):
 
-```sshconfig
+```ssh-config
 Host bastion
   HostName bastion.ejemplo.com
   User ops
@@ -74,7 +74,7 @@ Si alguien con root en el bastion accede a tu socket de agente mientras tu sesio
 
 Para "entrar al interno a traves del bastion", normalmente **no** necesitas `-A`:
 
-```sshconfig
+```ssh-config
 Host app-1
   HostName 10.0.2.15
   User deploy

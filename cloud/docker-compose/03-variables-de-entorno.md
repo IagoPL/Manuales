@@ -16,7 +16,7 @@ Un valor en `.env` **no** entra solo al contenedor. Solo alimenta la interpolaci
 
 `.env` en el mismo directorio que el compose file:
 
-```env
+```dotenv
 COMPOSE_PROJECT_NAME=tienda
 API_PORT=3000
 POSTGRES_IMAGE=postgres:16.4-alpine
@@ -97,7 +97,7 @@ services:
 
 `api.env`:
 
-```env
+```dotenv
 LOG_LEVEL=debug
 FEATURE_FLAGS=checkout,search
 REDIS_URL=redis://redis:6379
@@ -136,7 +136,7 @@ secrets/.env.api  # secretos locales (gitignored) montados via env_file
 
 `.gitignore`:
 
-```gitignore
+```txt
 .env
 .env.*
 !.env.example
@@ -146,7 +146,7 @@ secrets/
 
 `.env.example`:
 
-```env
+```dotenv
 COMPOSE_PROJECT_NAME=tienda
 API_PORT=3000
 POSTGRES_IMAGE=postgres:16.4-alpine
