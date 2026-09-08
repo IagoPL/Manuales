@@ -1,70 +1,85 @@
-# Servidor Openai Compatible
+# Servidor OpenAI compatible
 
-Este capitulo profundiza en **Servidor Openai Compatible** dentro del manual de **vLLM**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+`vllm serve` levanta un HTTP que habla el esquema de OpenAI: tus clientes (`openai` Python, LangChain, curl) cambian la **URL base**, no el contrato. Cómo arrancar, GPU y Docker está en [Despliegue](05-despliegue.md). Aquí, el API.
 
-## Objetivo
+Documentación oficial: [OpenAI-compatible server](https://docs.vllm.ai/en/latest/serving/openai_compatible_server.html), [CLI serve](https://docs.vllm.ai/en/latest/cli/serve/).
 
-Al terminar este capitulo sabras explicar servidor openai compatible, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+## Endpoints que vas a usar
 
-## Conceptos clave
+Con el servidor en `http://127.0.0.1:8000` (puerto por defecto):
 
-- **Servidor Openai Compatible:** pieza central de vLLM en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Servidor:** aspecto a dominar dentro de Servidor Openai Compatible.
-- **Openai:** aspecto a dominar dentro de Servidor Openai Compatible.
-- **Compatible:** aspecto a dominar dentro de Servidor Openai Compatible.
+| Ruta | Uso |
+| --- | --- |
+| `GET /v1/models` | Lista el id servido. |
+| `POST /v1/chat/completions` | Chat (mensajes con roles). |
+| `POST /v1/completions` | Prompt crudo (completion clásica). |
 
-## Desarrollo del tema
+El campo JSON `model` debe coincidir con `--model` o con `--served-model-name`. Si no, 404 o error de modelo desconocido. Empieza siempre por `GET /v1/models`.
 
-### Enfoque practico
-
-1. Define el problema que resuelve **Servidor Openai Compatible**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
-```
-
-## Ejemplo
+## Cliente Python
 
 ```python
-# Ejemplo con vLLM
-from pathlib import Path
+from openai import OpenAI
 
-def procesar(ruta: str) -> list[str]:
-    return Path(ruta).read_text(encoding='utf-8').splitlines()
+client = OpenAI(base_url="http://127.0.0.1:8000/v1", api_key="no-clave-local")
+
+resp = client.chat.completions.create(
+    model="Qwen/Qwen3-0.6B",
+    messages=[{"role": "user", "content": "Di hola en una frase."}],
+)
+print(resp.choices[0].message.content)
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+`api_key` hace falta para el SDK aunque el servidor no autentique. En red, pasa `--api-key` a `vllm serve` y la misma clave en el cliente (cabecera `Authorization`).
+
+Streaming:
+
+```python
+stream = client.chat.completions.create(
+    model="Qwen/Qwen3-0.6B",
+    messages=[{"role": "user", "content": "Cuenta hasta tres."}],
+    stream=True,
+)
+for chunk in stream:
+    delta = chunk.choices[0].delta.content
+    if delta:
+        print(delta, end="", flush=True)
+```
+
+## curl
+
+El capítulo 5 ya muestra un POST de chat. Completions:
+
+```bash
+curl http://127.0.0.1:8000/v1/completions \
+  -H "Content-Type: application/json" \
+  -d '{"model":"Qwen/Qwen3-0.6B","prompt":"La capital de Galicia es","max_tokens":16}'
+```
+
+## Chat template
+
+Los modelos instruct esperan el formato de mensajes (system/user/assistant). El servidor aplica el **chat template** del tokenizer. Si mandas un string plano a `/v1/completions` no es lo mismo que un chat. Si el modelo requiere `trust_remote_code`, eso se decide al cargar (capítulo 3), no en cada request.
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de servidor openai compatible.
-- No probar casos limite ni errores esperados.
+- Apuntar el SDK a `https://api.openai.com` y pensar que vLLM “ya está”.
+- `model: "gpt-4o"` contra un servidor que sirve Qwen.
+- Usar `/v1/chat/completions` con un modelo base sin plantilla de chat y quejarse del formato.
+- Dejar `api_key="dummy"` cuando el proceso tiene `--api-key` real.
 
-## Buenas practicas
+## Buenas prácticas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Fija version de modelo y dataset.
-- Evalua antes de desplegar.
+- Un `base_url` por entorno (dev/staging/prod), el resto del código igual.
+- Fija `max_tokens` / límites en el cliente; no dependas del default.
+- Streaming para UI; request completa para jobs.
+- Métricas en `/metrics` (capítulo 6), no “parece lento”.
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Servidor Openai Compatible**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Con el servidor del capítulo 5, lista modelos y haz un chat con el SDK.
+2. Repite con `stream=True` y sin stream; compara cuándo llega el primer token.
+3. Cambia el `model` del JSON a un nombre inventado y lee el error.
 
 ## Siguiente paso
 
-Continua con [Carga De Modelos](03-carga-de-modelos.md).
+Continúa con [Carga de modelos](03-carga-de-modelos.md).

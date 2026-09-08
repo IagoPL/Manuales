@@ -1,69 +1,63 @@
-# Batching Y Rendimiento
+# Batching y rendimiento
 
-Este capitulo profundiza en **Batching Y Rendimiento** dentro del manual de **vLLM**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+vLLM no espera a “llenar un batch y lanzarlo”: en cada paso de **decode** puede entrar o salir una petición. Eso es **continuous batching**. Junto con **PagedAttention** (KV cache en bloques reutilizables) es lo que sostiene el throughput cuando hay muchas solicitudes a la vez.
 
-## Objetivo
+Prefill (procesar el prompt) y decode (un token detrás de otro) no cuestan lo mismo. Una petición larga en prefill puede bloquear el resto; el motor mezcla trabajo para no dejar la GPU quieta. No intentes reproducir eso a mano con `generate` en un `for`.
 
-Al terminar este capitulo sabras explicar batching y rendimiento, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+Documentación oficial: [CLI serve](https://docs.vllm.ai/en/latest/cli/serve/) (`--gpu-memory-utilization`, `--max-num-seqs`, `--max-model-len`), [métricas](https://docs.vllm.ai/en/latest/design/metrics/). Ideas de diseño: [PagedAttention (blog vLLM)](https://vllm.ai/blog/2023-06-20-vllm).
 
-## Conceptos clave
+## Qué tunear (pocos flags)
 
-- **Batching Y Rendimiento:** pieza central de vLLM en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Batching:** aspecto a dominar dentro de Batching Y Rendimiento.
-- **Rendimiento:** aspecto a dominar dentro de Batching Y Rendimiento.
+| Flag | Efecto |
+| --- | --- |
+| `--gpu-memory-utilization` | Fracción de VRAM para esta instancia (default de la CLI: **0.92**). Más alto → más KV → más concurrencia, menos margen para OOM. |
+| `--max-num-seqs` | Máximo de secuencias en una iteración. Baja si ves OOM o quieres menos latencia a costa de cola. |
+| `--max-model-len` | Cota de contexto. Menos longitud → más sitio para batch. |
+| `--tensor-parallel-size` | Parte el modelo entre GPUs (capítulo 5). No es un “turbo” de una GPU. |
 
-## Desarrollo del tema
+No hay un `--enable-paged-attention`: va siempre. Continuous batching también es el modo de serving, no un extra.
 
-### Enfoque practico
+Ejemplo (ajusta el modelo a tu VRAM):
 
-1. Define el problema que resuelve **Batching Y Rendimiento**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
+```bash
+vllm serve Qwen/Qwen3-0.6B \
+  --gpu-memory-utilization 0.90 \
+  --max-num-seqs 64 \
+  --max-model-len 4096
 ```
 
-## Ejemplo
+## Cómo mirar si va bien
 
-```python
-# Ejemplo con vLLM
-from pathlib import Path
+Una petición suelta no demuestra nada. Mide con concurrencia:
 
-def procesar(ruta: str) -> list[str]:
-    return Path(ruta).read_text(encoding='utf-8').splitlines()
-```
+- **TTFT** (`vllm:time_to_first_token_seconds`): tiempo hasta el primer token.
+- **ITL / TPOT** (`vllm:inter_token_latency_seconds`): ritmo entre tokens.
+- **E2E** (`vllm:e2e_request_latency_seconds`).
+- **Cola:** `vllm:num_requests_running` y peticiones waiting.
+- **KV:** `vllm:kv_cache_usage_perc` alto y cola creciente → te faltan bloques (modelo, contexto o utilización).
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+Cómo scrapear `/metrics` está en [Observabilidad](06-observabilidad.md).
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de batching y rendimiento.
-- No probar casos limite ni errores esperados.
+- Subir `--gpu-memory-utilization` a 0.99 “porque hay margen” y petar al primer pico de contexto.
+- Comparar tokens/s de un batch de 1 con un artículo que mide 32 concurrentes.
+- Subir `-tp` en una sola GPU.
+- Ignorar que prompts enormes hacen prefill caro aunque `max_tokens` sea 16.
 
-## Buenas practicas
+## Buenas prácticas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Fija version de modelo y dataset.
-- Evalua antes de desplegar.
+- Fija un SLO (p95 TTFT o tokens/s) y cambia **un** flag cada vez.
+- Recorta contexto si el producto no necesita el máximo del card.
+- Separa workloads interactivos y batch si se pisan la KV cache.
+- Reprodice la mezcla real de longitudes de prompt; un dataset de frases cortas miente.
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Batching Y Rendimiento**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Sirve un modelo pequeño y lanza 1, luego 8 curls en paralelo. Anota TTFT percibido.
+2. Baja `--max-model-len` a la mitad y repite: ¿entra más concurrencia?
+3. En el siguiente capítulo, localiza `vllm:kv_cache_usage_perc` en `/metrics`.
 
 ## Siguiente paso
 
-Continua con [Despliegue](05-despliegue.md).
+Continúa con [Despliegue](05-despliegue.md).

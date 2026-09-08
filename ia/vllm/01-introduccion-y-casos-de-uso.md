@@ -1,70 +1,70 @@
-# Introduccion Y Casos De Uso
+# Introducción y casos de uso
 
-Este capitulo profundiza en **Introduccion Y Casos De Uso** dentro del manual de **vLLM**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+vLLM es un **motor de inferencia** para modelos de lenguaje: prioriza throughput y uso de VRAM cuando hay muchas peticiones a la vez. No entrena el modelo. No es un chatbot con UI. Cargas pesos (casi siempre desde Hugging Face) y o bien:
 
-## Objetivo
+- **Offline:** clase `LLM` en un script o job.
+- **Online:** `vllm serve`, API HTTP compatible con OpenAI (capítulos 2 y 5).
 
-Al terminar este capitulo sabras explicar introduccion y casos de uso, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+Documentación oficial: [offline inference](https://docs.vllm.ai/en/latest/examples/basic/offline_inference/), [vllm serve](https://docs.vllm.ai/en/latest/cli/serve/).
 
-## Conceptos clave
+## Qué problema resuelve
 
-- **Introduccion Y Casos De Uso:** pieza central de vLLM en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Introduccion:** aspecto a dominar dentro de Introduccion Y Casos De Uso.
-- **Casos:** aspecto a dominar dentro de Introduccion Y Casos De Uso.
-- **Uso:** aspecto a dominar dentro de Introduccion Y Casos De Uso.
+Generar tokens con `transformers.generate` en un bucle funciona para un notebook. En un servicio aparecen dos cuellos:
 
-## Desarrollo del tema
+- La **KV cache** (claves/valores de atención) crece con el contexto y se fragmenta si la reservas en bloque contiguo.
+- Un **batch estático** espera a la secuencia más lenta: la GPU se queda a medio gas.
 
-### Enfoque practico
+vLLM usa **PagedAttention** (KV en bloques, como páginas de un SO) y **continuous batching** (el batch se recompone en cada paso de decode). El detalle operativo está en [Batching y rendimiento](04-batching-y-rendimiento.md).
 
-1. Define el problema que resuelve **Introduccion Y Casos De Uso**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
+## Cuándo usarlo
 
-### Flujo recomendado
+- API de chat/completions para una app (sustituir `api.openai.com` por tu GPU).
+- Jobs por lotes: muchas prompts, un proceso, una GPU.
+- Modelos que caben (o se parten con tensor parallelism) en las GPUs que tienes.
 
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
-```
+Cuándo **no** es el primer paso:
 
-## Ejemplo
+- Probar un modelo de 0.5B en el portátil sin GPU: `transformers` o Ollama son más simples.
+- Fine-tuning: eso es Hugging Face / otros trainers.
+- Un único usuario ocasional que quiere una CLI local: Ollama suele ser mejor DX.
+
+## Offline mínimo
+
+Con vLLM instalado y una GPU NVIDIA visible:
 
 ```python
-# Ejemplo con vLLM
-from pathlib import Path
+from vllm import LLM, SamplingParams
 
-def procesar(ruta: str) -> list[str]:
-    return Path(ruta).read_text(encoding='utf-8').splitlines()
+llm = LLM(model="Qwen/Qwen3-0.6B")
+params = SamplingParams(temperature=0.7, max_tokens=64)
+outs = llm.generate(["Explica PagedAttention en una frase."], params)
+print(outs[0].outputs[0].text)
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+`LLM(...)` carga el modelo en VRAM. `generate` hace prefill + decode. El id del modelo es el del Hub (o una ruta local); el capítulo 3 cubre carga, `revision` y cuantización.
+
+Para un servicio HTTP no uses este script en un `while True`: usa `vllm serve` ([despliegue](05-despliegue.md)).
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de introduccion y casos de uso.
-- No probar casos limite ni errores esperados.
+- Tratar vLLM como “otro Hugging Face pipeline”. El runtime es distinto; los ejemplos de `pipeline` no se pegan aquí.
+- Pedir un modelo que no cabe y no mirar VRAM / `--max-model-len`.
+- Exponer el servidor a Internet sin clave ni red privada (capítulo 5).
+- Comparar latencia de una petición suelta con Transformers y concluir que “vLLM es igual de lento”: brilla con **concurrencia**.
 
-## Buenas practicas
+## Buenas prácticas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Fija version de modelo y dataset.
-- Evalua antes de desplegar.
+- Empieza con un modelo pequeño que quepa de sobra; luego sube tamaño o `-tp`.
+- Fija el id del modelo en config, no en un comentario.
+- Mide tokens/s y TTFT con la carga real (capítulo 4 y 6), no con un único prompt de 5 tokens.
+- Separa “probar el motor” (`LLM`) de “publicar API” (`vllm serve`).
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Introduccion Y Casos De Uso**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Ejecuta el snippet offline con un modelo que quepa en tu GPU.
+2. Lanza dos prompts en la misma llamada a `generate` y observa que salen las dos.
+3. Anota en qué casos usarías Ollama, `transformers` o vLLM en tu proyecto.
 
 ## Siguiente paso
 
-Continua con [Servidor Openai Compatible](02-servidor-openai-compatible.md).
+Continúa con [Servidor OpenAI compatible](02-servidor-openai-compatible.md).

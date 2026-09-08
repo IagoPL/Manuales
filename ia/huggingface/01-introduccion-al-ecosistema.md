@@ -1,69 +1,67 @@
-# Introduccion Al Ecosistema
+# Introducción al ecosistema Hugging Face
 
-Este capitulo profundiza en **Introduccion Al Ecosistema** dentro del manual de **Hugging Face**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+Hugging Face es sobre todo un **Hub** (git + artefactos de ML) y un conjunto de **bibliotecas** para usar esos artefactos. El Hub hospeda modelos, datasets y demos (Spaces). Las librerías más habituales en este manual:
 
-## Objetivo
+| Pieza | Para qué |
+| --- | --- |
+| Hub | Descubrir, versionar y descargar pesos y datos. |
+| `transformers` | Cargar modelos y hacer inferencia o fine-tuning. |
+| `datasets` | Leer y transformar datasets (capítulo 3). |
+| `huggingface_hub` | Login, upload/download programático. |
 
-Al terminar este capitulo sabras explicar introduccion al ecosistema, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+No es un único producto “el modelo”: un id tipo `org/nombre` apunta a un **repositorio** con config, tokenizer, pesos y una model card.
 
-## Conceptos clave
+Documentación oficial: [Hub](https://huggingface.co/docs/hub/index), [Transformers quickstart](https://huggingface.co/docs/transformers/en/quicktour).
 
-- **Introduccion Al Ecosistema:** pieza central de Hugging Face en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Introduccion:** aspecto a dominar dentro de Introduccion Al Ecosistema.
-- **Ecosistema:** aspecto a dominar dentro de Introduccion Al Ecosistema.
+## Qué vas a hacer en la práctica
 
-## Desarrollo del tema
+1. Elegir un modelo en el Hub (tarea, licencia, tamaño, si es gated).
+2. Autenticarte si el repo es privado o gated.
+3. Cargarlo con `from_pretrained` o con `pipeline` (siguiente capítulo).
+4. Cachear pesos en disco (por defecto `~/.cache/huggingface`).
 
-### Enfoque practico
+Login con el CLI actual:
 
-1. Define el problema que resuelve **Introduccion Al Ecosistema**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
+```bash
+hf auth login
 ```
 
-## Ejemplo
+Crea un [access token](https://huggingface.co/docs/hub/security-tokens) en la web. No lo subas al git; en CI usa un secret.
 
-```python
-# Ejemplo con Hugging Face
-from pathlib import Path
+## Relación con el resto del manual
 
-def procesar(ruta: str) -> list[str]:
-    return Path(ruta).read_text(encoding='utf-8').splitlines()
-```
+- **Transformers / pipelines / tokenizers:** cómo pasa el texto a ids y cómo se llama al modelo. Siguiente capítulo.
+- **Datasets:** `load_dataset`, streaming, map.
+- **Hub y modelos:** cards, gated, `revision`.
+- **Fine-tuning y evaluación:** Trainer, métricas.
+- **Despliegue:** Spaces, Inference, o un servidor propio (vLLM en este mismo área).
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+Si tu objetivo es **servir** un LLM con alta concurrencia, Hugging Face te da los pesos; el servidor puede ser vLLM, no `pipeline` en un Flask.
+
+## Cache y descargas
+
+`from_pretrained("Qwen/Qwen2.5-0.5B-Instruct")` descarga (o reutiliza) el snapshot al cache local. Controla la revisión (`revision="..."`) cuando necesites reproducibilidad. No asumas que `main` del Hub es inmutable.
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de introduccion al ecosistema.
-- No probar casos limite ni errores esperados.
+- Tratar el Hub como “un CDN anónimo” y pegar pesos en el repo git. El git del proyecto apunta al id; los binarios viven en el Hub/cache.
+- Usar un modelo gated sin token: el error parece de red y no de auth.
+- Ignorar la model card (licencia, datos de entrenamiento, limitaciones).
+- Cargar un LLM enorme con `pipeline` en CPU “para probar” y quedarse sin RAM. Empieza por un modelo pequeño.
 
-## Buenas practicas
+## Buenas prácticas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Fija version de modelo y dataset.
-- Evalua antes de desplegar.
+- Fija el **id completo** del modelo en el código o en config, no “el de sentimiento por defecto”.
+- Revisa tarea (`text-generation`, `token-classification`, …) antes de copiar un snippet.
+- En servidores, monta el cache en volumen (igual que en el capítulo de despliegue de vLLM).
+- `hf auth login` es el comando actual; no documentes `huggingface-cli login` como receta nueva.
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Introduccion Al Ecosistema**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Crea cuenta y un token de lectura. Ejecuta `hf auth login`.
+2. Abre en el Hub un modelo pequeño de generación y anota licencia y tamaño.
+3. En el siguiente capítulo cárgalo con `pipeline` usando ese id.
 
 ## Siguiente paso
 
-Continua con [Transformers Pipelines Y Tokenizers](02-transformers-pipelines-y-tokenizers.md).
+Continúa con [Transformers, pipelines y tokenizers](02-transformers-pipelines-y-tokenizers.md).
