@@ -6,22 +6,22 @@
     "areas": 8,
     "priorities": {
       "P0": 0,
-      "P1": 6,
+      "P1": 0,
       "P2": 117,
-      "P3": 619
+      "P3": 625
     },
     "flags": {
       "known_outdated_pattern": 0,
-      "generic_template": 115,
-      "generic_example": 98,
-      "duplicated_code": 123,
+      "generic_template": 109,
+      "generic_example": 92,
+      "duplicated_code": 117,
       "very_short": 196,
       "high_freshness_risk": 141
     },
     "trackedTemplatePhrase": {
       "pattern": "Este capitulo profundiza",
-      "chapters": 115,
-      "manuals": 22,
+      "chapters": 109,
+      "manuals": 20,
       "areas": [
         "data-engineering",
         "full-stack",
@@ -30,36 +30,13 @@
     },
     "lengthBands": {
       "very_short": 196,
-      "short": 421,
-      "normal": 122,
+      "short": 415,
+      "normal": 128,
       "long": 3
     },
     "duplicateGroups": 11
   },
   "manuals": [
-    {
-      "path": "ia/huggingface",
-      "slug": "huggingface",
-      "area": "ia",
-      "chapters": 7,
-      "priorities": {
-        "P0": 0,
-        "P1": 5,
-        "P2": 0,
-        "P3": 2
-      },
-      "flags": {
-        "known_outdated_pattern": 0,
-        "generic_template": 5,
-        "generic_example": 5,
-        "duplicated_code": 5,
-        "very_short": 0,
-        "high_freshness_risk": 7
-      },
-      "trackedPhrase": 5,
-      "reviewFlags": 5,
-      "genericRatio": 0.714
-    },
     {
       "path": "full-stack/backend/php",
       "slug": "php",
@@ -358,29 +335,6 @@
       "trackedPhrase": 6,
       "reviewFlags": 6,
       "genericRatio": 1
-    },
-    {
-      "path": "ia/vllm",
-      "slug": "vllm",
-      "area": "ia",
-      "chapters": 7,
-      "priorities": {
-        "P0": 0,
-        "P1": 1,
-        "P2": 0,
-        "P3": 6
-      },
-      "flags": {
-        "known_outdated_pattern": 0,
-        "generic_template": 1,
-        "generic_example": 1,
-        "duplicated_code": 1,
-        "very_short": 0,
-        "high_freshness_risk": 7
-      },
-      "trackedPhrase": 1,
-      "reviewFlags": 1,
-      "genericRatio": 0.143
     },
     {
       "path": "bases-de-datos/mysql",
@@ -1533,6 +1487,29 @@
       "genericRatio": 0
     },
     {
+      "path": "ia/huggingface",
+      "slug": "huggingface",
+      "area": "ia",
+      "chapters": 7,
+      "priorities": {
+        "P0": 0,
+        "P1": 0,
+        "P2": 0,
+        "P3": 7
+      },
+      "flags": {
+        "known_outdated_pattern": 0,
+        "generic_template": 0,
+        "generic_example": 0,
+        "duplicated_code": 0,
+        "very_short": 0,
+        "high_freshness_risk": 7
+      },
+      "trackedPhrase": 0,
+      "reviewFlags": 0,
+      "genericRatio": 0
+    },
+    {
       "path": "ia/langchain",
       "slug": "langchain",
       "area": "ia",
@@ -1604,6 +1581,29 @@
     {
       "path": "ia/rag",
       "slug": "rag",
+      "area": "ia",
+      "chapters": 7,
+      "priorities": {
+        "P0": 0,
+        "P1": 0,
+        "P2": 0,
+        "P3": 7
+      },
+      "flags": {
+        "known_outdated_pattern": 0,
+        "generic_template": 0,
+        "generic_example": 0,
+        "duplicated_code": 0,
+        "very_short": 0,
+        "high_freshness_risk": 7
+      },
+      "trackedPhrase": 0,
+      "reviewFlags": 0,
+      "genericRatio": 0
+    },
+    {
+      "path": "ia/vllm",
+      "slug": "vllm",
       "area": "ia",
       "chapters": 7,
       "priorities": {
@@ -1810,10 +1810,8 @@
         "full-stack/frontend/redux",
         "full-stack/frontend/tailwind",
         "full-stack/frontend/zustand",
-        "ia/huggingface",
         "ia/transformers",
-        "ia/vector-databases",
-        "ia/vllm"
+        "ia/vector-databases"
       ],
       "chapters": [
         "data-engineering/dbt/02-sources-models-y-refs.md",
@@ -1910,11 +1908,6 @@
         "full-stack/frontend/zustand/06-integracion-con-react.md",
         "full-stack/frontend/zustand/07-patrones-de-arquitectura.md",
         "full-stack/frontend/zustand/08-testing.md",
-        "ia/huggingface/03-datasets.md",
-        "ia/huggingface/04-fine-tuning.md",
-        "ia/huggingface/05-hub-y-modelos.md",
-        "ia/huggingface/06-evaluacion.md",
-        "ia/huggingface/07-despliegue.md",
         "ia/transformers/01-introduccion-y-arquitectura.md",
         "ia/transformers/02-tokenizacion-y-embeddings.md",
         "ia/transformers/03-attention.md",
@@ -1929,10 +1922,9 @@
         "ia/vector-databases/04-qdrant-pinecone-weaviate-y-pgvector.md",
         "ia/vector-databases/05-rendimiento.md",
         "ia/vector-databases/06-patrones-para-rag.md",
-        "ia/vector-databases/07-buenas-practicas.md",
-        "ia/vllm/07-buenas-practicas.md"
+        "ia/vector-databases/07-buenas-practicas.md"
       ],
-      "count": 115
+      "count": 109
     },
     {
       "hash": "5a9d824dcf18e14a",
@@ -1944,10 +1936,8 @@
         "data-engineering/parquet",
         "full-stack/backend/django",
         "full-stack/backend/fastapi",
-        "ia/huggingface",
         "ia/transformers",
-        "ia/vector-databases",
-        "ia/vllm"
+        "ia/vector-databases"
       ],
       "chapters": [
         "data-engineering/delta-lake/01-introduccion-y-arquitectura.md",
@@ -1975,11 +1965,6 @@
         "data-engineering/parquet/07-buenas-practicas.md",
         "full-stack/backend/django/01-introduccion-y-entorno.md",
         "full-stack/backend/fastapi/01-introduccion-y-entorno.md",
-        "ia/huggingface/03-datasets.md",
-        "ia/huggingface/04-fine-tuning.md",
-        "ia/huggingface/05-hub-y-modelos.md",
-        "ia/huggingface/06-evaluacion.md",
-        "ia/huggingface/07-despliegue.md",
         "ia/transformers/01-introduccion-y-arquitectura.md",
         "ia/transformers/02-tokenizacion-y-embeddings.md",
         "ia/transformers/03-attention.md",
@@ -1994,10 +1979,9 @@
         "ia/vector-databases/04-qdrant-pinecone-weaviate-y-pgvector.md",
         "ia/vector-databases/05-rendimiento.md",
         "ia/vector-databases/06-patrones-para-rag.md",
-        "ia/vector-databases/07-buenas-practicas.md",
-        "ia/vllm/07-buenas-practicas.md"
+        "ia/vector-databases/07-buenas-practicas.md"
       ],
-      "count": 46
+      "count": 40
     },
     {
       "hash": "fb1882696289f802",
@@ -13094,7 +13078,7 @@
       "manual": "huggingface",
       "manualPath": "ia/huggingface",
       "title": "Introducción al ecosistema Hugging Face",
-      "wordCount": 430,
+      "wordCount": 439,
       "usefulLines": 43,
       "headings": 8,
       "codeBlocks": 1,
@@ -13130,83 +13114,71 @@
       "manual": "huggingface",
       "manualPath": "ia/huggingface",
       "title": "Datasets",
-      "wordCount": 261,
-      "usefulLines": 42,
+      "wordCount": 496,
+      "usefulLines": 76,
       "headings": 12,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 22,
-      "lengthBand": "short",
+      "codeBlocks": 4,
+      "links": 7,
+      "lists": 12,
+      "lengthBand": "normal",
       "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code",
         "high_freshness_risk"
       ],
-      "priority": "P1"
+      "priority": "P3"
     },
     {
       "path": "ia/huggingface/04-fine-tuning.md",
       "area": "ia",
       "manual": "huggingface",
       "manualPath": "ia/huggingface",
-      "title": "Fine Tuning",
-      "wordCount": 278,
-      "usefulLines": 43,
-      "headings": 12,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 23,
-      "lengthBand": "short",
+      "title": "Fine-tuning",
+      "wordCount": 473,
+      "usefulLines": 86,
+      "headings": 7,
+      "codeBlocks": 1,
+      "links": 5,
+      "lists": 22,
+      "lengthBand": "normal",
       "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code",
         "high_freshness_risk"
       ],
-      "priority": "P1"
+      "priority": "P3"
     },
     {
       "path": "ia/huggingface/05-hub-y-modelos.md",
       "area": "ia",
       "manual": "huggingface",
       "manualPath": "ia/huggingface",
-      "title": "Hub Y Modelos",
-      "wordCount": 285,
-      "usefulLines": 43,
-      "headings": 12,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 23,
-      "lengthBand": "short",
+      "title": "Hub y modelos",
+      "wordCount": 455,
+      "usefulLines": 66,
+      "headings": 10,
+      "codeBlocks": 5,
+      "links": 6,
+      "lists": 15,
+      "lengthBand": "normal",
       "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code",
         "high_freshness_risk"
       ],
-      "priority": "P1"
+      "priority": "P3"
     },
     {
       "path": "ia/huggingface/06-evaluacion.md",
       "area": "ia",
       "manual": "huggingface",
       "manualPath": "ia/huggingface",
-      "title": "Evaluacion",
-      "wordCount": 260,
-      "usefulLines": 42,
+      "title": "Evaluación",
+      "wordCount": 609,
+      "usefulLines": 64,
       "headings": 12,
       "codeBlocks": 2,
-      "links": 1,
-      "lists": 22,
-      "lengthBand": "short",
+      "links": 7,
+      "lists": 21,
+      "lengthBand": "normal",
       "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code",
         "high_freshness_risk"
       ],
-      "priority": "P1"
+      "priority": "P3"
     },
     {
       "path": "ia/huggingface/07-despliegue.md",
@@ -13214,20 +13186,17 @@
       "manual": "huggingface",
       "manualPath": "ia/huggingface",
       "title": "Despliegue",
-      "wordCount": 255,
-      "usefulLines": 40,
-      "headings": 11,
-      "codeBlocks": 2,
-      "links": 0,
-      "lists": 22,
-      "lengthBand": "short",
+      "wordCount": 740,
+      "usefulLines": 62,
+      "headings": 8,
+      "codeBlocks": 1,
+      "links": 6,
+      "lists": 12,
+      "lengthBand": "normal",
       "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code",
         "high_freshness_risk"
       ],
-      "priority": "P1"
+      "priority": "P3"
     },
     {
       "path": "ia/langchain/01-introduccion.md",
@@ -14132,21 +14101,18 @@
       "area": "ia",
       "manual": "vllm",
       "manualPath": "ia/vllm",
-      "title": "Buenas Practicas",
-      "wordCount": 269,
-      "usefulLines": 41,
-      "headings": 11,
-      "codeBlocks": 2,
-      "links": 0,
-      "lists": 23,
-      "lengthBand": "short",
+      "title": "Buenas prácticas",
+      "wordCount": 832,
+      "usefulLines": 64,
+      "headings": 10,
+      "codeBlocks": 0,
+      "links": 4,
+      "lists": 35,
+      "lengthBand": "normal",
       "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code",
         "high_freshness_risk"
       ],
-      "priority": "P1"
+      "priority": "P3"
     },
     {
       "path": "lenguajes/cpp/00-indice.md",
