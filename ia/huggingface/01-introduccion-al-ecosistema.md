@@ -34,7 +34,7 @@ Crea un [access token](https://huggingface.co/docs/hub/security-tokens) en la we
 - **Datasets:** `load_dataset`, streaming, map.
 - **Hub y modelos:** cards, gated, `revision`.
 - **Fine-tuning y evaluación:** Trainer, métricas.
-- **Despliegue:** Spaces, Inference, o un servidor propio (vLLM en este mismo área).
+- **Despliegue:** Inference Providers, Inference Endpoints, o un servidor propio (vLLM en este mismo área). Spaces es demo, no API de producción.
 
 Si tu objetivo es **servir** un LLM con alta concurrencia, Hugging Face te da los pesos; el servidor puede ser vLLM, no `pipeline` en un Flask.
 
