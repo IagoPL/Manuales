@@ -1,71 +1,60 @@
-# Introduccion Y Casos De Uso
+# Introducción y casos de uso
 
-Este capitulo profundiza en **Introduccion Y Casos De Uso** dentro del manual de **Zustand**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+Zustand es un store **pequeño y poco opinionado**: estado + acciones en un objeto, consumido con un **hook**. No intenta ser Redux sin boilerplate. El modelo es más corto: `set` actualiza, el selector decide quién se renderiza.
 
-## Objetivo
+Documentación: [Zustand](https://zustand.docs.pmnd.rs/), [create](https://zustand.docs.pmnd.rs/reference/apis/create), [TypeScript](https://zustand.docs.pmnd.rs/learn/guides/beginner-typescript), [repo pmndrs/zustand](https://github.com/pmndrs/zustand).
 
-Al terminar este capitulo sabras explicar introduccion y casos de uso, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+```text
+store
+├── state     (líneas del carrito, filtro, tema)
+└── actions   (anadirLinea, resetFiltros)
 
-## Conceptos clave
-
-- **Introduccion Y Casos De Uso:** pieza central de Zustand en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Introduccion:** aspecto a dominar dentro de Introduccion Y Casos De Uso.
-- **Casos:** aspecto a dominar dentro de Introduccion Y Casos De Uso.
-- **Uso:** aspecto a dominar dentro de Introduccion Y Casos De Uso.
-
-## Desarrollo del tema
-
-### Enfoque practico
-
-1. Define el problema que resuelve **Introduccion Y Casos De Uso**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
+componente → action → set(...) → store cambia → selector afectado → render
 ```
 
-## Ejemplo
+En el caso **global básico** no hace falta `<Provider>`. El hook que devuelve `create` lee el módulo. Eso no es una ley: hay stores **por instancia** (capítulo 6).
 
-```javascript
-// Ejemplo en Zustand
-const config = { debug: true, retries: 3 };
+## Client state, no caché HTTP
 
-export function setup() {
-  console.log('Inicializando', config);
-}
+Zustand brilla en **estado cliente**: sidebar, draft, filtros, wizard, ítem seleccionado, preferencias, carrito coordinado entre header y página.
+
+No lo uses como receta principal de:
+
+```text
+fetch → store → loading → caché → staleTime → invalidar a mano
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+Eso es trabajo de una librería de **server state** (TanStack Query, RTK Query, etc.). Una app seria suele combinar **ambas**: Query cachea `/productos`; Zustand guarda el carrito y el filtro de la UI.
+
+## Cuándo sí / cuándo no
+
+| Herramienta | Encaja |
+| --- | --- |
+| **useState** | Un input, un modal de un solo componente. |
+| **Context** | Tema ya resuelto, “quién soy”, config que casi no cambia. |
+| **Zustand** | Estado cliente compartido con updates y selectores sin Provider obligatorio. |
+| **Redux Toolkit** | Convenciones, DevTools/tooling, RTK Query, un equipo que quiere ese flujo. |
+
+Ni “Zustand siempre gana a Redux” ni lo contrario. Menos líneas no es mejor arquitectura. El [manual Redux](../redux/01-introduccion-y-casos-de-uso.md) cubre RTK; aquí el mismo carrito se resuelve con un store de 30 líneas **si** el problema es solo cliente.
+
+No hace falta Zustand para tres `useState` en una ficha. Tampoco para sustituir la caché del backend.
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de introduccion y casos de uso.
-- No probar casos limite ni errores esperados.
+- Un `useAppStore` con productos, auth, formularios y caché HTTP.
+- Comparar solo el recuento de dependencias con RTK.
 
-## Buenas practicas
+## Buenas prácticas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Componentiza y evita estado global innecesario.
-- Prueba interacciones criticas.
+- Empieza por el estado que **varias** pantallas deben ver igual.
+- Acciones junto al estado (capítulo 2); selectores pequeños (capítulo 3).
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Introduccion Y Casos De Uso**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Lista tres estados de tu app: local / cliente compartido / servidor.
+2. Elige uno que merezca Zustand y uno que no.
+3. Lee la intro oficial y anota que `create` ya es un hook.
 
 ## Siguiente paso
 
-Continua con [Stores Basicos](02-stores-basicos.md).
+Continúa con [Stores básicos](02-stores-basicos.md).

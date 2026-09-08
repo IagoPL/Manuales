@@ -1,69 +1,97 @@
 # Middleware
 
-Este capitulo profundiza en **Middleware** dentro del manual de **Zustand**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+En Zustand un middleware **envuelve** el `stateCreator`. No es la cadena `dispatch → reducer` de Redux. Compone funciones: `persist(devtools(immer(creator)))`.
 
-## Objetivo
+Documentación: [persist](https://zustand.docs.pmnd.rs/reference/middlewares/persist), [devtools](https://zustand.docs.pmnd.rs/learn/guides/beginner-typescript) (ejemplo), [subscribeWithSelector](https://zustand.docs.pmnd.rs/reference/middlewares/subscribe-with-selector), [immer](https://zustand.docs.pmnd.rs/reference/middlewares/immer).
 
-Al terminar este capitulo sabras explicar middleware, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+## `devtools`
 
-## Conceptos clave
+Habla con **Redux DevTools**. No estás usando Redux: solo el inspector (actions, diffs, time-travel). Opcional en desarrollo.
 
-- **Middleware:** pieza central de Zustand en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Middleware:** aspecto a dominar dentro de Middleware.
+```js
+import { create } from 'zustand'
+import { devtools } from 'zustand/middleware'
 
-## Desarrollo del tema
-
-### Enfoque practico
-
-1. Define el problema que resuelve **Middleware**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
+export const useCarritoStore = create(
+  devtools(
+    (set) => ({
+      lineas: [],
+      anadir: (id) =>
+        set((state) => ({ lineas: [...state.lineas, { id, cantidad: 1 }] }), false, 'carrito/anadir'),
+    }),
+    { name: 'carrito' },
+  ),
+)
 ```
 
-## Ejemplo
+El tercer argumento de `set` (nombre) ayuda en el panel. No es obligatorio para que la app funcione.
 
-```javascript
-// Ejemplo en Zustand
-const config = { debug: true, retries: 3 };
+## `subscribeWithSelector`
 
-export function setup() {
-  console.log('Inicializando', config);
-}
+Quieres **reaccionar** a un trozo del state **sin** un componente (analytics, sync con no-React):
+
+```js
+import { subscribeWithSelector } from 'zustand/middleware'
+
+// store creado con este middleware:
+useCarritoStore.subscribe(
+  (state) => state.lineas.length,
+  (n) => {
+    console.info('lineas', n)
+  },
+)
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+No sustituye a los hooks en la UI. Es la puerta **imperativa**.
+
+## `immer`
+
+`import { immer } from 'zustand/middleware/immer'` (paquete `immer` aparte). Permite `state.usuario.nombre = 'Ana'` **dentro** del `set` de immer. Útil si anidas mucho. Un carrito plano no lo necesita. No “Zustand requiere Immer”.
+
+## `persist`
+
+Capítulo 4. En un store combinado, **un** `persist` por fuera de los slices, no uno por slice.
+
+## Orden y TypeScript
+
+La forma currificada encaja middleware:
+
+```ts
+export const usePrefsStore = create<Prefs>()(
+  devtools(
+    persist(
+      (set) => ({
+        tema: 'system',
+        setTema: (tema) => set({ tema }),
+      }),
+      { name: 'prefs-catalogo' },
+    ),
+    { name: 'prefs' },
+  ),
+)
+```
+
+`devtools` por fuera ve las updates de `persist`. Invierte el orden solo si sabes por qué. Con `immer`, suele ir **dentro** (el creator que “muta”). No apiles cinco capas el día uno.
+
+Si TypeScript se queja, la doc de [middleware + TS](https://zustand.docs.pmnd.rs/learn/guides/beginner-typescript) usa `create<T>()(devtools(persist(...)))`. No inventes wrappers.
 
 ## Errores habituales
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de middleware.
-- No probar casos limite ni errores esperados.
+- Middleware dentro de cada slice (cap. 7).
+- Creer que DevTools implica Redux Toolkit.
+- Immer + mutar **fuera** de `set`.
 
-## Buenas practicas
+## Buenas prácticas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Componentiza y evita estado global innecesario.
-- Prueba interacciones criticas.
+- Empieza sin middleware; añade persist/devtools cuando duela.
+- Nombres en DevTools para el carrito, no `set`.
 
-## Ejercicios
+## Ejercicio
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Middleware**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+1. Conecta DevTools y despacha `anadir`.
+2. Suscríbete a `lineas.length` sin un componente.
+3. Reescribe un update nested con y sin `immer`; elige el más legible.
 
 ## Siguiente paso
 
-Continua con [Integracion Con React](06-integracion-con-react.md).
+Continúa con [Integración con React](06-integracion-con-react.md).
