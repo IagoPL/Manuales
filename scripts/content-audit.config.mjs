@@ -103,6 +103,13 @@ export const outdatedPatterns = [
     pattern: 'ReactDOM.render(',
     severity: 'review',
     reason: 'ReactDOM.render es la API anterior a React 18; el punto de entrada moderno es createRoot.'
+  },
+  {
+    id: 'huggingface-cli-login',
+    manuals: ['huggingface'],
+    pattern: 'huggingface-cli login',
+    severity: 'review',
+    reason: 'El CLI actual documenta hf auth login; huggingface-cli login es la receta antigua.'
   }
 ]
 
