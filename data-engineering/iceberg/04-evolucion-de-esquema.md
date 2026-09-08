@@ -1,69 +1,80 @@
-# Evolucion De Esquema
+# Evolución de esquema
 
-Este capitulo profundiza en **Evolucion De Esquema** dentro del manual de **Apache Iceberg**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+Iceberg identifica cada campo por un **column ID** (y IDs anidados), no por el nombre ni por la posición en el fichero. Por eso un rename no es “borrar y crear”, y un reorder no cambia el significado de las columnas.
 
-## Objetivo
+Documentación: [evolución](https://iceberg.apache.org/docs/latest/evolution/), [ALTER TABLE](https://iceberg.apache.org/docs/latest/spark-ddl/), [tipos y promociones en la spec](https://iceberg.apache.org/spec/).
 
-Al terminar este capitulo sabras explicar evolucion de esquema, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+## Por qué importan los IDs
 
-## Conceptos clave
+Formatos que rastrean por **nombre** pueden “resucitar” datos de una columna droppeada si reutilizas el nombre. Formatos que rastrean por **posición** no pueden droppear sin desplazar el resto.
 
-- **Evolucion De Esquema:** pieza central de Apache Iceberg en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Evolucion:** aspecto a dominar dentro de Evolucion De Esquema.
-- **Esquema:** aspecto a dominar dentro de Evolucion De Esquema.
+Iceberg asigna un ID nuevo a cada campo añadido. Los data files antiguos no tienen ese ID: las filas viejas leen `NULL` (o el default declarado). Nadie reescribe Parquet para un `ADD COLUMN`.
 
-## Desarrollo del tema
+**No reutilices ni edites IDs a mano.** Son parte del esquema en el metadata. Manipularlos es corromper la tabla.
 
-### Enfoque practico
+## Operaciones (metadata, no rewrite)
 
-1. Define el problema que resuelve **Evolucion De Esquema**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
+Iceberg documenta:
 
-### Flujo recomendado
+- **add** — columna o campo de struct;
+- **drop** — deja de proyectarse; los ficheros no se reescriben;
+- **rename** — mismo ID, otro nombre;
+- **reorder** — cambia el orden lógico; los valores siguen al ID;
+- **update / type widening** — promociones compatibles (p. ej. `int` → `long`, `float` → `double`; v3 admite más). Comprueba la tabla de la spec de *tu* format-version.
 
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
+Garantías: añadir, quitar, renombrar o reordenar **no** mezcla valores entre columnas.
+
+## Rename seguro
+
+```sql
+ALTER TABLE local.analytics.events RENAME COLUMN type TO event_type;
 ```
 
-## Ejemplo
+`type` → `event_type` **no** es drop + add. El ID sigue siendo el mismo: los Parquet escritos con el nombre viejo se leen como `event_type`. Un drop + add de `event_type` **sí** crearía un ID nuevo y perdería la asociación con los valores antiguos.
 
-```python
-# Ejemplo con Apache Iceberg
-from pathlib import Path
-
-def procesar(ruta: str) -> list[str]:
-    return Path(ruta).read_text(encoding='utf-8').splitlines()
+```sql
+-- evolución típica (IDs nuevos solo en ADD)
+ALTER TABLE local.analytics.events ADD COLUMNS (channel STRING);
+ALTER TABLE local.analytics.events ALTER COLUMN channel AFTER event_type;
+ALTER TABLE local.analytics.events DROP COLUMN channel;  -- ya no se lee; no reescribe
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+## Nested: struct, list, map
 
-## Errores habituales
+Los IDs también viven *dentro* del anidado. Un ejemplo pequeño:
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de evolucion de esquema.
-- No probar casos limite ni errores esperados.
+```sql
+ALTER TABLE local.analytics.events
+ADD COLUMN props STRUCT<browser: STRING, os: STRING>;
 
-## Buenas practicas
+ALTER TABLE local.analytics.events
+ADD COLUMN props.device STRING;
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Datos reproducibles y pipelines idempotentes.
-- Versiona esquemas y contratos.
+ALTER TABLE local.analytics.events
+RENAME COLUMN props.os TO platform;
 
-## Ejercicios
+-- lista de structs / map: se evoluciona el elemento o el value
+ALTER TABLE local.analytics.events
+ADD COLUMN tags ARRAY<STRUCT<key: STRING, value: STRING>>;
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Evolucion De Esquema**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+ALTER TABLE local.analytics.events
+ADD COLUMN tags.element.source STRING;
+```
 
-## Siguiente paso
+Las claves de un `MAP` no admiten add/drop de campos de struct que cambiarían la igualdad. No conviertas esto en la spec completa: si el anidado es profundo, diseña el struct *antes* de llenar terabytes.
 
-Continua con [Lectura Y Escritura Con Spark](05-lectura-y-escritura-con-spark.md).
+## Widening
+
+```sql
+ALTER TABLE local.analytics.events ADD COLUMNS (score INT);
+-- promoción int → long (válida en v1–v3)
+ALTER TABLE local.analytics.events ALTER COLUMN score TYPE BIGINT;
+```
+
+Un cambio incompatible (p. ej. `string` → `int`) **no** es evolución in-place. Ahí hay que reescribir o crear columna nueva. No asumas que “Iceberg acepta cualquier ALTER”.
+
+## Escritura y schema merge
+
+Por defecto, un write con columnas de más **falla** (o las ignora, según API). Spark puede evolucionar en el write si la tabla y el writer lo piden (`write.spark.accept-any-schema` + `mergeSchema`). Eso es una **decisión**, no el default operativo. Prefiere `ALTER TABLE` explícito en producción.
+
+Siguiente: [Lectura y escritura con Spark](05-lectura-y-escritura-con-spark.md).

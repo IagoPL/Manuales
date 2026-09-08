@@ -1,69 +1,95 @@
-# Introduccion Y Arquitectura
+# Introducción y arquitectura
 
-Este capitulo profundiza en **Introduccion Y Arquitectura** dentro del manual de **Apache Iceberg**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+Apache Iceberg es un **formato de tabla abierto**: un protocolo de metadatos y commits que trata una colección de ficheros (Parquet, Avro u ORC) como una **tabla lógica**. No es Spark, ni un motor SQL, ni un catálogo, ni un servicio cloud, ni “Parquet con un candado”.
 
-## Objetivo
+Documentación: [iceberg.apache.org](https://iceberg.apache.org/), [especificación](https://iceberg.apache.org/spec/), [docs latest](https://iceberg.apache.org/docs/latest/), [releases](https://iceberg.apache.org/releases/).
 
-Al terminar este capitulo sabras explicar introduccion y arquitectura, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+## El problema de las carpetas de Parquet
 
-## Conceptos clave
+Un lago “solo directorios” deja que cada job liste `s3://…/events/dt=2026-09-08/` y decida qué es la tabla:
 
-- **Introduccion Y Arquitectura:** pieza central de Apache Iceberg en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Introduccion:** aspecto a dominar dentro de Introduccion Y Arquitectura.
-- **Arquitectura:** aspecto a dominar dentro de Introduccion Y Arquitectura.
+- un writer a medias deja lecturas inconsistentes;
+- no hay un **estado de tabla** único: el listing *es* la verdad;
+- cambiar el esquema o el particionado suele exigir una tabla nueva o reescribir todo;
+- varios motores no se ponen de acuerdo sobre qué ficheros están vivos.
 
-## Desarrollo del tema
+Iceberg no sustituye el object store. Añade un **árbol de metadatos** y un **commit** que publica, de forma atómica, *qué* ficheros pertenecen al snapshot actual. La tabla **no** se descubre listando el warehouse.
 
-### Enfoque practico
+## Jerarquía (no la confundas)
 
-1. Define el problema que resuelve **Introduccion Y Arquitectura**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
+```text
+local.analytics.events
+        │
+        ▼
+     catálogo          ← ¿cuál es el metadata.json actual?
+        │
+        ▼
+   metadata.json       ← esquema, specs, refs, snapshot current
+        │
+        ▼
+     snapshot          ← una versión de la tabla
+        │
+        ▼
+  manifest list
+        │
+        ▼
+    manifests
+        │
+        ▼
+ data files / delete files   (Parquet, Avro, ORC, …)
 ```
 
-## Ejemplo
+Cada nivel tiene un trabajo distinto. El capítulo 2 baja al detalle; aquí basta con el modelo.
 
-```python
-# Ejemplo con Apache Iceberg
-from pathlib import Path
+## Catálogo y commit
 
-def procesar(ruta: str) -> list[str]:
-    return Path(ruta).read_text(encoding='utf-8').splitlines()
+El **catálogo** no guarda las filas. Localiza y **cambia el puntero** al metadata vigente:
+
+```text
+metadata v12
+      ↓
+writer crea metadata v13 (ficheros nuevos + metadatos)
+      ↓
+commit atómico en el catálogo:
+puntero v12 → v13
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+Si otro writer commitea antes:
 
-## Errores habituales
+```text
+conflicto
+→ refresh (leer el metadata actual)
+→ validar si el cambio sigue siendo aplicable
+→ retry cuando sea seguro
+```
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de introduccion y arquitectura.
-- No probar casos limite ni errores esperados.
+Eso es **optimistic concurrency**. No hay un lock universal de fila ni un mecanismo único de “rename de ficheros” en todos los storages: la atomicidad del puntero depende del **catálogo** (capítulo 6).
 
-## Buenas practicas
+## Snapshots, no copias físicas
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Datos reproducibles y pipelines idempotentes.
-- Versiona esquemas y contratos.
+Cada commit produce normalmente un **snapshot** nuevo: un ID, un padre, un timestamp y una operación (`append`, `overwrite`, `delete`, …). Un lector fija un snapshot y ve un conjunto coherente de ficheros. Time travel es leer otro snapshot, no clonar el bucket.
 
-## Ejercicios
+Los snapshots se **expiran**. No son un backup.
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Introduccion Y Arquitectura**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+## Lo que Iceberg habilita (recorrido)
 
-## Siguiente paso
+| Capacidad | Dónde se desarrolla |
+| --- | --- |
+| Árbol metadata / manifests | [capítulo 2](02-tablas-snapshots-y-manifests.md) |
+| Hidden partitioning y evolución de specs | [capítulo 3](03-particionado-oculto.md) |
+| Evolución de esquema por **column IDs** | [capítulo 4](04-evolucion-de-esquema.md) |
+| Lectura/escritura con Spark | [capítulo 5](05-lectura-y-escritura-con-spark.md) |
+| Hadoop / Hive / REST / JDBC | [capítulo 6](06-catalogos.md) |
+| Compaction, manifests, expire, orphans | [capítulo 7](07-optimizacion.md) |
 
-Continua con [Tablas Snapshots Y Manifests](02-tablas-snapshots-y-manifests.md).
+## Multi-engine
+
+Spark es el motor **pedagógico** de este manual: la documentación oficial lo trata como el más completo hoy. Iceberg también tiene conectores para Flink, Trino, Presto, Hive y otros. **No** hay paridad de features: un `MERGE` que funciona en Spark no implica el mismo soporte en Trino o Flink. Lo que sí comparte un motor compatible es la spec, el catálogo y las *features* que la tabla ya activó.
+
+Delta Lake resuelve un problema parecido (tabla lakehouse sobre un lago) con **otro** árbol de metadatos y otro ecosistema. Este manual no es una comparativa.
+
+## Spec
+
+La spec **v1, v2 y v3** están adoptadas. La **v4 está en desarrollo** y no está formalmente adoptada: no la uses como formato de producción. Subir `format-version` puede añadir capacidades que un lector antiguo no entiende. Más nuevo no es automáticamente mejor.
+
+Siguiente: [Tablas, snapshots y manifests](02-tablas-snapshots-y-manifests.md).

@@ -1,65 +1,67 @@
-# Buenas Practicas
+# Buenas prácticas
 
-Este capitulo profundiza en **Buenas Practicas** dentro del manual de **Apache Iceberg**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+Cierra el recorrido sobre `local.analytics.events`: diseño, writes, catálogo, mantenimiento y compatibilidad. Iceberg es el formato; el motor y el catálogo son *tuyos*.
 
-## Objetivo
+Documentación: [docs](https://iceberg.apache.org/docs/latest/), [spec](https://iceberg.apache.org/spec/), [procedures](https://iceberg.apache.org/docs/latest/spark-procedures/), [multi-engine](https://iceberg.apache.org/docs/latest/).
 
-Al terminar este capitulo sabras explicar buenas practicas, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+## Diseño
 
-## Conceptos clave
+- Esquema con **IDs**: evolve con `ALTER` (`ADD`/`RENAME`/`DROP`/`TYPE`). No reutilices IDs ni simules un rename con drop+add.
+- Partition **transforms** (`days(event_time)`, `identity`, `bucket`) alineados al filtro real. No sobreparticiones por ids únicos.
+- Evolucionar el spec no reescribe el histórico. Compáctalo aparte si el layout viejo duele.
+- `format-version` mínima que cubra tus deletes/motores. **v1–v3 adoptadas; v4 no.** No actives v3 “por las features del blog” si Trino/Flink aún no las leen.
 
-- **Buenas Practicas:** pieza central de Apache Iceberg en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Buenas:** aspecto a dominar dentro de Buenas Practicas.
-- **Practicas:** aspecto a dominar dentro de Buenas Practicas.
+## Escrituras
 
-## Desarrollo del tema
+- Controla el tamaño de fichero (`write.target-file-size-bytes`, distribución `hash`/`range`, no un append de 40 filas cada segundo sin compactar).
+- `writeTo(...).append()` para tablas de catálogo. Reserva `format("iceberg")` para casos path aislados.
+- `INSERT OVERWRITE` con alcance consciente (dynamic vs static). `MERGE` reescribe ficheros afectados: predica bien y deduplica el source.
+- SQL `MERGE`/`UPDATE`/`DELETE` necesitan extensions en Spark 3.x. DataFrame `mergeInto` es Spark 4.0+.
 
-### Enfoque practico
+## Catálogo
 
-1. Define el problema que resuelve **Buenas Practicas**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
+- Elige según **cuántos motores y writers**: Hadoop para un solo proceso de laboratorio; REST (u Hive/JDBC bien operados) cuando hay que commitear en serio.
+- Catálogo ≠ S3. Alta disponibilidad y backups del **metastore/REST**, no solo del warehouse.
+- Cloud catalogs (Glue, etc.) son implementaciones, no el estándar Iceberg.
 
-### Flujo recomendado
+## Mantenimiento
 
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
+- `rewrite_data_files` (binpack; sort/z-order solo medidos).
+- `rewrite_manifests` si el planning se ahoga en manifests chicos.
+- `expire_snapshots` con retención que cubra time travel **y** jobs largos; respeta branches/tags.
+- `remove_orphan_files` con `dry_run` y `older_than` holgado. Nunca en medio de un write.
+- Observa `.snapshots`, `.files`, `.manifests`: recuento de snapshots, ficheros por partición, manifests.
+
+## Compatibilidad
+
+- Antes de subir format-version o table features, verifica **cada** motor que lee/escribe.
+- “Funciona en Spark” ≠ mismo `MERGE`, mismos deletes, mismos types en Flink/Trino.
+- No documentes spec v4 como estable.
+
+## Observabilidad
+
+- Crecimiento de `metadata/` y de manifests.
+- Small files tras streaming.
+- Fallos de commit / retries (conflicto OCC).
+- Time travel que de repente falla: alguien expiró el snapshot.
+
+## Recovery
+
+- Snapshot + tag ayudan a **inspeccionar y revertir** (`rollback_to_snapshot`) dentro de la retención.
+- No sustituyen copiar el warehouse y el catálogo a otro sitio.
+- No parchees metadata JSON a mano.
+
+## Recorrido
+
+```text
+tabla events
+  → snapshots / manifests
+  → days(event_time)
+  → IDs y ALTER
+  → Spark writeTo / SQL
+  → catálogo (puntero)
+  → rewrite / expire / orphans
+  → operación
 ```
 
-## Ejemplo
-
-```python
-# Ejemplo con Apache Iceberg
-from pathlib import Path
-
-def procesar(ruta: str) -> list[str]:
-    return Path(ruta).read_text(encoding='utf-8').splitlines()
-```
-
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
-
-## Errores habituales
-
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de buenas practicas.
-- No probar casos limite ni errores esperados.
-
-## Buenas practicas
-
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Datos reproducibles y pipelines idempotentes.
-- Versiona esquemas y contratos.
-
-## Ejercicios
-
-1. Reproduce el ejemplo minimo del capitulo sobre **Buenas Practicas**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+Spark enseñó las APIs; Iceberg sigue siendo el formato.

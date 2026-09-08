@@ -7,21 +7,21 @@
     "priorities": {
       "P0": 0,
       "P1": 0,
-      "P2": 71,
-      "P3": 671
+      "P2": 63,
+      "P3": 679
     },
     "flags": {
       "known_outdated_pattern": 0,
-      "generic_template": 63,
-      "generic_example": 55,
-      "duplicated_code": 71,
+      "generic_template": 55,
+      "generic_example": 47,
+      "duplicated_code": 63,
       "very_short": 196,
       "high_freshness_risk": 141
     },
     "trackedTemplatePhrase": {
       "pattern": "Este capitulo profundiza",
-      "chapters": 63,
-      "manuals": 15,
+      "chapters": 55,
+      "manuals": 14,
       "areas": [
         "data-engineering",
         "full-stack",
@@ -30,36 +30,13 @@
     },
     "lengthBands": {
       "very_short": 196,
-      "short": 391,
-      "normal": 152,
+      "short": 383,
+      "normal": 160,
       "long": 3
     },
     "duplicateGroups": 9
   },
   "manuals": [
-    {
-      "path": "data-engineering/iceberg",
-      "slug": "iceberg",
-      "area": "data-engineering",
-      "chapters": 8,
-      "priorities": {
-        "P0": 0,
-        "P1": 0,
-        "P2": 8,
-        "P3": 0
-      },
-      "flags": {
-        "known_outdated_pattern": 0,
-        "generic_template": 8,
-        "generic_example": 8,
-        "duplicated_code": 8,
-        "very_short": 0,
-        "high_freshness_risk": 0
-      },
-      "trackedPhrase": 8,
-      "reviewFlags": 8,
-      "genericRatio": 1
-    },
     {
       "path": "ia/transformers",
       "slug": "transformers",
@@ -783,6 +760,29 @@
         "P1": 0,
         "P2": 0,
         "P3": 7
+      },
+      "flags": {
+        "known_outdated_pattern": 0,
+        "generic_template": 0,
+        "generic_example": 0,
+        "duplicated_code": 0,
+        "very_short": 0,
+        "high_freshness_risk": 0
+      },
+      "trackedPhrase": 0,
+      "reviewFlags": 0,
+      "genericRatio": 0
+    },
+    {
+      "path": "data-engineering/iceberg",
+      "slug": "iceberg",
+      "area": "data-engineering",
+      "chapters": 8,
+      "priorities": {
+        "P0": 0,
+        "P1": 0,
+        "P2": 0,
+        "P3": 8
       },
       "flags": {
         "known_outdated_pattern": 0,
@@ -1793,7 +1793,6 @@
       "chars": 75,
       "manuals": [
         "data-engineering/dbt",
-        "data-engineering/iceberg",
         "data-engineering/parquet",
         "full-stack/arquitectura/cqrs",
         "full-stack/arquitectura/event-driven",
@@ -1816,14 +1815,6 @@
         "data-engineering/dbt/06-materializaciones.md",
         "data-engineering/dbt/07-ci-cd.md",
         "data-engineering/dbt/08-buenas-practicas.md",
-        "data-engineering/iceberg/01-introduccion-y-arquitectura.md",
-        "data-engineering/iceberg/02-tablas-snapshots-y-manifests.md",
-        "data-engineering/iceberg/03-particionado-oculto.md",
-        "data-engineering/iceberg/04-evolucion-de-esquema.md",
-        "data-engineering/iceberg/05-lectura-y-escritura-con-spark.md",
-        "data-engineering/iceberg/06-catalogos.md",
-        "data-engineering/iceberg/07-optimizacion.md",
-        "data-engineering/iceberg/08-buenas-practicas.md",
         "data-engineering/parquet/01-introduccion-al-formato-columnar.md",
         "data-engineering/parquet/02-esquemas-tipos-y-compresion.md",
         "data-engineering/parquet/03-row-groups-pages-y-metadata.md",
@@ -1873,14 +1864,13 @@
         "ia/vector-databases/06-patrones-para-rag.md",
         "ia/vector-databases/07-buenas-practicas.md"
       ],
-      "count": 63
+      "count": 55
     },
     {
       "hash": "5a9d824dcf18e14a",
       "lang": "python",
       "chars": 121,
       "manuals": [
-        "data-engineering/iceberg",
         "data-engineering/parquet",
         "full-stack/backend/django",
         "full-stack/backend/fastapi",
@@ -1888,14 +1878,6 @@
         "ia/vector-databases"
       ],
       "chapters": [
-        "data-engineering/iceberg/01-introduccion-y-arquitectura.md",
-        "data-engineering/iceberg/02-tablas-snapshots-y-manifests.md",
-        "data-engineering/iceberg/03-particionado-oculto.md",
-        "data-engineering/iceberg/04-evolucion-de-esquema.md",
-        "data-engineering/iceberg/05-lectura-y-escritura-con-spark.md",
-        "data-engineering/iceberg/06-catalogos.md",
-        "data-engineering/iceberg/07-optimizacion.md",
-        "data-engineering/iceberg/08-buenas-practicas.md",
         "data-engineering/parquet/01-introduccion-al-formato-columnar.md",
         "data-engineering/parquet/02-esquemas-tipos-y-compresion.md",
         "data-engineering/parquet/03-row-groups-pages-y-metadata.md",
@@ -1921,7 +1903,7 @@
         "ia/vector-databases/06-patrones-para-rag.md",
         "ia/vector-databases/07-buenas-practicas.md"
       ],
-      "count": 32
+      "count": 24
     },
     {
       "hash": "fb1882696289f802",
@@ -5017,160 +4999,128 @@
       "area": "data-engineering",
       "manual": "iceberg",
       "manualPath": "data-engineering/iceberg",
-      "title": "Introduccion Y Arquitectura",
-      "wordCount": 287,
-      "usefulLines": 43,
-      "headings": 12,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 23,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "title": "Introducción y arquitectura",
+      "wordCount": 484,
+      "usefulLines": 63,
+      "headings": 8,
+      "codeBlocks": 3,
+      "links": 11,
+      "lists": 4,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "data-engineering/iceberg/02-tablas-snapshots-y-manifests.md",
       "area": "data-engineering",
       "manual": "iceberg",
       "manualPath": "data-engineering/iceberg",
-      "title": "Tablas Snapshots Y Manifests",
-      "wordCount": 304,
-      "usefulLines": 44,
-      "headings": 12,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 24,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "title": "Tablas, snapshots y manifests",
+      "wordCount": 561,
+      "usefulLines": 58,
+      "headings": 13,
+      "codeBlocks": 3,
+      "links": 4,
+      "lists": 3,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "data-engineering/iceberg/03-particionado-oculto.md",
       "area": "data-engineering",
       "manual": "iceberg",
       "manualPath": "data-engineering/iceberg",
-      "title": "Particionado Oculto",
-      "wordCount": 277,
-      "usefulLines": 43,
-      "headings": 12,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 23,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "title": "Particionado oculto",
+      "wordCount": 352,
+      "usefulLines": 51,
+      "headings": 6,
+      "codeBlocks": 5,
+      "links": 4,
+      "lists": 4,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "data-engineering/iceberg/04-evolucion-de-esquema.md",
       "area": "data-engineering",
       "manual": "iceberg",
       "manualPath": "data-engineering/iceberg",
-      "title": "Evolucion De Esquema",
-      "wordCount": 288,
-      "usefulLines": 43,
-      "headings": 12,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 23,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "title": "Evolución de esquema",
+      "wordCount": 385,
+      "usefulLines": 44,
+      "headings": 7,
+      "codeBlocks": 4,
+      "links": 4,
+      "lists": 5,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "data-engineering/iceberg/05-lectura-y-escritura-con-spark.md",
       "area": "data-engineering",
       "manual": "iceberg",
       "manualPath": "data-engineering/iceberg",
-      "title": "Lectura Y Escritura Con Spark",
-      "wordCount": 313,
-      "usefulLines": 44,
-      "headings": 12,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 24,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "title": "Lectura y escritura con Spark",
+      "wordCount": 424,
+      "usefulLines": 73,
+      "headings": 8,
+      "codeBlocks": 6,
+      "links": 6,
+      "lists": 5,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "data-engineering/iceberg/06-catalogos.md",
       "area": "data-engineering",
       "manual": "iceberg",
       "manualPath": "data-engineering/iceberg",
-      "title": "Catalogos",
-      "wordCount": 259,
-      "usefulLines": 42,
-      "headings": 12,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 22,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "title": "Catálogos",
+      "wordCount": 376,
+      "usefulLines": 44,
+      "headings": 6,
+      "codeBlocks": 3,
+      "links": 4,
+      "lists": 2,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "data-engineering/iceberg/07-optimizacion.md",
       "area": "data-engineering",
       "manual": "iceberg",
       "manualPath": "data-engineering/iceberg",
-      "title": "Optimizacion",
-      "wordCount": 260,
-      "usefulLines": 42,
-      "headings": 12,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 22,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "title": "Optimización",
+      "wordCount": 388,
+      "usefulLines": 55,
+      "headings": 6,
+      "codeBlocks": 5,
+      "links": 3,
+      "lists": 3,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "data-engineering/iceberg/08-buenas-practicas.md",
       "area": "data-engineering",
       "manual": "iceberg",
       "manualPath": "data-engineering/iceberg",
-      "title": "Buenas Practicas",
-      "wordCount": 270,
-      "usefulLines": 41,
-      "headings": 11,
-      "codeBlocks": 2,
-      "links": 0,
-      "lists": 23,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "generic_example",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "title": "Buenas prácticas",
+      "wordCount": 354,
+      "usefulLines": 46,
+      "headings": 9,
+      "codeBlocks": 1,
+      "links": 4,
+      "lists": 26,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "data-engineering/kafka/01-introduccion-y-arquitectura.md",

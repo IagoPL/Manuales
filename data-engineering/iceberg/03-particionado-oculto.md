@@ -1,69 +1,89 @@
-# Particionado Oculto
+# Particionado oculto
 
-Este capitulo profundiza en **Particionado Oculto** dentro del manual de **Apache Iceberg**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+Iceberg **sí** particiona. Lo que cambia respecto a Hive-style es que el usuario no mantiene una columna `event_date` ni la escribe en cada `WHERE`. El **partition spec** vive en los metadatos; el motor traduce filtros sobre columnas lógicas.
 
-## Objetivo
+Documentación: [partitioning](https://iceberg.apache.org/docs/latest/partitioning/), [evolución](https://iceberg.apache.org/docs/latest/evolution/), [spec](https://iceberg.apache.org/spec/).
 
-Al terminar este capitulo sabras explicar particionado oculto, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
+## De `timestamp` a `day(timestamp)`
 
-## Conceptos clave
+La tabla `local.analytics.events` se declara así:
 
-- **Particionado Oculto:** pieza central de Apache Iceberg en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Particionado:** aspecto a dominar dentro de Particionado Oculto.
-- **Oculto:** aspecto a dominar dentro de Particionado Oculto.
-
-## Desarrollo del tema
-
-### Enfoque practico
-
-1. Define el problema que resuelve **Particionado Oculto**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
+```sql
+CREATE TABLE local.analytics.events (
+  id BIGINT,
+  event_time TIMESTAMP,
+  type STRING
+)
+USING iceberg
+PARTITIONED BY (days(event_time));
 ```
 
-## Ejemplo
+(`day(event_time)` es la forma corta; `days(...)` sigue aceptada.)
 
-```python
-# Ejemplo con Apache Iceberg
-from pathlib import Path
+El writer **no** inserta `event_date`. Iceberg calcula la partición. La consulta:
 
-def procesar(ruta: str) -> list[str]:
-    return Path(ruta).read_text(encoding='utf-8').splitlines()
+```sql
+SELECT type, count(*) AS n
+FROM local.analytics.events
+WHERE event_time >= TIMESTAMP '2026-09-08 00:00:00'
+  AND event_time <  TIMESTAMP '2026-09-09 00:00:00';
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+no necesita `AND event_date = DATE '2026-09-08'`. El planner deriva el predicado de partición y salta ficheros de otros días.
 
-## Errores habituales
+**Hidden ≠ “no hay particiones”.** Hay un layout físico. Lo oculto es el contrato con el analista: las queries no están atadas a ese layout.
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de particionado oculto.
-- No probar casos limite ni errores esperados.
+## Partition spec
 
-## Buenas practicas
+Un spec es metadata: lista de campos `(source column → transform → partition field)`. Cada campo tiene un **partition field id**. Varios specs pueden coexistir en la misma tabla (evolución).
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Datos reproducibles y pipelines idempotentes.
-- Versiona esquemas y contratos.
+## Transforms habituales
 
-## Ejercicios
+| Transform | Uso típico |
+| --- | --- |
+| `identity` | La columna *es* la partición (`type`, `country`). |
+| `bucket(N, col)` | Reparto en N cubos (evitar cardinalidad explosiva de un id). |
+| `truncate(W, col)` | Prefijo / truncado (strings, decimales). |
+| `year` / `month` / `day` / `hour` | Granularidad temporal sobre un timestamp. |
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Particionado Oculto**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+```sql
+-- identidad + día (Spark)
+PARTITIONED BY (type, days(event_time))
 
-## Siguiente paso
+-- buckets (no uses bucket(1_000_000, user_id) “por si acaso”)
+PARTITIONED BY (bucket(16, user_id))
+```
 
-Continua con [Evolucion De Esquema](04-evolucion-de-esquema.md).
+No memorices todas las combinaciones. Elige la que coincide con **el filtro real** y con un volumen decente por partición.
+
+## Partition evolution
+
+Hive obliga a una tabla nueva para pasar de diario a horario. Iceberg cambia el spec **sin** reescribir los ficheros viejos:
+
+```text
+spec 0:  days(event_time)
+spec 1:  hours(event_time)
+```
+
+Los Parquet de 2024 siguen en spec 0. Los writes nuevos usan spec 1. El planner hace *split planning*: un filtro por cada spec.
+
+```sql
+ALTER TABLE local.analytics.events ADD PARTITION FIELD hours(event_time);
+-- o reemplazar el campo diario:
+ALTER TABLE local.analytics.events REPLACE PARTITION FIELD event_time_day WITH hours(event_time);
+```
+
+Es una operación de **metadatos**. No “reoptimiza” el histórico: esos ficheros no se reagrupan solos. Si quieres layout horario en datos viejos, hay que **reescribirlos** (capítulo 7).
+
+## Cardinalidad: Iceberg no perdona un spec malo
+
+Hidden partitioning no autoriza particionar por `event_id` o por timestamp al milisegundo.
+
+- **Cardinalidad** altísima → miles de directorios/ficheros minúsculos.
+- **Distribución** sesgada → una partición gigante y mil vacías.
+- **Pruning** solo ayuda si el `WHERE` se alinea con el transform.
+- **Tamaño de fichero** por partición: cientos de MB suelen ser más sanos que 80 ficheros de 2 MB.
+
+`bucket` existe precisamente para *no* materializar un id único como partición. Úsalo con N pequeño y medido.
+
+Siguiente: [Evolución de esquema](04-evolucion-de-esquema.md).
