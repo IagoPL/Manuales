@@ -17,17 +17,17 @@ schemaVersion: 1
 | --- | ---: | --- |
 | P0 | 0 | Patrón técnico conocido (obsoleto / incorrecto) |
 | P1 | 0 | Plantilla genérica en tecnología de alto ritmo de cambio |
-| P2 | 79 | Plantilla, ejemplo genérico o código duplicado entre manuales |
-| P3 | 663 | Sin señales de revisión editorial (puede tener solo riesgo de frescura) |
+| P2 | 71 | Plantilla, ejemplo genérico o código duplicado entre manuales |
+| P3 | 671 | Sin señales de revisión editorial (puede tener solo riesgo de frescura) |
 
 ### Señales
 
 | Flag | Capítulos |
 | --- | ---: |
-| generic_template | 71 |
-| generic_example | 63 |
+| generic_template | 63 |
+| generic_example | 55 |
 | very_short | 196 |
-| duplicated_code | 79 |
+| duplicated_code | 71 |
 | high_freshness_risk | 141 |
 | known_outdated_pattern | 0 |
 
@@ -36,23 +36,22 @@ schemaVersion: 1
 | Banda | Palabras | Capítulos |
 | --- | --- | ---: |
 | very_short | ≤ 119 | 196 |
-| short | 120–349 | 399 |
-| normal | 350–1200 | 144 |
+| short | 120–349 | 391 |
+| normal | 350–1200 | 152 |
 | long | ≥ 1201 | 3 |
 
 ## Patrón conocido: `Este capitulo profundiza`
 
-- Capítulos actuales: **71**
-- Manuales afectados: **16**
+- Capítulos actuales: **63**
+- Manuales afectados: **15**
 - Áreas: `data-engineering`, `full-stack`, `ia`
 
-Auditoría previa de referencia: ~126. Recuento actual: **71**.
+Auditoría previa de referencia: ~126. Recuento actual: **63**.
 
 ### 20 manuales con más casos
 
 | Manual | Casos | Capítulos |
 | --- | --- | --- |
-| data-engineering/delta-lake | 8 | 8 |
 | data-engineering/iceberg | 8 | 8 |
 | ia/transformers | 8 | 8 |
 | data-engineering/dbt | 7 | 8 |
@@ -86,7 +85,6 @@ Los ratios son solo para priorizar; no se muestran en la web pública.
 
 | Manual | Capítulos | Flags revisión | P0 | P1 | P2 | Genéricos |
 | --- | --- | --- | --- | --- | --- | --- |
-| data-engineering/delta-lake | 8 | 8 | 0 | 0 | 8 | 8/8 |
 | data-engineering/iceberg | 8 | 8 | 0 | 0 | 8 | 8/8 |
 | ia/transformers | 8 | 8 | 0 | 0 | 8 | 8/8 |
 | data-engineering/dbt | 8 | 7 | 0 | 0 | 7 | 7/8 |
@@ -101,8 +99,9 @@ Los ratios son solo para priorizar; no se muestran en la web pública.
 | full-stack/backend/aspnet-core | 15 | 15 | 0 | 0 | 1 | 1/15 |
 | full-stack/backend/django | 15 | 15 | 0 | 0 | 1 | 1/15 |
 | full-stack/backend/express | 15 | 15 | 0 | 0 | 1 | 1/15 |
+| full-stack/backend/fastapi | 16 | 16 | 0 | 0 | 1 | 1/16 |
 
-Manuales donde **todos** los capítulos son plantilla: `data-engineering/delta-lake` (8), `data-engineering/iceberg` (8), `ia/transformers` (8), `data-engineering/parquet` (7), `full-stack/arquitectura/microservicios` (7), `ia/vector-databases` (7), `full-stack/arquitectura/cqrs` (6), `full-stack/arquitectura/event-driven` (6).
+Manuales donde **todos** los capítulos son plantilla: `data-engineering/iceberg` (8), `ia/transformers` (8), `data-engineering/parquet` (7), `full-stack/arquitectura/microservicios` (7), `ia/vector-databases` (7), `full-stack/arquitectura/cqrs` (6), `full-stack/arquitectura/event-driven` (6).
 
 ## Tecnologías con mayor riesgo de actualización
 
@@ -134,8 +133,8 @@ Bloques de código con el mismo hash (tras quitar comentarios y colapsar espacio
 
 | Hash | Lang | Manuales | Capítulos | Ejemplo |
 | --- | --- | --- | --- | --- |
-| `34c4a79450ca7290` | txt | 16 | 71 | `data-engineering/dbt/02-sources-models-y-refs.md` |
-| `5a9d824dcf18e14a` | python | 7 | 40 | `data-engineering/delta-lake/01-introduccion-y-arquitectura.md` |
+| `34c4a79450ca7290` | txt | 15 | 63 | `data-engineering/dbt/02-sources-models-y-refs.md` |
+| `5a9d824dcf18e14a` | python | 6 | 32 | `data-engineering/iceberg/01-introduccion-y-arquitectura.md` |
 | `fb1882696289f802` | txt | 3 | 19 | `full-stack/arquitectura/cqrs/01-introduccion-y-motivacion.md` |
 | `3320248a647ec61e` | sql | 3 | 3 | `bases-de-datos/mysql/04-indices-y-explain.md` |
 | `ed0e2a5ce46cd7bc` | sql | 3 | 3 | `bases-de-datos/mysql/03-consultas-joins-y-agregaciones.md` |
