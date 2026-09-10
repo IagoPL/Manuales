@@ -7,21 +7,21 @@
     "priorities": {
       "P0": 0,
       "P1": 0,
-      "P2": 58,
-      "P3": 684
+      "P2": 56,
+      "P3": 686
     },
     "flags": {
       "known_outdated_pattern": 0,
-      "generic_template": 50,
+      "generic_template": 48,
       "generic_example": 47,
-      "duplicated_code": 58,
+      "duplicated_code": 56,
       "very_short": 196,
       "high_freshness_risk": 141
     },
     "trackedTemplatePhrase": {
       "pattern": "Este capitulo profundiza",
-      "chapters": 50,
-      "manuals": 14,
+      "chapters": 48,
+      "manuals": 13,
       "areas": [
         "data-engineering",
         "full-stack",
@@ -30,9 +30,9 @@
     },
     "lengthBands": {
       "very_short": 196,
-      "short": 378,
-      "normal": 165,
-      "long": 3
+      "short": 376,
+      "normal": 166,
+      "long": 4
     },
     "duplicateGroups": 9
   },
@@ -174,29 +174,6 @@
       "trackedPhrase": 6,
       "reviewFlags": 6,
       "genericRatio": 1
-    },
-    {
-      "path": "data-engineering/dbt",
-      "slug": "dbt",
-      "area": "data-engineering",
-      "chapters": 8,
-      "priorities": {
-        "P0": 0,
-        "P1": 0,
-        "P2": 2,
-        "P3": 6
-      },
-      "flags": {
-        "known_outdated_pattern": 0,
-        "generic_template": 2,
-        "generic_example": 0,
-        "duplicated_code": 2,
-        "very_short": 0,
-        "high_freshness_risk": 0
-      },
-      "trackedPhrase": 2,
-      "reviewFlags": 2,
-      "genericRatio": 0.25
     },
     {
       "path": "bases-de-datos/mysql",
@@ -714,6 +691,29 @@
         "P1": 0,
         "P2": 0,
         "P3": 5
+      },
+      "flags": {
+        "known_outdated_pattern": 0,
+        "generic_template": 0,
+        "generic_example": 0,
+        "duplicated_code": 0,
+        "very_short": 0,
+        "high_freshness_risk": 0
+      },
+      "trackedPhrase": 0,
+      "reviewFlags": 0,
+      "genericRatio": 0
+    },
+    {
+      "path": "data-engineering/dbt",
+      "slug": "dbt",
+      "area": "data-engineering",
+      "chapters": 8,
+      "priorities": {
+        "P0": 0,
+        "P1": 0,
+        "P2": 0,
+        "P3": 8
       },
       "flags": {
         "known_outdated_pattern": 0,
@@ -1792,7 +1792,6 @@
       "lang": "txt",
       "chars": 75,
       "manuals": [
-        "data-engineering/dbt",
         "data-engineering/parquet",
         "full-stack/arquitectura/cqrs",
         "full-stack/arquitectura/event-driven",
@@ -1808,8 +1807,6 @@
         "ia/vector-databases"
       ],
       "chapters": [
-        "data-engineering/dbt/07-ci-cd.md",
-        "data-engineering/dbt/08-buenas-practicas.md",
         "data-engineering/parquet/01-introduccion-al-formato-columnar.md",
         "data-engineering/parquet/02-esquemas-tipos-y-compresion.md",
         "data-engineering/parquet/03-row-groups-pages-y-metadata.md",
@@ -1859,7 +1856,7 @@
         "ia/vector-databases/06-patrones-para-rag.md",
         "ia/vector-databases/07-buenas-practicas.md"
       ],
-      "count": 50
+      "count": 48
     },
     {
       "hash": "5a9d824dcf18e14a",
@@ -4606,7 +4603,7 @@
       "manual": "dbt",
       "manualPath": "data-engineering/dbt",
       "title": "Manual de dbt",
-      "wordCount": 277,
+      "wordCount": 276,
       "usefulLines": 80,
       "headings": 10,
       "codeBlocks": 4,
@@ -4701,38 +4698,32 @@
       "area": "data-engineering",
       "manual": "dbt",
       "manualPath": "data-engineering/dbt",
-      "title": "Ci Cd",
-      "wordCount": 258,
-      "usefulLines": 43,
-      "headings": 11,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 21,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "title": "CI/CD",
+      "wordCount": 1228,
+      "usefulLines": 150,
+      "headings": 16,
+      "codeBlocks": 4,
+      "links": 6,
+      "lists": 36,
+      "lengthBand": "long",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "data-engineering/dbt/08-buenas-practicas.md",
       "area": "data-engineering",
       "manual": "dbt",
       "manualPath": "data-engineering/dbt",
-      "title": "Buenas Practicas",
-      "wordCount": 268,
-      "usefulLines": 43,
-      "headings": 10,
+      "title": "Buenas prácticas",
+      "wordCount": 1001,
+      "usefulLines": 99,
+      "headings": 18,
       "codeBlocks": 2,
-      "links": 0,
-      "lists": 23,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "links": 5,
+      "lists": 32,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "data-engineering/delta-lake/01-introduccion-y-arquitectura.md",
