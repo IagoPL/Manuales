@@ -7,20 +7,20 @@
     "priorities": {
       "P0": 0,
       "P1": 0,
-      "P2": 63,
-      "P3": 679
+      "P2": 58,
+      "P3": 684
     },
     "flags": {
       "known_outdated_pattern": 0,
-      "generic_template": 55,
+      "generic_template": 50,
       "generic_example": 47,
-      "duplicated_code": 63,
+      "duplicated_code": 58,
       "very_short": 196,
       "high_freshness_risk": 141
     },
     "trackedTemplatePhrase": {
       "pattern": "Este capitulo profundiza",
-      "chapters": 55,
+      "chapters": 50,
       "manuals": 14,
       "areas": [
         "data-engineering",
@@ -30,8 +30,8 @@
     },
     "lengthBands": {
       "very_short": 196,
-      "short": 383,
-      "normal": 160,
+      "short": 378,
+      "normal": 165,
       "long": 3
     },
     "duplicateGroups": 9
@@ -59,29 +59,6 @@
       "trackedPhrase": 8,
       "reviewFlags": 8,
       "genericRatio": 1
-    },
-    {
-      "path": "data-engineering/dbt",
-      "slug": "dbt",
-      "area": "data-engineering",
-      "chapters": 8,
-      "priorities": {
-        "P0": 0,
-        "P1": 0,
-        "P2": 7,
-        "P3": 1
-      },
-      "flags": {
-        "known_outdated_pattern": 0,
-        "generic_template": 7,
-        "generic_example": 0,
-        "duplicated_code": 7,
-        "very_short": 0,
-        "high_freshness_risk": 0
-      },
-      "trackedPhrase": 7,
-      "reviewFlags": 7,
-      "genericRatio": 0.875
     },
     {
       "path": "data-engineering/parquet",
@@ -197,6 +174,29 @@
       "trackedPhrase": 6,
       "reviewFlags": 6,
       "genericRatio": 1
+    },
+    {
+      "path": "data-engineering/dbt",
+      "slug": "dbt",
+      "area": "data-engineering",
+      "chapters": 8,
+      "priorities": {
+        "P0": 0,
+        "P1": 0,
+        "P2": 2,
+        "P3": 6
+      },
+      "flags": {
+        "known_outdated_pattern": 0,
+        "generic_template": 2,
+        "generic_example": 0,
+        "duplicated_code": 2,
+        "very_short": 0,
+        "high_freshness_risk": 0
+      },
+      "trackedPhrase": 2,
+      "reviewFlags": 2,
+      "genericRatio": 0.25
     },
     {
       "path": "bases-de-datos/mysql",
@@ -1808,11 +1808,6 @@
         "ia/vector-databases"
       ],
       "chapters": [
-        "data-engineering/dbt/02-sources-models-y-refs.md",
-        "data-engineering/dbt/03-tests-documentacion-y-lineage.md",
-        "data-engineering/dbt/04-snapshots-y-seeds.md",
-        "data-engineering/dbt/05-macros-y-jinja.md",
-        "data-engineering/dbt/06-materializaciones.md",
         "data-engineering/dbt/07-ci-cd.md",
         "data-engineering/dbt/08-buenas-practicas.md",
         "data-engineering/parquet/01-introduccion-al-formato-columnar.md",
@@ -1864,7 +1859,7 @@
         "ia/vector-databases/06-patrones-para-rag.md",
         "ia/vector-databases/07-buenas-practicas.md"
       ],
-      "count": 55
+      "count": 50
     },
     {
       "hash": "5a9d824dcf18e14a",
@@ -4611,11 +4606,11 @@
       "manual": "dbt",
       "manualPath": "data-engineering/dbt",
       "title": "Manual de dbt",
-      "wordCount": 258,
-      "usefulLines": 78,
-      "headings": 9,
+      "wordCount": 277,
+      "usefulLines": 80,
+      "headings": 10,
       "codeBlocks": 4,
-      "links": 8,
+      "links": 9,
       "lists": 33,
       "lengthBand": "short",
       "flags": [],
@@ -4626,76 +4621,64 @@
       "area": "data-engineering",
       "manual": "dbt",
       "manualPath": "data-engineering/dbt",
-      "title": "Sources Models Y Refs",
-      "wordCount": 304,
-      "usefulLines": 46,
-      "headings": 11,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 24,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "title": "Sources, models y refs",
+      "wordCount": 671,
+      "usefulLines": 109,
+      "headings": 12,
+      "codeBlocks": 6,
+      "links": 7,
+      "lists": 26,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "data-engineering/dbt/03-tests-documentacion-y-lineage.md",
       "area": "data-engineering",
       "manual": "dbt",
       "manualPath": "data-engineering/dbt",
-      "title": "Tests Documentacion Y Lineage",
-      "wordCount": 303,
-      "usefulLines": 46,
-      "headings": 11,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 24,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "title": "Tests, documentación y lineage",
+      "wordCount": 558,
+      "usefulLines": 96,
+      "headings": 9,
+      "codeBlocks": 7,
+      "links": 4,
+      "lists": 25,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "data-engineering/dbt/04-snapshots-y-seeds.md",
       "area": "data-engineering",
       "manual": "dbt",
       "manualPath": "data-engineering/dbt",
-      "title": "Snapshots Y Seeds",
-      "wordCount": 284,
-      "usefulLines": 45,
+      "title": "Snapshots y seeds",
+      "wordCount": 685,
+      "usefulLines": 94,
       "headings": 11,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 23,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "codeBlocks": 5,
+      "links": 4,
+      "lists": 22,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "data-engineering/dbt/05-macros-y-jinja.md",
       "area": "data-engineering",
       "manual": "dbt",
       "manualPath": "data-engineering/dbt",
-      "title": "Macros Y Jinja",
-      "wordCount": 282,
-      "usefulLines": 45,
-      "headings": 11,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 23,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "title": "Macros y Jinja",
+      "wordCount": 507,
+      "usefulLines": 81,
+      "headings": 10,
+      "codeBlocks": 5,
+      "links": 5,
+      "lists": 21,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "data-engineering/dbt/06-materializaciones.md",
@@ -4703,18 +4686,15 @@
       "manual": "dbt",
       "manualPath": "data-engineering/dbt",
       "title": "Materializaciones",
-      "wordCount": 258,
-      "usefulLines": 44,
-      "headings": 11,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 22,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "wordCount": 651,
+      "usefulLines": 80,
+      "headings": 13,
+      "codeBlocks": 5,
+      "links": 3,
+      "lists": 13,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "data-engineering/dbt/07-ci-cd.md",

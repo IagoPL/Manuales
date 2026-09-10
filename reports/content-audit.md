@@ -17,17 +17,17 @@ schemaVersion: 1
 | --- | ---: | --- |
 | P0 | 0 | Patrón técnico conocido (obsoleto / incorrecto) |
 | P1 | 0 | Plantilla genérica en tecnología de alto ritmo de cambio |
-| P2 | 63 | Plantilla, ejemplo genérico o código duplicado entre manuales |
-| P3 | 679 | Sin señales de revisión editorial (puede tener solo riesgo de frescura) |
+| P2 | 58 | Plantilla, ejemplo genérico o código duplicado entre manuales |
+| P3 | 684 | Sin señales de revisión editorial (puede tener solo riesgo de frescura) |
 
 ### Señales
 
 | Flag | Capítulos |
 | --- | ---: |
-| generic_template | 55 |
+| generic_template | 50 |
 | generic_example | 47 |
 | very_short | 196 |
-| duplicated_code | 63 |
+| duplicated_code | 58 |
 | high_freshness_risk | 141 |
 | known_outdated_pattern | 0 |
 
@@ -36,29 +36,29 @@ schemaVersion: 1
 | Banda | Palabras | Capítulos |
 | --- | --- | ---: |
 | very_short | ≤ 119 | 196 |
-| short | 120–349 | 383 |
-| normal | 350–1200 | 160 |
+| short | 120–349 | 378 |
+| normal | 350–1200 | 165 |
 | long | ≥ 1201 | 3 |
 
 ## Patrón conocido: `Este capitulo profundiza`
 
-- Capítulos actuales: **55**
+- Capítulos actuales: **50**
 - Manuales afectados: **14**
 - Áreas: `data-engineering`, `full-stack`, `ia`
 
-Auditoría previa de referencia: ~126. Recuento actual: **55**.
+Auditoría previa de referencia: ~126. Recuento actual: **50**.
 
 ### 20 manuales con más casos
 
 | Manual | Casos | Capítulos |
 | --- | --- | --- |
 | ia/transformers | 8 | 8 |
-| data-engineering/dbt | 7 | 8 |
 | data-engineering/parquet | 7 | 7 |
 | full-stack/arquitectura/microservicios | 7 | 7 |
 | ia/vector-databases | 7 | 7 |
 | full-stack/arquitectura/cqrs | 6 | 6 |
 | full-stack/arquitectura/event-driven | 6 | 6 |
+| data-engineering/dbt | 2 | 8 |
 | full-stack/backend/aspnet-core | 1 | 15 |
 | full-stack/backend/django | 1 | 15 |
 | full-stack/backend/express | 1 | 15 |
@@ -85,12 +85,12 @@ Los ratios son solo para priorizar; no se muestran en la web pública.
 | Manual | Capítulos | Flags revisión | P0 | P1 | P2 | Genéricos |
 | --- | --- | --- | --- | --- | --- | --- |
 | ia/transformers | 8 | 8 | 0 | 0 | 8 | 8/8 |
-| data-engineering/dbt | 8 | 7 | 0 | 0 | 7 | 7/8 |
 | data-engineering/parquet | 7 | 7 | 0 | 0 | 7 | 7/7 |
 | full-stack/arquitectura/microservicios | 7 | 7 | 0 | 0 | 7 | 7/7 |
 | ia/vector-databases | 7 | 7 | 0 | 0 | 7 | 7/7 |
 | full-stack/arquitectura/cqrs | 6 | 6 | 0 | 0 | 6 | 6/6 |
 | full-stack/arquitectura/event-driven | 6 | 6 | 0 | 0 | 6 | 6/6 |
+| data-engineering/dbt | 8 | 2 | 0 | 0 | 2 | 2/8 |
 | bases-de-datos/mysql | 14 | 4 | 0 | 0 | 2 | 0/14 |
 | bases-de-datos/oracle-sql | 7 | 5 | 0 | 0 | 2 | 0/7 |
 | bases-de-datos/postgresql | 16 | 2 | 0 | 0 | 2 | 0/16 |
@@ -132,7 +132,7 @@ Bloques de código con el mismo hash (tras quitar comentarios y colapsar espacio
 
 | Hash | Lang | Manuales | Capítulos | Ejemplo |
 | --- | --- | --- | --- | --- |
-| `34c4a79450ca7290` | txt | 14 | 55 | `data-engineering/dbt/02-sources-models-y-refs.md` |
+| `34c4a79450ca7290` | txt | 14 | 50 | `data-engineering/dbt/07-ci-cd.md` |
 | `5a9d824dcf18e14a` | python | 5 | 24 | `data-engineering/parquet/01-introduccion-al-formato-columnar.md` |
 | `fb1882696289f802` | txt | 3 | 19 | `full-stack/arquitectura/cqrs/01-introduccion-y-motivacion.md` |
 | `3320248a647ec61e` | sql | 3 | 3 | `bases-de-datos/mysql/04-indices-y-explain.md` |
