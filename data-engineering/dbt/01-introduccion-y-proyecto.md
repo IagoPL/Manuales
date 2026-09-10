@@ -14,8 +14,8 @@ No sustituye a Airflow, Spark ni Snowflake. dbt se centra en la capa de transfor
 4. [Snapshots y seeds](04-snapshots-y-seeds.md)
 5. [Macros y Jinja](05-macros-y-jinja.md)
 6. [Materializaciones](06-materializaciones.md)
-7. [CI CD](07-ci-cd.md)
-8. [Buenas practicas](08-buenas-practicas.md)
+7. [CI/CD](07-ci-cd.md)
+8. [Buenas prácticas](08-buenas-practicas.md)
 
 ## Que problema resuelve
 
