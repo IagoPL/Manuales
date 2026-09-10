@@ -7,20 +7,20 @@
     "priorities": {
       "P0": 0,
       "P1": 0,
-      "P2": 55,
-      "P3": 687
+      "P2": 56,
+      "P3": 686
     },
     "flags": {
       "known_outdated_pattern": 0,
-      "generic_template": 47,
-      "generic_example": 39,
-      "duplicated_code": 55,
+      "generic_template": 48,
+      "generic_example": 47,
+      "duplicated_code": 56,
       "very_short": 196,
       "high_freshness_risk": 141
     },
     "trackedTemplatePhrase": {
       "pattern": "Este capitulo profundiza",
-      "chapters": 47,
+      "chapters": 48,
       "manuals": 13,
       "areas": [
         "data-engineering",
@@ -30,35 +30,35 @@
     },
     "lengthBands": {
       "very_short": 196,
-      "short": 375,
-      "normal": 168,
-      "long": 3
+      "short": 376,
+      "normal": 166,
+      "long": 4
     },
     "duplicateGroups": 9
   },
   "manuals": [
     {
-      "path": "data-engineering/dbt",
-      "slug": "dbt",
-      "area": "data-engineering",
+      "path": "ia/transformers",
+      "slug": "transformers",
+      "area": "ia",
       "chapters": 8,
       "priorities": {
         "P0": 0,
         "P1": 0,
-        "P2": 7,
-        "P3": 1
+        "P2": 8,
+        "P3": 0
       },
       "flags": {
         "known_outdated_pattern": 0,
-        "generic_template": 7,
-        "generic_example": 0,
-        "duplicated_code": 7,
+        "generic_template": 8,
+        "generic_example": 8,
+        "duplicated_code": 8,
         "very_short": 0,
         "high_freshness_risk": 0
       },
-      "trackedPhrase": 7,
-      "reviewFlags": 7,
-      "genericRatio": 0.875
+      "trackedPhrase": 8,
+      "reviewFlags": 8,
+      "genericRatio": 1
     },
     {
       "path": "data-engineering/parquet",
@@ -691,6 +691,29 @@
         "P1": 0,
         "P2": 0,
         "P3": 5
+      },
+      "flags": {
+        "known_outdated_pattern": 0,
+        "generic_template": 0,
+        "generic_example": 0,
+        "duplicated_code": 0,
+        "very_short": 0,
+        "high_freshness_risk": 0
+      },
+      "trackedPhrase": 0,
+      "reviewFlags": 0,
+      "genericRatio": 0
+    },
+    {
+      "path": "data-engineering/dbt",
+      "slug": "dbt",
+      "area": "data-engineering",
+      "chapters": 8,
+      "priorities": {
+        "P0": 0,
+        "P1": 0,
+        "P2": 0,
+        "P3": 8
       },
       "flags": {
         "known_outdated_pattern": 0,
@@ -1579,29 +1602,6 @@
       "genericRatio": 0
     },
     {
-      "path": "ia/transformers",
-      "slug": "transformers",
-      "area": "ia",
-      "chapters": 8,
-      "priorities": {
-        "P0": 0,
-        "P1": 0,
-        "P2": 0,
-        "P3": 8
-      },
-      "flags": {
-        "known_outdated_pattern": 0,
-        "generic_template": 0,
-        "generic_example": 0,
-        "duplicated_code": 0,
-        "very_short": 0,
-        "high_freshness_risk": 0
-      },
-      "trackedPhrase": 0,
-      "reviewFlags": 0,
-      "genericRatio": 0
-    },
-    {
       "path": "ia/vllm",
       "slug": "vllm",
       "area": "ia",
@@ -1792,7 +1792,6 @@
       "lang": "txt",
       "chars": 75,
       "manuals": [
-        "data-engineering/dbt",
         "data-engineering/parquet",
         "full-stack/arquitectura/cqrs",
         "full-stack/arquitectura/event-driven",
@@ -1804,16 +1803,10 @@
         "full-stack/backend/laravel",
         "full-stack/backend/nestjs",
         "full-stack/backend/spring-boot",
+        "ia/transformers",
         "ia/vector-databases"
       ],
       "chapters": [
-        "data-engineering/dbt/02-sources-models-y-refs.md",
-        "data-engineering/dbt/03-tests-documentacion-y-lineage.md",
-        "data-engineering/dbt/04-snapshots-y-seeds.md",
-        "data-engineering/dbt/05-macros-y-jinja.md",
-        "data-engineering/dbt/06-materializaciones.md",
-        "data-engineering/dbt/07-ci-cd.md",
-        "data-engineering/dbt/08-buenas-practicas.md",
         "data-engineering/parquet/01-introduccion-al-formato-columnar.md",
         "data-engineering/parquet/02-esquemas-tipos-y-compresion.md",
         "data-engineering/parquet/03-row-groups-pages-y-metadata.md",
@@ -1847,6 +1840,14 @@
         "full-stack/backend/laravel/01-introduccion-y-entorno.md",
         "full-stack/backend/nestjs/01-introduccion-y-entorno.md",
         "full-stack/backend/spring-boot/01-introduccion-y-entorno.md",
+        "ia/transformers/01-introduccion-y-arquitectura.md",
+        "ia/transformers/02-tokenizacion-y-embeddings.md",
+        "ia/transformers/03-attention.md",
+        "ia/transformers/04-modelos-encoder-decoder.md",
+        "ia/transformers/05-fine-tuning.md",
+        "ia/transformers/06-inferencia.md",
+        "ia/transformers/07-evaluacion.md",
+        "ia/transformers/08-buenas-practicas.md",
         "ia/vector-databases/01-introduccion-a-busqueda-vectorial.md",
         "ia/vector-databases/02-embeddings-e-indices.md",
         "ia/vector-databases/03-metadatos-y-filtros.md",
@@ -1855,7 +1856,46 @@
         "ia/vector-databases/06-patrones-para-rag.md",
         "ia/vector-databases/07-buenas-practicas.md"
       ],
-      "count": 47
+      "count": 48
+    },
+    {
+      "hash": "5a9d824dcf18e14a",
+      "lang": "python",
+      "chars": 121,
+      "manuals": [
+        "data-engineering/parquet",
+        "full-stack/backend/django",
+        "full-stack/backend/fastapi",
+        "ia/transformers",
+        "ia/vector-databases"
+      ],
+      "chapters": [
+        "data-engineering/parquet/01-introduccion-al-formato-columnar.md",
+        "data-engineering/parquet/02-esquemas-tipos-y-compresion.md",
+        "data-engineering/parquet/03-row-groups-pages-y-metadata.md",
+        "data-engineering/parquet/04-lectura-y-escritura.md",
+        "data-engineering/parquet/05-particionado.md",
+        "data-engineering/parquet/06-rendimiento.md",
+        "data-engineering/parquet/07-buenas-practicas.md",
+        "full-stack/backend/django/01-introduccion-y-entorno.md",
+        "full-stack/backend/fastapi/01-introduccion-y-entorno.md",
+        "ia/transformers/01-introduccion-y-arquitectura.md",
+        "ia/transformers/02-tokenizacion-y-embeddings.md",
+        "ia/transformers/03-attention.md",
+        "ia/transformers/04-modelos-encoder-decoder.md",
+        "ia/transformers/05-fine-tuning.md",
+        "ia/transformers/06-inferencia.md",
+        "ia/transformers/07-evaluacion.md",
+        "ia/transformers/08-buenas-practicas.md",
+        "ia/vector-databases/01-introduccion-a-busqueda-vectorial.md",
+        "ia/vector-databases/02-embeddings-e-indices.md",
+        "ia/vector-databases/03-metadatos-y-filtros.md",
+        "ia/vector-databases/04-qdrant-pinecone-weaviate-y-pgvector.md",
+        "ia/vector-databases/05-rendimiento.md",
+        "ia/vector-databases/06-patrones-para-rag.md",
+        "ia/vector-databases/07-buenas-practicas.md"
+      ],
+      "count": 24
     },
     {
       "hash": "fb1882696289f802",
@@ -1888,36 +1928,6 @@
         "full-stack/arquitectura/microservicios/07-trade-offs.md"
       ],
       "count": 19
-    },
-    {
-      "hash": "5a9d824dcf18e14a",
-      "lang": "python",
-      "chars": 121,
-      "manuals": [
-        "data-engineering/parquet",
-        "full-stack/backend/django",
-        "full-stack/backend/fastapi",
-        "ia/vector-databases"
-      ],
-      "chapters": [
-        "data-engineering/parquet/01-introduccion-al-formato-columnar.md",
-        "data-engineering/parquet/02-esquemas-tipos-y-compresion.md",
-        "data-engineering/parquet/03-row-groups-pages-y-metadata.md",
-        "data-engineering/parquet/04-lectura-y-escritura.md",
-        "data-engineering/parquet/05-particionado.md",
-        "data-engineering/parquet/06-rendimiento.md",
-        "data-engineering/parquet/07-buenas-practicas.md",
-        "full-stack/backend/django/01-introduccion-y-entorno.md",
-        "full-stack/backend/fastapi/01-introduccion-y-entorno.md",
-        "ia/vector-databases/01-introduccion-a-busqueda-vectorial.md",
-        "ia/vector-databases/02-embeddings-e-indices.md",
-        "ia/vector-databases/03-metadatos-y-filtros.md",
-        "ia/vector-databases/04-qdrant-pinecone-weaviate-y-pgvector.md",
-        "ia/vector-databases/05-rendimiento.md",
-        "ia/vector-databases/06-patrones-para-rag.md",
-        "ia/vector-databases/07-buenas-practicas.md"
-      ],
-      "count": 16
     },
     {
       "hash": "3320248a647ec61e",
@@ -4593,11 +4603,11 @@
       "manual": "dbt",
       "manualPath": "data-engineering/dbt",
       "title": "Manual de dbt",
-      "wordCount": 258,
-      "usefulLines": 78,
-      "headings": 9,
+      "wordCount": 276,
+      "usefulLines": 80,
+      "headings": 10,
       "codeBlocks": 4,
-      "links": 8,
+      "links": 9,
       "lists": 33,
       "lengthBand": "short",
       "flags": [],
@@ -4608,76 +4618,64 @@
       "area": "data-engineering",
       "manual": "dbt",
       "manualPath": "data-engineering/dbt",
-      "title": "Sources Models Y Refs",
-      "wordCount": 304,
-      "usefulLines": 46,
-      "headings": 11,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 24,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "title": "Sources, models y refs",
+      "wordCount": 671,
+      "usefulLines": 109,
+      "headings": 12,
+      "codeBlocks": 6,
+      "links": 7,
+      "lists": 26,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "data-engineering/dbt/03-tests-documentacion-y-lineage.md",
       "area": "data-engineering",
       "manual": "dbt",
       "manualPath": "data-engineering/dbt",
-      "title": "Tests Documentacion Y Lineage",
-      "wordCount": 303,
-      "usefulLines": 46,
-      "headings": 11,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 24,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "title": "Tests, documentación y lineage",
+      "wordCount": 558,
+      "usefulLines": 96,
+      "headings": 9,
+      "codeBlocks": 7,
+      "links": 4,
+      "lists": 25,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "data-engineering/dbt/04-snapshots-y-seeds.md",
       "area": "data-engineering",
       "manual": "dbt",
       "manualPath": "data-engineering/dbt",
-      "title": "Snapshots Y Seeds",
-      "wordCount": 284,
-      "usefulLines": 45,
+      "title": "Snapshots y seeds",
+      "wordCount": 685,
+      "usefulLines": 94,
       "headings": 11,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 23,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "codeBlocks": 5,
+      "links": 4,
+      "lists": 22,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "data-engineering/dbt/05-macros-y-jinja.md",
       "area": "data-engineering",
       "manual": "dbt",
       "manualPath": "data-engineering/dbt",
-      "title": "Macros Y Jinja",
-      "wordCount": 282,
-      "usefulLines": 45,
-      "headings": 11,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 23,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "title": "Macros y Jinja",
+      "wordCount": 507,
+      "usefulLines": 81,
+      "headings": 10,
+      "codeBlocks": 5,
+      "links": 5,
+      "lists": 21,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "data-engineering/dbt/06-materializaciones.md",
@@ -4685,56 +4683,47 @@
       "manual": "dbt",
       "manualPath": "data-engineering/dbt",
       "title": "Materializaciones",
-      "wordCount": 258,
-      "usefulLines": 44,
-      "headings": 11,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 22,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "wordCount": 651,
+      "usefulLines": 80,
+      "headings": 13,
+      "codeBlocks": 5,
+      "links": 3,
+      "lists": 13,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "data-engineering/dbt/07-ci-cd.md",
       "area": "data-engineering",
       "manual": "dbt",
       "manualPath": "data-engineering/dbt",
-      "title": "Ci Cd",
-      "wordCount": 258,
-      "usefulLines": 43,
-      "headings": 11,
-      "codeBlocks": 2,
-      "links": 1,
-      "lists": 21,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "title": "CI/CD",
+      "wordCount": 1228,
+      "usefulLines": 150,
+      "headings": 16,
+      "codeBlocks": 4,
+      "links": 6,
+      "lists": 36,
+      "lengthBand": "long",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "data-engineering/dbt/08-buenas-practicas.md",
       "area": "data-engineering",
       "manual": "dbt",
       "manualPath": "data-engineering/dbt",
-      "title": "Buenas Practicas",
-      "wordCount": 268,
-      "usefulLines": 43,
-      "headings": 10,
+      "title": "Buenas prácticas",
+      "wordCount": 1001,
+      "usefulLines": 99,
+      "headings": 18,
       "codeBlocks": 2,
-      "links": 0,
-      "lists": 23,
-      "lengthBand": "short",
-      "flags": [
-        "generic_template",
-        "duplicated_code"
-      ],
-      "priority": "P2"
+      "links": 5,
+      "lists": 32,
+      "lengthBand": "normal",
+      "flags": [],
+      "priority": "P3"
     },
     {
       "path": "data-engineering/delta-lake/01-introduccion-y-arquitectura.md",
@@ -13334,32 +13323,40 @@
       "area": "ia",
       "manual": "transformers",
       "manualPath": "ia/transformers",
-      "title": "Introducción y arquitectura Transformer",
-      "wordCount": 834,
-      "usefulLines": 74,
-      "headings": 8,
-      "codeBlocks": 3,
-      "links": 9,
-      "lists": 15,
-      "lengthBand": "normal",
-      "flags": [],
-      "priority": "P3"
+      "title": "Introduccion Y Arquitectura",
+      "wordCount": 285,
+      "usefulLines": 43,
+      "headings": 12,
+      "codeBlocks": 2,
+      "links": 1,
+      "lists": 23,
+      "lengthBand": "short",
+      "flags": [
+        "generic_template",
+        "generic_example",
+        "duplicated_code"
+      ],
+      "priority": "P2"
     },
     {
       "path": "ia/transformers/02-tokenizacion-y-embeddings.md",
       "area": "ia",
       "manual": "transformers",
       "manualPath": "ia/transformers",
-      "title": "Tokenización y embeddings",
-      "wordCount": 746,
-      "usefulLines": 58,
-      "headings": 7,
+      "title": "Tokenizacion Y Embeddings",
+      "wordCount": 283,
+      "usefulLines": 43,
+      "headings": 12,
       "codeBlocks": 2,
-      "links": 3,
-      "lists": 11,
-      "lengthBand": "normal",
-      "flags": [],
-      "priority": "P3"
+      "links": 1,
+      "lists": 23,
+      "lengthBand": "short",
+      "flags": [
+        "generic_template",
+        "generic_example",
+        "duplicated_code"
+      ],
+      "priority": "P2"
     },
     {
       "path": "ia/transformers/03-attention.md",
@@ -13367,47 +13364,59 @@
       "manual": "transformers",
       "manualPath": "ia/transformers",
       "title": "Attention",
-      "wordCount": 793,
-      "usefulLines": 59,
-      "headings": 8,
-      "codeBlocks": 4,
-      "links": 5,
-      "lists": 6,
-      "lengthBand": "normal",
-      "flags": [],
-      "priority": "P3"
+      "wordCount": 260,
+      "usefulLines": 42,
+      "headings": 12,
+      "codeBlocks": 2,
+      "links": 1,
+      "lists": 22,
+      "lengthBand": "short",
+      "flags": [
+        "generic_template",
+        "generic_example",
+        "duplicated_code"
+      ],
+      "priority": "P2"
     },
     {
       "path": "ia/transformers/04-modelos-encoder-decoder.md",
       "area": "ia",
       "manual": "transformers",
       "manualPath": "ia/transformers",
-      "title": "Modelos encoder y decoder",
-      "wordCount": 612,
-      "usefulLines": 68,
-      "headings": 8,
-      "codeBlocks": 4,
-      "links": 3,
-      "lists": 3,
-      "lengthBand": "normal",
-      "flags": [],
-      "priority": "P3"
+      "title": "Modelos Encoder Decoder",
+      "wordCount": 293,
+      "usefulLines": 44,
+      "headings": 12,
+      "codeBlocks": 2,
+      "links": 1,
+      "lists": 24,
+      "lengthBand": "short",
+      "flags": [
+        "generic_template",
+        "generic_example",
+        "duplicated_code"
+      ],
+      "priority": "P2"
     },
     {
       "path": "ia/transformers/05-fine-tuning.md",
       "area": "ia",
       "manual": "transformers",
       "manualPath": "ia/transformers",
-      "title": "Fine-tuning",
-      "wordCount": 721,
-      "usefulLines": 76,
-      "headings": 9,
+      "title": "Fine Tuning",
+      "wordCount": 274,
+      "usefulLines": 43,
+      "headings": 12,
       "codeBlocks": 2,
-      "links": 7,
-      "lists": 16,
-      "lengthBand": "normal",
-      "flags": [],
-      "priority": "P3"
+      "links": 1,
+      "lists": 23,
+      "lengthBand": "short",
+      "flags": [
+        "generic_template",
+        "generic_example",
+        "duplicated_code"
+      ],
+      "priority": "P2"
     },
     {
       "path": "ia/transformers/06-inferencia.md",
@@ -13415,47 +13424,59 @@
       "manual": "transformers",
       "manualPath": "ia/transformers",
       "title": "Inferencia",
-      "wordCount": 798,
-      "usefulLines": 92,
-      "headings": 10,
-      "codeBlocks": 6,
-      "links": 6,
-      "lists": 5,
-      "lengthBand": "normal",
-      "flags": [],
-      "priority": "P3"
+      "wordCount": 258,
+      "usefulLines": 42,
+      "headings": 12,
+      "codeBlocks": 2,
+      "links": 1,
+      "lists": 22,
+      "lengthBand": "short",
+      "flags": [
+        "generic_template",
+        "generic_example",
+        "duplicated_code"
+      ],
+      "priority": "P2"
     },
     {
       "path": "ia/transformers/07-evaluacion.md",
       "area": "ia",
       "manual": "transformers",
       "manualPath": "ia/transformers",
-      "title": "Evaluación",
-      "wordCount": 616,
-      "usefulLines": 55,
-      "headings": 7,
-      "codeBlocks": 1,
-      "links": 4,
-      "lists": 15,
-      "lengthBand": "normal",
-      "flags": [],
-      "priority": "P3"
+      "title": "Evaluacion",
+      "wordCount": 259,
+      "usefulLines": 42,
+      "headings": 12,
+      "codeBlocks": 2,
+      "links": 1,
+      "lists": 22,
+      "lengthBand": "short",
+      "flags": [
+        "generic_template",
+        "generic_example",
+        "duplicated_code"
+      ],
+      "priority": "P2"
     },
     {
       "path": "ia/transformers/08-buenas-practicas.md",
       "area": "ia",
       "manual": "transformers",
       "manualPath": "ia/transformers",
-      "title": "Buenas prácticas",
-      "wordCount": 799,
-      "usefulLines": 60,
-      "headings": 16,
-      "codeBlocks": 1,
-      "links": 5,
-      "lists": 18,
-      "lengthBand": "normal",
-      "flags": [],
-      "priority": "P3"
+      "title": "Buenas Practicas",
+      "wordCount": 269,
+      "usefulLines": 41,
+      "headings": 11,
+      "codeBlocks": 2,
+      "links": 0,
+      "lists": 23,
+      "lengthBand": "short",
+      "flags": [
+        "generic_template",
+        "generic_example",
+        "duplicated_code"
+      ],
+      "priority": "P2"
     },
     {
       "path": "ia/vector-databases/01-introduccion-a-busqueda-vectorial.md",
