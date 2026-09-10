@@ -1,69 +1,117 @@
-# Fine Tuning
+# Fine-tuning
 
-Este capitulo profundiza en **Fine Tuning** dentro del manual de **Transformers**. El objetivo es que entiendas el concepto, lo apliques con ejemplos y evites errores frecuentes en entornos reales.
+Fine-tuning **sigue entrenando** pesos que ya vinieron de un preentrenamiento. No partes de una red aleatoria: partes de un checkpoint y lo adaptas a una tarea o a un dominio. Hace falta menos datos que el preentrenamiento, pero sigues eligiendo pérdida, particiones y un presupuesto de memoria.
 
-## Objetivo
+Este capítulo no replica el tutorial operativo de [Fine-tuning en Hugging Face](../huggingface/04-fine-tuning.md) ni el manual de Datasets. El flujo compacto es:
 
-Al terminar este capitulo sabras explicar fine tuning, implementarlo en un caso practico y detectar malas practicas antes de llevarlas a produccion.
-
-## Conceptos clave
-
-- **Fine Tuning:** pieza central de Transformers en este capitulo.
-- **Contexto:** como encaja en el flujo del manual y en proyectos reales.
-- **Criterios de diseno:** legibilidad, seguridad y mantenibilidad.
-- **Fine:** aspecto a dominar dentro de Fine Tuning.
-- **Tuning:** aspecto a dominar dentro de Fine Tuning.
-
-## Desarrollo del tema
-
-### Enfoque practico
-
-1. Define el problema que resuelve **Fine Tuning**.
-2. Identifica entradas, salidas y dependencias.
-3. Implementa un ejemplo minimo funcional.
-4. Itera midiendo resultado y calidad.
-
-### Flujo recomendado
-
-```txt
-lectura -> ejemplo guiado -> ejercicio corto -> revision de errores comunes
+```text
+dataset  →  tokenize (tokenizer del checkpoint)  →  collator  →  bucle / Trainer
 ```
 
-## Ejemplo
+Detalles de `DatasetDict`, cache y streaming: [Datasets](../huggingface/03-datasets.md).
+
+Guía oficial de la librería: [Fine-tune a pretrained model](https://huggingface.co/docs/transformers/en/training), [Trainer](https://huggingface.co/docs/transformers/en/main_classes/trainer).
+
+## Qué se adapta
+
+El preentrenamiento dejó representaciones útiles (lenguaje, visión, etc.). El fine-tuning mueve esos pesos —o un subconjunto— para que la **pérdida de tu tarea** baje: cross-entropy de clases, next-token, seq2seq, token labels.
+
+Hace falta:
+
+- **train**: actualiza parámetros;
+- **validation**: eliges hiperparámetros, early stopping, “¿este run va mejor?”;
+- **test**: cifra que reportas; no la uses para tunear cada epoch.
+
+Sin validation, overfitting es invisible. El [capítulo de evaluación](07-evaluacion.md) cubre leakage y métricas.
+
+## Pérdida, optimizer, batch, learning rate, epochs
+
+A alto nivel, cada paso:
+
+1. El collator arma un batch (tensores alineados).
+2. El *forward* produce logits.
+3. La **loss** compara logits con etiquetas (o con tokens desplazados en LM).
+4. El **optimizer** (AdamW es el default habitual del `Trainer`) actualiza pesos con un **learning rate**.
+5. Se repite durante **epochs** (pasadas al train) o un número de steps.
+
+El learning rate suele ser **más bajo** que en preentrenamiento: los pesos ya significan algo; un LR alto los destroza. El tamaño de **batch** (por dispositivo × acumulación) afecta ruido del gradiente y memoria. Más epochs no es mejor: el validation loss o la métrica de validación te dicen cuándo parar.
+
+**Overfitting:** el train mejora y el validation empeora. Mitigación: más datos, regularización, early stopping, menos epochs, PEFT más pequeño, o un modelo más chico. **Checkpointing** de entrenamiento (`save_strategy`, `load_best_model_at_end`) guarda el mejor punto de validation, no el último step por inercia.
+
+## Full fine-tuning frente a PEFT / LoRA
+
+| Enfoque | Qué actualizas | Por qué existe |
+| --- | --- | --- |
+| Full fine-tuning | Todos o la mayoría de los parámetros | Máxima capacidad de adaptarse; máximo VRAM y riesgo de olvidar el preentrenamiento si hay pocos datos. |
+| PEFT / LoRA | Un subconjunto (adapters, matrices de bajo rango, …) | Menos memoria y checkpoints pequeños; varios adapters sobre el mismo base. |
+
+LoRA no es “el fine-tuning moderno obligatorio”. Es la vía cuando el modelo no cabe o no quieres copiar todos los pesos por tarea. Este no es un manual de PEFT: la API vive en [`peft`](https://huggingface.co/docs/peft/main/en/conceptual_guides/lora) y se conecta al mismo `Trainer`. Feature extraction (congelar el cuerpo, entrenar solo el task head) es un tercer punto del espectro, aún más barato.
+
+## API Trainer en Transformers 5.x
+
+En la línea 5.x, el esqueleto documentado es:
+
+- `Trainer(..., processing_class=tokenizer, data_collator=...)` — **no** el kwarg `tokenizer=` de v4;
+- `TrainingArguments(..., eval_strategy=...)` — **no** `evaluation_strategy`;
+- `from_pretrained(..., dtype="auto")` cuando quieras evitar cargar todo en float32 por defecto.
+
+Los ejemplos de este manual usan **PyTorch**. Eso es consistencia pedagógica, no una afirmación de que Transformers solo exista en PyTorch.
 
 ```python
-# Ejemplo con Transformers
-from pathlib import Path
+from transformers import (
+    AutoModelForSequenceClassification,
+    AutoTokenizer,
+    DataCollatorWithPadding,
+    Trainer,
+    TrainingArguments,
+)
 
-def procesar(ruta: str) -> list[str]:
-    return Path(ruta).read_text(encoding='utf-8').splitlines()
+ckpt = "google-bert/bert-base-uncased"
+tokenizer = AutoTokenizer.from_pretrained(ckpt)
+model = AutoModelForSequenceClassification.from_pretrained(ckpt, num_labels=2)
+
+# train_dataset / eval_dataset ya tokenizados (input_ids, attention_mask, labels).
+# El map de datasets se documenta en ia/huggingface; aquí no se repite.
+
+collator = DataCollatorWithPadding(tokenizer=tokenizer)
+
+training_args = TrainingArguments(
+    output_dir="salida-ft-encoder",
+    num_train_epochs=2,
+    per_device_train_batch_size=8,
+    eval_strategy="epoch",
+    save_strategy="epoch",
+    learning_rate=2e-5,
+    report_to="none",
+)
+
+trainer = Trainer(
+    model=model,
+    args=training_args,
+    train_dataset=train_dataset,
+    eval_dataset=eval_dataset,
+    processing_class=tokenizer,
+    data_collator=collator,
+)
 ```
 
-Adapta nombres, rutas y parametros a tu proyecto. Si el manual incluye stack concreto (version, framework), alinea el ejemplo con esa version.
+`DataCollatorWithPadding` hace **padding dinámico**: cada batch se rellena hasta su secuencia más larga, no hasta el `max_length` global del modelo. Padding fijo global desperdicia compute cuando casi todos los textos son cortos. Truncation en el `map` (un tope razonable, p. ej. 128 o 512 según la tarea) sigue siendo necesaria para no explotar el contexto.
 
-## Errores habituales
+Para language modeling causal, la guía oficial usa `DataCollatorForLanguageModeling(..., mlm=False)` y una pérdida de siguiente token. El esqueleto `TrainingArguments` + `processing_class` es el mismo.
 
-- Aplicar el concepto sin leer requisitos previos del manual.
-- Copiar ejemplos sin adaptar al entorno (versiones, permisos, region).
-- Optimizar prematuramente antes de tener mediciones.
-- Ignorar seguridad en escenarios de fine tuning.
-- No probar casos limite ni errores esperados.
+## Memoria: acumulación y gradient checkpointing
 
-## Buenas practicas
+Dos palancas frecuentes, **no** recetas universales:
 
-- Documenta decisiones y limites del enfoque.
-- Valida en entorno de prueba antes de produccion.
-- Mide impacto (rendimiento, coste, seguridad) tras cada cambio.
-- Fija version de modelo y dataset.
-- Evalua antes de desplegar.
+- **`gradient_accumulation_steps`**: varios forwards pequeños antes de un `optimizer.step`. Simula un batch mayor cuando la VRAM no permite ese batch de golpe. El trade-off es más steps de forward por update y, a veces, dinámica de batch-norm / estadísticas distinta.
+- **Gradient checkpointing**: no guarda todas las activaciones; las recomputa en el backward. Ahorra memoria, paga compute. Útil en full FT de modelos grandes; innecesario en un BERT-base con batch 8.
 
-## Ejercicios
+Ninguna de las dos sustituye elegir un modelo que quepa. `device_map="auto"` (Accelerate) reparte pesos; no garantiza el mejor throughput.
 
-1. Reproduce el ejemplo minimo del capitulo sobre **Fine Tuning**.
-2. Modifica un parametro y observa el cambio en el resultado.
-3. Anade un caso de error controlado y verifica el manejo.
-4. Integra el concepto con un capitulo anterior del mismo manual.
+## Lo que no hace falta repetir aquí
 
-## Siguiente paso
+- Cómo construir un `DatasetDict` o activar streaming.
+- Cómo subir el checkpoint al Hub (eso es el manual Hugging Face).
+- Un catálogo de `LoraConfig`.
 
-Continua con [Inferencia](06-inferencia.md).
+Sí hace falta: tokenizer del **mismo** `ckpt`, métrica de validation alineada con la tarea, y guardar el mejor checkpoint —no solo el último— antes de pasar a [inferencia](06-inferencia.md).

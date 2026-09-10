@@ -17,17 +17,17 @@ schemaVersion: 1
 | --- | ---: | --- |
 | P0 | 0 | Patrón técnico conocido (obsoleto / incorrecto) |
 | P1 | 0 | Plantilla genérica en tecnología de alto ritmo de cambio |
-| P2 | 56 | Plantilla, ejemplo genérico o código duplicado entre manuales |
-| P3 | 686 | Sin señales de revisión editorial (puede tener solo riesgo de frescura) |
+| P2 | 48 | Plantilla, ejemplo genérico o código duplicado entre manuales |
+| P3 | 694 | Sin señales de revisión editorial (puede tener solo riesgo de frescura) |
 
 ### Señales
 
 | Flag | Capítulos |
 | --- | ---: |
-| generic_template | 48 |
-| generic_example | 47 |
+| generic_template | 40 |
+| generic_example | 39 |
 | very_short | 196 |
-| duplicated_code | 56 |
+| duplicated_code | 48 |
 | high_freshness_risk | 141 |
 | known_outdated_pattern | 0 |
 
@@ -36,23 +36,22 @@ schemaVersion: 1
 | Banda | Palabras | Capítulos |
 | --- | --- | ---: |
 | very_short | ≤ 119 | 196 |
-| short | 120–349 | 376 |
-| normal | 350–1200 | 166 |
+| short | 120–349 | 368 |
+| normal | 350–1200 | 174 |
 | long | ≥ 1201 | 4 |
 
 ## Patrón conocido: `Este capitulo profundiza`
 
-- Capítulos actuales: **48**
-- Manuales afectados: **13**
+- Capítulos actuales: **40**
+- Manuales afectados: **12**
 - Áreas: `data-engineering`, `full-stack`, `ia`
 
-Auditoría previa de referencia: ~126. Recuento actual: **48**.
+Auditoría previa de referencia: ~126. Recuento actual: **40**.
 
 ### 20 manuales con más casos
 
 | Manual | Casos | Capítulos |
 | --- | --- | --- |
-| ia/transformers | 8 | 8 |
 | data-engineering/parquet | 7 | 7 |
 | full-stack/arquitectura/microservicios | 7 | 7 |
 | ia/vector-databases | 7 | 7 |
@@ -83,7 +82,6 @@ Los ratios son solo para priorizar; no se muestran en la web pública.
 
 | Manual | Capítulos | Flags revisión | P0 | P1 | P2 | Genéricos |
 | --- | --- | --- | --- | --- | --- | --- |
-| ia/transformers | 8 | 8 | 0 | 0 | 8 | 8/8 |
 | data-engineering/parquet | 7 | 7 | 0 | 0 | 7 | 7/7 |
 | full-stack/arquitectura/microservicios | 7 | 7 | 0 | 0 | 7 | 7/7 |
 | ia/vector-databases | 7 | 7 | 0 | 0 | 7 | 7/7 |
@@ -98,8 +96,9 @@ Los ratios son solo para priorizar; no se muestran en la web pública.
 | full-stack/backend/fastapi | 16 | 16 | 0 | 0 | 1 | 1/16 |
 | full-stack/backend/laravel | 16 | 16 | 0 | 0 | 1 | 1/16 |
 | full-stack/backend/nestjs | 16 | 16 | 0 | 0 | 1 | 1/16 |
+| full-stack/backend/spring-boot | 16 | 8 | 0 | 0 | 1 | 1/16 |
 
-Manuales donde **todos** los capítulos son plantilla: `ia/transformers` (8), `data-engineering/parquet` (7), `full-stack/arquitectura/microservicios` (7), `ia/vector-databases` (7), `full-stack/arquitectura/cqrs` (6), `full-stack/arquitectura/event-driven` (6).
+Manuales donde **todos** los capítulos son plantilla: `data-engineering/parquet` (7), `full-stack/arquitectura/microservicios` (7), `ia/vector-databases` (7), `full-stack/arquitectura/cqrs` (6), `full-stack/arquitectura/event-driven` (6).
 
 ## Tecnologías con mayor riesgo de actualización
 
@@ -131,9 +130,9 @@ Bloques de código con el mismo hash (tras quitar comentarios y colapsar espacio
 
 | Hash | Lang | Manuales | Capítulos | Ejemplo |
 | --- | --- | --- | --- | --- |
-| `34c4a79450ca7290` | txt | 13 | 48 | `data-engineering/parquet/01-introduccion-al-formato-columnar.md` |
-| `5a9d824dcf18e14a` | python | 5 | 24 | `data-engineering/parquet/01-introduccion-al-formato-columnar.md` |
+| `34c4a79450ca7290` | txt | 12 | 40 | `data-engineering/parquet/01-introduccion-al-formato-columnar.md` |
 | `fb1882696289f802` | txt | 3 | 19 | `full-stack/arquitectura/cqrs/01-introduccion-y-motivacion.md` |
+| `5a9d824dcf18e14a` | python | 4 | 16 | `data-engineering/parquet/01-introduccion-al-formato-columnar.md` |
 | `3320248a647ec61e` | sql | 3 | 3 | `bases-de-datos/mysql/04-indices-y-explain.md` |
 | `ed0e2a5ce46cd7bc` | sql | 3 | 3 | `bases-de-datos/mysql/03-consultas-joins-y-agregaciones.md` |
 | `31d2e54669733206` | sql | 2 | 2 | `bases-de-datos/mysql/03-consultas-joins-y-agregaciones.md` |
